@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 71</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 72</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -1303,8 +1303,11 @@ function analyse(p){ // tách thương hiệu, loại SP, cờ xuất xứ từ 
   let type = tw.slice(0, bi>0?4:3).join(' ').replace(/[,.;:\-–]+$/,'');
   if(!type) type='sản phẩm';
   return {brand, flag: flag || sn.flag, type, base:sn.base, extras:sn.extras}; }
-const sizesOf = s => { s=String(s||'').trim(); if(!s) return []; const r=s.match(/^(\d{2})\s*[-–đến]+\s*(\d{2})$/); if(r){ const a=[]; for(let i=+r[1];i<=+r[2];i++) a.push(String(i)); return a; }
-  return s.split(/[\s,;\/]+/).map(x=>x.trim().toUpperCase()).filter(Boolean); };
+/* size chữ X nhiều lần ghi gọn: XXL → 2XL, XXXL → 3XL (cách shop đặt mã, ví dụ A012XL) */
+const szNorm = z => { z=String(z||'').trim().toUpperCase(); const m=z.match(/^(X{2,5})L$/); return m?m[1].length+'XL':z; };
+const szList = a => [...new Set(a.map(szNorm))];
+const sizesOf = s => szList((()=>{ s=String(s||'').trim(); if(!s) return []; const r=s.match(/^(\d{2})\s*[-–đến]+\s*(\d{2})$/); if(r){ const a=[]; for(let i=+r[1];i<=+r[2];i++) a.push(String(i)); return a; }
+  return s.split(/[\s,;\/]+/).map(x=>x.trim().toUpperCase()).filter(Boolean); })());
 
 /* đợt bán: lưu trong trình duyệt, chỉ mã, tên, giá bán, giá hãng, size, số lượng, mô tả */
 const BKEY='xas-batches', CKEY='xas-batch-cur';
@@ -4572,7 +4575,7 @@ var EVC_COV=null;
 if(S.evCov==null) S.evCov=true; if(S.evCovY==null){ S.evCovY=8.5; S.evCovH=11.5; S.evCovX=6; S.evCovW=88; } if(S.evCovText==null) S.evCovText=''; if(S.evCovMode==null) S.evCovMode='erase'; if(S.evCovAuto==null) S.evCovAuto=true;
 function evSizesOf(g,info){ const nm=(g&&g.name)||(info&&info.name)||(info&&info.p&&info.p.name)||'', cat=info&&info.p&&info.cat?info.cat:guessCat(nm); // chỉ quần áo, giày dép mới gõ mã liền size
   if(!(cat==='thoitrang'||cat==='giay') || /(^| )(tui|balo|vi)( |$)/.test(norm(nm))) return [];
-  const h=String(g&&g.sizes||'').split(/[\s,;/]+/).map(s=>s.trim().toUpperCase()).filter(Boolean); if(h.length) return h; return info&&info.p?sizesOf(info.p.size):[]; } // host nói "còn size…" thì theo host
+  const h=szList(String(g&&g.sizes||'').split(/[\s,;/]+/).map(s=>s.trim().toUpperCase()).filter(Boolean)); if(h.length) return h; return info&&info.p?sizesOf(info.p.size):[]; } // host nói "còn size…" thì theo host
 function evCovText(code,sizes){ code=code||'A01'; const t=(S.evCovText||'').trim(); if(t) return t.replace(/\{ma\}/gi,code); return sizes.length?`Còn size ${sizes.join(', ')} · gõ mã liền size, ví dụ ${code}${sizes[Math.floor(sizes.length/2)]}`:''; } // hàng khác: chỉ mã + giá, không dòng ví dụ
 // xoá ô cũ: kéo dải nền ngay dưới ô lên phủ kín rồi làm mờ; sau đó đặt khung mới: MÃ + giá + cú pháp đặt hàng
 // tự dò 2 ô xanh (xanh lá, xanh nhạt) ở nửa trên khung hình: trả về vùng % của video
