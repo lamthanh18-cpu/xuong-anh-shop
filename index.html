@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 72</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 74</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -402,6 +402,21 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label for="tcQuote">Câu nói</label>
             <select id="tcQuote"></select>
             <textarea id="tcText" rows="2" placeholder="Hoặc tự gõ câu của shop, xuống dòng để tách cảnh"></textarea>
+            <div class="field" id="tcBatchBox" style="border:1px dashed var(--line,#cbd5e1);border-radius:12px;padding:10px;margin-top:8px">
+              <button class="btn primary" type="button" data-lotopen="tc">📚 Làm cả loạt 10–20 video câu nói hay (đăng nhiều fanpage)</button>
+              <div id="tcBatch" hidden>
+                <p class="hint">Thư viện câu nói hay, đạo lý sống (tục ngữ, ca dao, Lão Tử, Khổng Tử…), mỗi câu có lời bình ý nghĩa. App làm lần lượt từng video có giọng AI đọc, câu đã làm được đánh dấu để không làm lại. Xong, sang tab Edit → 📅 Đăng hẹn giờ → 📁 Chọn cả thư mục clip để lên lịch cho các fanpage. Mỗi trang nhận câu mở đầu khác nhau.</p>
+                <div class="chips">
+                  <button class="chip" type="button" data-lotn="tc:10">Chọn 10 câu chưa làm</button>
+                  <button class="chip" type="button" data-lotn="tc:20">Chọn 20 câu chưa làm</button>
+                  <button class="chip" type="button" data-lotn="tc:0">Bỏ chọn hết</button>
+                </div>
+                <div id="tcBList" style="max-height:320px;overflow:auto;margin:8px 0"></div>
+                <p class="hint" id="tcBSum"></p>
+                <div class="row"><button class="btn primary grow" type="button" id="tcBGo" data-lotgo="tc">▶ Bắt đầu làm cả loạt</button><button class="btn" type="button" id="tcBStop" data-lotstop="tc" hidden>■ Dừng sau video này</button></div>
+                <p class="hint" id="tcBMsg"></p>
+              </div>
+            </div>
           </div>
           <div class="field" id="ttField">
             <label for="ttTitle">Tên bộ sưu tập (hiện trên bìa)</label>
@@ -423,6 +438,21 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label for="mhNote">⚠ Lưu ý an toàn</label>
             <textarea id="mhNote" rows="2" placeholder="Bề mặt nào không dùng, chất nào không trộn, ai cần cẩn thận"></textarea>
             <label class="check"><input type="checkbox" id="mhProd" checked> Cuối video giới thiệu sản phẩm đang chọn + chốt mã (bỏ tích nếu mẹo không liên quan sản phẩm)</label>
+            <div class="field" id="mhBatchBox" style="border:1px dashed var(--line,#cbd5e1);border-radius:12px;padding:10px;margin-top:8px">
+              <button class="btn primary" type="button" data-lotopen="mh">📚 Làm cả loạt 10–20 video mẹo (đăng nhiều fanpage)</button>
+              <div id="mhBatch" hidden>
+                <p class="hint">Tích các mẹo muốn làm. App làm lần lượt từng video (có giọng AI thuyết minh), tự lưu vào thư mục chọn sẵn, kèm bài đăng sẵn cho từng video. Xong, sang tab Edit → 📅 Đăng hẹn giờ → 📁 Chọn cả thư mục clip để lên lịch cho các fanpage. Mỗi trang nhận câu mở đầu khác nhau.</p>
+                <div class="chips">
+                  <button class="chip" type="button" data-lotn="mh:10">Chọn 10 mẹo chưa làm</button>
+                  <button class="chip" type="button" data-lotn="mh:20">Chọn 20 mẹo chưa làm</button>
+                  <button class="chip" type="button" data-lotn="mh:0">Bỏ chọn hết</button>
+                </div>
+                <div id="mhBList" style="max-height:320px;overflow:auto;margin:8px 0"></div>
+                <p class="hint" id="mhBSum"></p>
+                <div class="row"><button class="btn primary grow" type="button" id="mhBGo" data-lotgo="mh">▶ Bắt đầu làm cả loạt</button><button class="btn" type="button" id="mhBStop" data-lotstop="mh" hidden>■ Dừng sau video này</button></div>
+                <p class="hint" id="mhBMsg"></p>
+              </div>
+            </div>
             <button class="btn" type="button" id="mhDirect">🎬 Đạo diễn vẽ ảnh thật: trước, sau, từng bước (AI, ~900đ/ảnh)</button>
             <p class="hint" id="mhMsg"></p>
             <p class="hint">Chỉ ghi cách làm shop đã thử thật. Ảnh/clip bối cảnh (tay đang làm) sẽ được dùng cho từng bước, không có thì app dùng ảnh sản phẩm. Video mẹo hay được lưu và chia sẻ nhiều, kéo tương tác cho trang.</p>
@@ -1612,23 +1642,64 @@ const MH_LIB=[
 ];
 /*MH_LIB_END*/
 var MH={shots:{},ver:0,busy:false};
-const QUOTES = [
-  'Phụ nữ đẹp nhất\nlà khi tự tin làm điều mình yêu.',
-  'Mỗi ngày một chút,\nrồi sẽ thành điều lớn lao.',
-  'Chăm sóc bản thân không phải ích kỷ,\nđó là yêu thương.',
-  'Ngôi nhà ấm áp\nbắt đầu từ những điều nhỏ bé.',
-  'Đừng đợi dịp đặc biệt,\nhãy làm hôm nay thật đặc biệt.',
-  'Cứ đi chậm cũng được,\nmiễn là đừng dừng lại.',
-  'Đẹp không phải để giống ai,\nđẹp là được là chính mình.',
-  'Hạnh phúc là bữa cơm nóng\nchờ người thương về.',
-  'Thành công là những nỗ lực nhỏ\nlặp lại mỗi ngày.',
-  'Biết ơn những điều đang có,\nđiều tốt sẽ tìm đến thêm.',
-  'Gian bếp gọn gàng,\nlòng người thảnh thơi.',
-  'Hôm nay mệt một chút,\nngày mai tự hào nhiều chút.',
-  'Đừng so sánh hành trình của mình\nvới bất kỳ ai.',
-  'Yêu bản thân\nlà khởi đầu của mọi điều đẹp đẽ.',
-  'Sáng nay hãy mỉm cười,\nvì bạn xứng đáng có một ngày tốt lành.',
-  'Khoác lên sự đam mê,\nsống trọn từng ngày.'];
+/*TC_LIB_START*/
+const TC_LIB = [
+ {c:'Tự tin, yêu bản thân',q:'Phụ nữ đẹp nhất\nlà khi tự tin làm điều mình yêu.',a:'',y:'Vẻ đẹp bền lâu đến từ sự tự tin và niềm vui trong việc mình làm.'},
+ {c:'Kiên trì',q:'Mỗi ngày một chút,\nrồi sẽ thành điều lớn lao.',a:'',y:'Không cần làm tất cả trong một ngày, chỉ cần đều đặn mỗi ngày.'},
+ {c:'Tự tin, yêu bản thân',q:'Chăm sóc bản thân không phải ích kỷ,\nđó là yêu thương.',a:'',y:'Mình khoẻ và vui thì mới chăm được cho người mình thương.'},
+ {c:'Gia đình',q:'Ngôi nhà ấm áp\nbắt đầu từ những điều nhỏ bé.',a:'',y:'Một bữa cơm, một lời hỏi han là đủ làm nhà ấm hơn.'},
+ {c:'Sống trọn hôm nay',q:'Đừng đợi dịp đặc biệt,\nhãy làm hôm nay thật đặc biệt.',a:'',y:'Hôm nay là ngày duy nhất mình chắc chắn đang có.'},
+ {c:'Kiên trì',q:'Cứ đi chậm cũng được,\nmiễn là đừng dừng lại.',a:'',y:'Tốc độ không quan trọng bằng việc mình vẫn bước tiếp.'},
+ {c:'Tự tin, yêu bản thân',q:'Đẹp không phải để giống ai,\nđẹp là được là chính mình.',a:'',y:'Mỗi người có một nét đẹp riêng, không cần so với ai.'},
+ {c:'Gia đình',q:'Hạnh phúc là bữa cơm nóng\nchờ người thương về.',a:'',y:'Hạnh phúc nhiều khi giản dị hơn mình nghĩ.'},
+ {c:'Kiên trì',q:'Thành công là những nỗ lực nhỏ\nlặp lại mỗi ngày.',a:'',y:'Thói quen tốt mỗi ngày làm nên kết quả lớn.'},
+ {c:'Biết ơn',q:'Biết ơn những điều đang có,\nđiều tốt sẽ tìm đến thêm.',a:'',y:'Người biết ơn thấy cuộc sống đủ đầy hơn.'},
+ {c:'Bình an',q:'Gian bếp gọn gàng,\nlòng người thảnh thơi.',a:'',y:'Nhà gọn thì đầu óc cũng nhẹ nhõm hơn.'},
+ {c:'Kiên trì',q:'Hôm nay mệt một chút,\nngày mai tự hào nhiều chút.',a:'',y:'Cố gắng hôm nay là món quà cho chính mình ngày mai.'},
+ {c:'Tự tin, yêu bản thân',q:'Đừng so sánh hành trình của mình\nvới bất kỳ ai.',a:'',y:'Mỗi người một hoàn cảnh, một thời điểm nở hoa riêng.'},
+ {c:'Tự tin, yêu bản thân',q:'Yêu bản thân\nlà khởi đầu của mọi điều đẹp đẽ.',a:'',y:'Biết trân trọng mình thì mới biết trân trọng người khác.'},
+ {c:'Sống trọn hôm nay',q:'Sáng nay hãy mỉm cười,\nvì bạn xứng đáng có một ngày tốt lành.',a:'',y:'Một nụ cười buổi sáng làm cả ngày nhẹ nhàng hơn.'},
+ {c:'Sống trọn hôm nay',q:'Khoác lên sự đam mê,\nsống trọn từng ngày.',a:'',y:'Làm việc gì cũng làm bằng cả trái tim.'},
+ {c:'Kiên trì',q:'Không có việc gì khó,\nchỉ sợ lòng không bền.\nĐào núi và lấp biển,\nquyết chí ắt làm nên.',a:'Hồ Chí Minh',y:'Việc khó đến đâu, giữ được quyết tâm thì sẽ làm được.'},
+ {c:'Sống tử tế',q:'Điều mình không muốn,\nđừng làm cho người khác.',a:'Khổng Tử',y:'Đặt mình vào vị trí người khác là gốc của sự tử tế.'},
+ {c:'Kiên trì',q:'Hành trình ngàn dặm\nbắt đầu từ một bước chân.',a:'Lão Tử',y:'Việc lớn nào cũng bắt đầu bằng một bước nhỏ, quan trọng là bắt đầu.'},
+ {c:'Hiểu mình',q:'Biết người là trí,\nbiết mình là sáng.',a:'Lão Tử',y:'Hiểu người đã khó, hiểu chính mình còn quý hơn.'},
+ {c:'Kiên trì',q:'Có công mài sắt,\ncó ngày nên kim.',a:'Tục ngữ Việt Nam',y:'Kiên nhẫn và bền bỉ thì việc khó mấy cũng thành.'},
+ {c:'Biết ơn',q:'Uống nước nhớ nguồn.',a:'Tục ngữ Việt Nam',y:'Sống có trước có sau, nhớ người đã giúp mình.'},
+ {c:'Biết ơn',q:'Ăn quả nhớ kẻ trồng cây.',a:'Tục ngữ Việt Nam',y:'Thành quả hôm nay có công sức của biết bao người.'},
+ {c:'Sống tử tế',q:'Một miếng khi đói\nbằng một gói khi no.',a:'Tục ngữ Việt Nam',y:'Giúp người đúng lúc họ cần mới là quý nhất.'},
+ {c:'Sống tử tế',q:'Lá lành đùm lá rách.',a:'Tục ngữ Việt Nam',y:'Mình có điều kiện hơn thì san sẻ cho người khó khăn.'},
+ {c:'Gia đình',q:'Thuận vợ thuận chồng,\ntát biển Đông cũng cạn.',a:'Ca dao Việt Nam',y:'Vợ chồng đồng lòng thì việc gì cũng vượt qua.'},
+ {c:'Gia đình',q:'Công cha như núi Thái Sơn,\nnghĩa mẹ như nước trong nguồn chảy ra.',a:'Ca dao Việt Nam',y:'Ơn cha mẹ lớn lao, sống sao cho cha mẹ vui lòng.'},
+ {c:'Sống tử tế',q:'Tốt gỗ hơn tốt nước sơn.',a:'Tục ngữ Việt Nam',y:'Phẩm chất bên trong quý hơn vẻ ngoài.'},
+ {c:'Sống tử tế',q:'Lời nói chẳng mất tiền mua,\nlựa lời mà nói cho vừa lòng nhau.',a:'Ca dao Việt Nam',y:'Một lời nói nhẹ nhàng giữ được hoà khí cả nhà.'},
+ {c:'Đoàn kết',q:'Một cây làm chẳng nên non,\nba cây chụm lại nên hòn núi cao.',a:'Ca dao Việt Nam',y:'Cùng nhau thì làm được việc lớn hơn một mình.'},
+ {c:'Kiên trì',q:'Thất bại là mẹ thành công.',a:'Tục ngữ',y:'Mỗi lần vấp ngã cho mình thêm một bài học.'},
+ {c:'Học hỏi',q:'Học, học nữa, học mãi.',a:'V.I. Lênin',y:'Không bao giờ là muộn để học thêm điều mới.'},
+ {c:'Thái độ sống',q:'Hạnh phúc không có sẵn.\nNó đến từ chính hành động của bạn.',a:'Đạt Lai Lạt Ma',y:'Muốn hạnh phúc thì bắt đầu từ việc mình làm hôm nay.'},
+ {c:'Thái độ sống',q:'Người ta có thể lấy đi mọi thứ,\ntrừ quyền chọn thái độ\ntrước hoàn cảnh của mình.',a:'Viktor Frankl',y:'Hoàn cảnh không chọn được, nhưng cách mình đối diện thì chọn được.'},
+ {c:'Thái độ sống',q:'Điều làm ta phiền lòng\nkhông phải là sự việc,\nmà là cách ta nhìn sự việc.',a:'Epictetus',y:'Đổi cách nhìn thì lòng cũng nhẹ đi nhiều.'},
+ {c:'Thái độ sống',q:'Hạnh phúc của đời bạn\nphụ thuộc vào chất lượng\nsuy nghĩ của bạn.',a:'Marcus Aurelius',y:'Nghĩ tích cực là nuôi dưỡng hạnh phúc mỗi ngày.'},
+ {c:'Bình an',q:'Bình an không phải là không có giông bão,\nmà là bình tĩnh giữa giông bão.',a:'',y:'Ai cũng có lúc khó khăn, giữ được bình tĩnh là đã thắng một nửa.'},
+ {c:'Bình an',q:'Bớt so đo,\nlòng sẽ rộng.',a:'',y:'Buông bớt hơn thua thì ngày nào cũng nhẹ nhàng.'},
+ {c:'Sống tử tế',q:'Tử tế là thứ\nkhông bao giờ lỗi mốt.',a:'',y:'Thời nào thì sự tử tế cũng được trân trọng.'},
+ {c:'Sống tử tế',q:'Hãy tử tế,\nvì ai cũng đang chiến đấu\nmột trận chiến của riêng họ.',a:'',y:'Mình không biết hết nỗi lòng người khác, nên nhẹ nhàng với nhau.'},
+ {c:'Gia đình',q:'Nhà là nơi để về,\nkhông phải nơi để hơn thua.',a:'',y:'Về nhà là để được yêu thương, không phải để tranh cãi.'},
+ {c:'Gia đình',q:'Con trẻ không nghe lời ta nói,\ncon nhìn cách ta sống.',a:'',y:'Cha mẹ là tấm gương đầu tiên của con.'},
+ {c:'Gia đình',q:'Dành thời gian cho người thân\nlà món quà quý nhất.',a:'',y:'Quà nào cũng không bằng sự có mặt bên nhau.'},
+ {c:'Sống trọn hôm nay',q:'Điện thoại có thể đợi,\nngười thân thì không.',a:'',y:'Cất điện thoại một chút để nhìn và nghe người bên cạnh.'},
+ {c:'Tự tin, yêu bản thân',q:'Bạn không cần hoàn hảo\nđể xứng đáng được yêu thương.',a:'',y:'Ai cũng có thiếu sót, và vẫn đáng được yêu thương.'},
+ {c:'Tự tin, yêu bản thân',q:'Ngủ đủ, ăn ngon, cười nhiều,\nđó cũng là thành công.',a:'',y:'Sức khoẻ và niềm vui là nền móng của mọi thành công.'},
+ {c:'Học hỏi',q:'Mỗi ngày học một điều mới,\nmột năm mình đã khác rất nhiều.',a:'',y:'Học một chút mỗi ngày là cách lớn lên bền vững nhất.'},
+ {c:'Làm việc',q:'Làm việc gì cũng vậy,\nlàm bằng cái tâm thì người ta sẽ thấy.',a:'',y:'Khách hàng, người thân đều cảm nhận được sự tận tâm.'},
+ {c:'Làm việc',q:'Chữ tín\nquý hơn vàng.',a:'Tục ngữ Việt Nam',y:'Giữ lời hứa là giữ được lòng tin, thứ khó mua nhất.'},
+ {c:'Biết ơn',q:'Trước khi ngủ,\nhãy nghĩ về ba điều làm mình biết ơn hôm nay.',a:'',y:'Thói quen nhỏ giúp lòng an yên và ngủ ngon hơn.'},
+ {c:'Bình an',q:'Sống chậm lại,\nđể thấy mình đang có rất nhiều.',a:'',y:'Vội vàng quá dễ bỏ lỡ những điều đẹp ngay bên cạnh.'},
+ {c:'Kiên trì',q:'Trời không phụ lòng người\nbiết cố gắng.',a:'',y:'Cứ chăm chỉ, kết quả sẽ đến vào lúc mình không ngờ.'},
+];
+/*TC_LIB_END*/
+const QUOTES = TC_LIB.map(x=>x.q);
+const tcAuthor=()=>(S.tcText||'').trim()?'':((TC_LIB[S.tcQuote]||{}).a||'');
 const KIND_VI = {tip:'Thẻ kiến thức mẹo hay', step:'Bước làm', before:'Ảnh TRƯỚC', after:'Ảnh SAU', compare:'Thanh kéo so sánh trước – sau', cover:'Bìa tạp chí', look:'LOOK người mẫu (lướt đầu tới chân)', tri:'Ba khung dọc', polaroid:'Ảnh polaroid rơi', flash:'Cắt nhanh theo nhịp', sizes:'Thẻ chọn size', live:'Báo giờ live', logo:'Logo mở màn', hook:'Câu mở', hero:'Sản phẩm', detail:'Cận cảnh', studio:'Sân khấu', grid:'Bộ sưu tập', title:'Tựa đề',
   value:'Điều shop cam kết', cta:'Đóng dấu mã', quote:'Câu nói', outro:'Kết', clip:'Bối cảnh', orbit:'Lia vòng quanh', dolly:'Zoom', split:'Chia đôi: sản phẩm + bối cảnh', pip:'Khung lồng sản phẩm', talk:'Lời thoại'};
 const EDIT_KEY = {tip:'t', step:'t', before:'t', after:'t', compare:'t', cover:'t', look:'t', tri:'t', flash:'t', sizes:'t2', live:'t', logo:'t2', hook:'t', hero:'t', detail:'t', studio:'t', grid:'t', title:'t', value:'t', cta:'t2', quote:'t', outro:'t', orbit:'t', dolly:'t', split:'t', pip:'t', clip:'t'};
@@ -1917,7 +1988,8 @@ const SCENES = {
     if(sc.clip) drawMedia(ctx,sc.clip,0,0,W,H,1.04+.08*p); else if(sc.it) drawCoverAt(ctx,sc.it,0,0,W,H,1.08+.1*p,.45+.1*p,.5); else { ctx.fillStyle=mix(o.brand,'#000000',.6); ctx.fillRect(0,0,W,H); bokeh(ctx,W,H,lt,18,.2); }
     ctx.fillStyle='rgba(24,14,8,.5)'; ctx.fillRect(0,0,W,H); leak(ctx,W,H,lt,.18);
     ctx.save(); ctx.globalAlpha=.55*seg01(lt,0,.8); ctx.fillStyle=o.tag; ctx.font=fontOf(700,u*34,SERIF); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('“',W/2,H*.3); ctx.restore();
-    ctx.save(); ctx.shadowColor='rgba(0,0,0,.45)'; ctx.shadowBlur=u*2.4; popWords(ctx,sc.t||'',W,H*.5,u*8.4,lt-.3,o,{font:SERIF,weight:'italic 500',hl:false,rise:true,anim:sc.ta,stagger:.2,maxLines:6}); ctx.restore(); },
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,.45)'; ctx.shadowBlur=u*2.4; const r=popWords(ctx,sc.t||'',W,H*.5,u*8.4,lt-.3,o,{font:SERIF,weight:'italic 500',hl:false,rise:true,anim:sc.ta,stagger:.2,maxLines:6}); ctx.restore();
+    if(sc.au){ const a=ease.out(seg01(lt,.9,1.6)); if(a>0){ ctx.save(); ctx.globalAlpha=a; ctx.fillStyle='#fff'; ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=u*1.5; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font=fontOf(700,u*4.4); ctx.fillText('— '+sc.au,W/2,H*.5+((r&&r.h)||u*20)/2+u*7); ctx.restore(); } } }, /* tác giả câu nói (Lão Tử, tục ngữ…) */
   outro(ctx,W,H,sc,lt,E){ const {o,u}=E; brandBg(ctx,W,H,o,.18); bokeh(ctx,W,H,lt,16,.16); ctx.textAlign='center'; ctx.textBaseline='middle'; /* cảnh kết: lời cảm ơn chị em đã xem, nhẹ nhàng */
     if(logoImg){ const a=ease.out(seg01(lt,0,.6)), lw=W*.24, lh=lw*logoImg.height/logoImg.width, s=.94+.06*a; ctx.save(); ctx.globalAlpha=a; ctx.translate(W/2,H*.31); ctx.scale(s,s); ctx.drawImage(logoImg,-lw/2,-lh/2,lw,lh); ctx.restore(); }
     const a1=ease.out(seg01(lt,.1,.6)); let y=H*.46; ctx.save(); ctx.globalAlpha=a1; ctx.fillStyle='#fff'; ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=u*2; const f=fitLines(ctx,sc.thank||'Cảm ơn chị em đã xem',SERIF,'italic 600',u*7.6,W*.86,2); f.lines.forEach((l,i)=>ctx.fillText(l,W/2,y+i*f.size*1.2+(1-a1)*u*2)); ctx.restore(); y+=(f.lines.length-1)*f.size*1.2+f.size*.9;
@@ -2203,10 +2275,10 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     // nền: xoay vòng ảnh/clip bối cảnh và ảnh chụp sản phẩm, xen cảnh máy quay chậm giữa các câu
     const pool=clips.map(c=>({clip:c})).concat(all.map(it=>({it}))); let pi=0; const nextBg=()=>pool.length?pool[pi++%pool.length]:{};
     const roll=prods.length?prods:[]; const trs=['','drop','twirl','iris'];
-    lines.forEach((l,i)=>{ const bg=nextBg(); out.push({k:'quote',d:D(7),t:l,clip:bg.clip||null,it:bg.it||null,tr:trs[i%trs.length]});
+    const au=tcAuthor(); lines.forEach((l,i)=>{ const bg=nextBg(); out.push({k:'quote',d:D(7),t:l,au:lines.length>1?'':au,clip:bg.clip||null,it:bg.it||null,tr:trs[i%trs.length]});
       if(roll.length && i<lines.length-1) out.push({k:'dolly',d:D(5),it:roll[i%roll.length],dir:i%2?'out':'in',f:i,t:'',tr:'leak'}); });
     if(roll.length) out.push({k:'orbit',d:D(6),it:roll[0],dir:1,t:'',tr:'iris'});
-    if(lines.length>1){ const bg=nextBg(); out.push({k:'quote',d:D(8),t:lines.join('\n'),clip:bg.clip||null,it:bg.it||null,tr:'twirl'}); }
+    if(lines.length>1){ const bg=nextBg(); out.push({k:'quote',d:D(8),t:lines.join('\n'),au,clip:bg.clip||null,it:bg.it||null,tr:'twirl'}); }
     out.push({k:'outro',d:D(5),t:S.thSlogan||shop,t2:shop,tr:'leak'}); }
   else if(st==='mh'){ const G=chosenGroups().slice(0,1); const g=S.mhProd===false?null:G[0]; const its=g?g.its:[]; const title=(S.mhTitle||'').trim()||'Mẹo hay việc nhà';
     let steps=mhSteps(); if(!steps.length) steps=['Chuẩn bị đồ cần dùng','Làm theo hướng dẫn trên bao bì sản phẩm','Lau lại cho sạch, cất gọn'];
@@ -2519,7 +2591,7 @@ $('#btnPreview').onclick=async()=>{ if(prevRun){ prevRun.stop(); return; } const
   btn.textContent='■ Dừng'; const tick=()=>{ if(!alive) return; const t=Math.max(0,actx.currentTime-a0); clipSync(F.st,t); F.draw(ctx,W,H,Math.min(t,F.total-.001),E); if(t>=F.total){ prevRun&&prevRun.stop(); return; } requestAnimationFrame(tick); };
   requestAnimationFrame(tick); };
 $('#btnRender').onclick=async()=>{
-  if(rendering) return; let autoDir=null; if(evDirOK()){ try{ autoDir=await evDir(false); }catch(e){} } const mime=pickMime(); const cv0=document.createElement('canvas');
+  if(rendering) return; let autoDir=null; if(evDirOK()){ try{ autoDir=await evDir(false); }catch(e){} } if(MHB.dir) autoDir=MHB.dir; /* làm cả loạt mẹo: lưu vào thư mục con của loạt */ const mime=pickMime(); const cv0=document.createElement('canvas');
   if(mime===null || !cv0.captureStream){ toast('Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome hoặc Safari bản mới.'); return; }
   if(prevRun) prevRun.stop(); const actx=new (window.AudioContext||window.webkitAudioContext)(); try{ actx.resume(); }catch(e){}
   if(S.vstyle==='mh' && S.vo!=='file' && gKey() && !IN_CLAUDE){ rendering=true; $('#renderBox').hidden=false; $('#renderMsg').textContent='Đang tạo giọng thuyết minh (AI Google)…'; await mhVoPrep(); rendering=false; }
@@ -2551,7 +2623,7 @@ $('#btnRender').onclick=async()=>{
   $('#videoInfo').textContent=`${W}×${H} · ${total.toFixed(1).replace('.',',')} giây · ${(blob.size/1048576).toFixed(1).replace('.',',')} MB · .${ext}${hiddenWarn?' · Có lúc bạn rời màn hình, nếu video bị giật hãy tạo lại.':''}`;
   $('#renderMsg').textContent=(await vAutoSave(autoDir))||'Xong. Xem lại rồi bấm Lưu video.'; btn.disabled=false; btn.textContent='Tạo lại video'; rendering=false;
 };
-function vName(){ const d=new Date(); const kind={mh:'meo-hay',ts:'truoc-sau',tt:'thoi-trang',lv:'bao-live',ban:'ban-hang',qb:'quang-ba',th:'thuong-hieu',tc:'truyen-cam-hung',tu:'video'}[S.vstyle]||'video';
+function vName(){ if(MHB.name) return MHB.name+'.'+lastVideo.ext; const d=new Date(); const kind={mh:'meo-hay',ts:'truoc-sau',tt:'thoi-trang',lv:'bao-live',ban:'ban-hang',qb:'quang-ba',th:'thuong-hieu',tc:'truyen-cam-hung',tu:'video'}[S.vstyle]||'video';
   return `${kind}-${pad2(d.getDate())}${pad2(d.getMonth()+1)}-${pad2(d.getHours())}${pad2(d.getMinutes())}.${lastVideo.ext}`; }
 // tạo xong tự lưu thẳng vào thư mục đã chọn (bản máy tính), không cần bấm Lưu
 async function vAutoSave(dir){ if(!dir||!lastVideo) return ''; try{ const nm=vName(); await evWrite(dir,{name:nm,blob:lastVideo.blob}); return `Xong. Đã tự lưu ${nm} vào thư mục ${dir.name}.`; }catch(e){ console.warn('autosave',e); return ''; } }
@@ -3332,9 +3404,9 @@ function fpItems(){ return evOuts.map((x,i)=>({name:x.name,blob:x.blob,meta:x.me
 const fpFoot=()=>String($('#fpFoot').value||'').trim();
 function fpMetaFor(name){ const cs=fpCodesOf(name); if(!cs.length) return null; const info=evInfo(cs[0]); return evPostData(info,cs,{code:cs.join(', '),name:info.name,lines:'',price:''}); }
 function fpCapFor(name){ const md=fpMetaFor(name); return md?evPostCap(md,0):`🔥 Hàng mới mỗi ngày tại ${S.shopName||"Nancy's Shop"}\n#NancyShop`; }
-function fpHookFor(x,k){ if(x.meta){ const H=evPostHooks(x.meta); if(H.length) return H[((k%H.length)+H.length)%H.length]; } const cs=fpCodesOf(x.name), first=String(x.caption||'').split('\n')[0]||'', m=first.match(/^\S+\s+(.+?)\s+–\s/), nm=(m&&m[1])||(cs[0]&&evInfo(cs[0]).name)||'sản phẩm này', c=cs.join(', ')||'';
+function fpHookFor(x,k){ if(x.meta&&(x.meta.kind==='meo'||x.meta.kind==='quote')){ const T=x.meta.title||'Mẹo hay', H=(x.meta.kind==='quote'?TCB_HOOKS:MHB_HOOKS).map(h=>h.replace('{T}',T)); return H[((k%H.length)+H.length)%H.length]; } if(x.meta){ const H=evPostHooks(x.meta); if(H.length) return H[((k%H.length)+H.length)%H.length]; } const cs=fpCodesOf(x.name), first=String(x.caption||'').split('\n')[0]||'', m=first.match(/^\S+\s+(.+?)\s+–\s/), nm=(m&&m[1])||(cs[0]&&evInfo(cs[0]).name)||'sản phẩm này', c=cs.join(', ')||'';
   const pool=c?FP_HOOKS:FP_HOOKS.filter(h=>!h.includes('{c}')); return pool[((k%pool.length)+pool.length)%pool.length].replace(/\{n\}/g,nm).replace(/\{c\}/g,c); }
-function fpFootFor(x){ const cs=fpCodesOf(x.name), f=fpFoot(); if(!cs.length) return f.replace(/\{dat\}/g,'đúng mã sản phẩm').replace(/\{vd\}|\{ma\}/g,'mã');
+function fpFootFor(x){ const cs=fpCodesOf(x.name), f=fpFoot(); if(x.meta&&(x.meta.kind==='meo'||x.meta.kind==='quote')) return ''; /* video mẹo hay, câu nói hay: không chèn hướng dẫn đặt/huỷ đơn */ if(!cs.length) return f.replace(/\{dat\}/g,'đúng mã sản phẩm').replace(/\{vd\}|\{ma\}/g,'mã');
   const c=cs[0], m=String(x.caption||'').match(/Còn size ([0-9A-Z, ]+)/i), sz=m?m[1].split(/[ ,]+/).map(v=>v.trim().toUpperCase()).filter(Boolean):evSizesOf(null,evInfo(c)), vd=c+(sz.length?sz[Math.floor(sz.length/2)]:'');
   const dat=sz.length?`mã liền size, ví dụ ${vd} (còn size ${sz.join(', ')})`:cs.length>1?`${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]} (mỗi màu một mã)`:c;
   return f.replace(/\{dat\}/g,dat).replace(/\{vd\}/g,vd).replace(/\{ma\}/g,c); }
@@ -3778,7 +3850,7 @@ function voSuggest(){ const G=chosenGroups(), g=G[0], st=S.vstyle; const nm=g?St
   const v=(S.voVar=((S.voVar|0)+1))%3, end=s=>String(s).trim().replace(/[.!…]+$/,'')+'.', ben=g?realBenefits(g.p).slice(0,2).map(end):[], sz=g?sizesOf(g.p.size):[];
   const name=nm?end(nm.charAt(0).toUpperCase()+nm.slice(1)):'', cta=code?`Chị em gõ mã ${code} để đặt hàng.`:'Chị em nhắn Nancy để đặt hàng.';
   let L=[];
-  if(st==='tc'){ L=[...quoteLines().map(end), ["Nancy's Shop chúc chị em luôn bình an và rạng rỡ.","Hãy dịu dàng với chính mình, chị em nhé.","Mỗi ngày một chút, rồi chị em sẽ thấy mình đã đi rất xa."][v]]; }
+  if(st==='tc'){ const tq=(S.tcText||'').trim()?null:TC_LIB[S.tcQuote]; L=[...(quoteLines().join(' ').match(/[^.!?…]+[.!?…]*/g)||[]).map(x=>x.trim().replace(/,$/,'')).filter(Boolean).map(end), ...(tq&&tq.a?[(/^(Tục ngữ|Ca dao)/.test(tq.a)?'':'Lời của ')+tq.a+'.']:[]), ...(tq&&tq.y?[end(tq.y)]:[]), ["Nancy's Shop chúc chị em luôn bình an và rạng rỡ.","Hãy dịu dàng với chính mình, chị em nhé.","Mỗi ngày một chút, rồi chị em sẽ thấy mình đã đi rất xa."][v]]; }
   else if(st==='th'){ L=[S.thSlogan?end(S.thSlogan):["Nancy's Shop.","Có một nơi luôn chọn đồ đẹp thay chị em.","Đẹp không cần ồn ào."][v], ...(S.thVals||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3).map(end), ["Nancy's Shop, đồng hành cùng chị em trên từng lựa chọn.","Cảm ơn chị em đã tin Nancy, mỗi ngày.","Chọn kỹ, để chị em chỉ việc tận hưởng."][v]]; }
   else if(st==='lv'){ const cs=G.map(x=>x.code).filter(Boolean).slice(0,4); L=[[`${S.lvTime||'Tối nay'}, Nancy lên live.`,`Chị em ơi, ${S.lvTime||'tối nay'} mình gặp nhau trên live.`,`Đếm ngược thôi, ${S.lvTime||'tối nay'} Nancy lên sóng.`][v], cs.length?`Nancy mang lên các mã ${cs.join(', ')}.`:'', 'Bật thông báo ngay, để không lỡ khoảnh khắc chốt đơn.', ['Hẹn chị em đúng giờ, Nancy chờ.','Đến sớm, chọn trước.','Gặp nhau trên live nhé chị em.'][v]]; }
   else if(st==='mh'){ const why=(S.mhWhy||'').trim(), note=(S.mhNote||'').trim(); const pr=mvPrepTools(mvPlan(S.mhTitle||'',mhSteps())).map(x=>x.lb.toLowerCase().replace(/°c/g,' độ')); L=[S.mhTitle?end(S.mhTitle):'Một mẹo nhỏ, đỡ cả buổi dọn dẹp.', pr.length>=2?'Chuẩn bị: '+pr.join(', ')+'.':'', ...mhSteps().map((s,i)=>`Bước ${i+1}, ${end(s).charAt(0).toLowerCase()+end(s).slice(1)}`), why?'Vì sao hiệu quả? '+end(why):'', note?'Lưu ý: '+end(note):'', S.mhProd!==false&&nm&&code?`Nancy đang dùng ${nm}. Chị em gõ mã ${code} để đặt hàng.`:'', 'Lưu lại ngay, có ngày chị em sẽ cần đến.'].filter(Boolean); }
@@ -4867,6 +4939,41 @@ async function mhDirect(){ if(!aiNeed()||MH.busy) return; const title=(S.mhTitle
       const blob=await gImage(prompt,pimg&&!/^#/.test(j.k)?[pimg]:[],'9:16'); const k=mhKey(title,j.k); await idbPut(k,blob); MH.shots[k]=await fnItOf(blob); MH.ver++; done++; ensureStory(true); updateVsum(); }
     msg.textContent=`✓ Đã vẽ ${done} ảnh (trước, sau, từng bước). Bấm ▶ Xem thử. Ảnh nào chưa ưng thì sửa chữ bước đó rồi bấm vẽ lại.`; }
   catch(e){ msg.textContent=(done?`Đã vẽ ${done} ảnh, dừng lại vì: `:'')+aiErrText(e); } MH.busy=false; }
+/* --- làm cả loạt 10–20 video một lần (Mẹo hay, Câu nói hay): mỗi video kèm bài đăng (.json) để lên lịch nhiều fanpage --- */
+const MHB={run:false,stop:false,name:'',dir:null};
+const MHB_HOOKS=['💡 {T}!','📌 Lưu ngay kẻo quên: {T}','✨ Ít ai biết: {T}','🧽 {T}: làm thế này là xong!','😍 Mẹo hay cho chị em: {T}','👉 {T}, chỉ vài bước đơn giản','🏠 Việc nhà nhẹ tênh: {T}','💯 Thử ngay hôm nay: {T}','📝 Mẹo nhỏ, hiệu quả lớn: {T}','🙌 Chị em đã biết cách này chưa? {T}'];
+const TCB_HOOKS=['🌿 Lời hay mỗi ngày','💭 Một câu nói để suy ngẫm','☀️ Gửi chị em lời nhắn hôm nay','📖 Câu nói Nancy muốn chị em đọc hôm nay','💖 Lưu lại để đọc mỗi khi mệt mỏi','🌸 Sống chậm lại một chút','✨ Điều nhỏ, ý nghĩa lớn','🍀 Kim chỉ nam cho một ngày tốt lành','🤍 Đọc xong thấy lòng nhẹ hơn','🌻 Chia sẻ cho người thân cùng đọc nhé'];
+function mhbCaption(m){ const g=(chosenGroups()||[])[0], nm=g?String(g.a.base||g.p.name||'').trim():'', code=g?g.code:'';
+  return [`💡 ${m.n}!`,'Lưu lại ngay, có ngày chị em sẽ cần 👇','',...m.s.map((x,i)=>`${['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'][i]||'•'} ${x}`),'',m.w?`💡 Vì sao hiệu quả: ${m.w}`:'',m.l?`⚠️ Lưu ý: ${m.l}`:'',
+    S.mhProd!==false&&nm&&code?`🛒 Nancy đang dùng ${nm}: đặt mã ${code} để Nancy ship hàng nhanh nhé!`:'','👉 Thấy hữu ích thì chia sẻ cho người thân cùng biết nhé!','#MeoHay #MeoVatGiaDinh #NancyShop'].filter((x,i,a)=>x!==''||(a[i-1]!=='')).join('\n').replace(/\n{3,}/g,'\n\n').trim(); }
+function tcbCaption(m){ return ['🌿 Lời hay mỗi ngày','',`“${m.q.replace(/\n/g,' ')}”`,m.a?`— ${m.a}`:'','',m.y?`💭 ${m.y}`:'','','💖 Thấy đúng thì lưu lại và chia sẻ cho người thân cùng đọc nhé!','#CauNoiHay #SongTichCuc #NancyShop'].filter((x,i,a)=>x!==''||(a[i-1]!=='')).join('\n').replace(/\n{3,}/g,'\n\n').trim(); }
+const LOTS={
+  mh:{lib:()=>MH_LIB, t:m=>m.n, key:'xas-mhdone', pre:'meo-hay', dir:'Meo hay', kind:'meo', noun:'mẹo', style:'mh', cap:mhbCaption, pick:i=>{ $('#mhLib').value=String(i); mhPick(i); }},
+  tc:{lib:()=>TC_LIB, t:m=>m.q.replace(/\n/g,' '), key:'xas-tcdone', pre:'cau-noi-hay', dir:'Cau noi hay', kind:'quote', noun:'câu nói', style:'tc', cap:tcbCaption, pick:i=>{ S.tcQuote=i; S.tcText=''; $('#tcQuote').value=String(i); $('#tcText').value=''; persist(); }}};
+const lotDone=L=>{ try{ return JSON.parse(localStorage.getItem(L.key)||'{}'); }catch(e){ return {}; } };
+const lotSel={mh:new Set(),tc:new Set()};
+function lotRender(p){ const L=LOTS[p], lib=L.lib(), D=lotDone(L), sel=lotSel[p], cats=[...new Set(lib.map(m=>m.c))];
+  $('#'+p+'BList').innerHTML=cats.map(c=>`<div class="lbl" style="margin-top:6px">${esc(c)}</div>`+lib.map((m,i)=>m.c!==c?'':`<label class="check" style="display:flex"><input type="checkbox" data-lot="${p}:${i}"${sel.has(i)?' checked':''}> ${esc(L.t(m))}${D[L.t(m)]?` <span class="hint">· đã làm ${esc(D[L.t(m)])}</span>`:''}</label>`).join('')).join('');
+  const n=sel.size, left=lib.filter(m=>!D[L.t(m)]).length; $('#'+p+'BSum').textContent=(n?`Đã chọn ${n} ${L.noun} · máy tự làm khoảng ${n*3}–${n*6} phút (có thể đi làm việc khác) · giọng AI khoảng ${(n*300).toLocaleString('vi-VN')}đ cả loạt.`:`Chưa chọn ${L.noun} nào.`)+` Thư viện còn ${left}/${lib.length} ${L.noun} chưa làm.`; $('#'+p+'BGo').disabled=!n||MHB.run; }
+document.addEventListener('change',e=>{ const c=e.target.closest('[data-lot]'); if(!c) return; const [p,k]=c.dataset.lot.split(':'), i=+k, sel=lotSel[p]; if(c.checked){ if(sel.size>=20){ c.checked=false; toast('Mỗi loạt tối đa 20 video'); return; } sel.add(i); } else sel.delete(i); lotRender(p); });
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-lotn]'); if(b){ const [p,k]=b.dataset.lotn.split(':'), n=+k, L=LOTS[p], lib=L.lib(), sel=lotSel[p]; sel.clear();
+    if(n){ const D=lotDone(L), q=[...new Set(lib.map(m=>m.c))].map(c=>lib.map((m,i)=>i).filter(i=>lib[i].c===c&&!D[L.t(lib[i])])); while(sel.size<n && q.some(x=>x.length)) q.forEach(x=>{ if(x.length&&sel.size<n) sel.add(x.shift()); }); /* xen kẽ các nhóm cho loạt bài đa dạng */
+      if(sel.size<n) lib.forEach((m,i)=>{ if(sel.size<n) sel.add(i); }); } lotRender(p); return; }
+  const o=e.target.closest('[data-lotopen]'); if(o){ const p=o.dataset.lotopen, bx=$('#'+p+'Batch'); bx.hidden=!bx.hidden; if(!bx.hidden) lotRender(p); return; }
+  const st=e.target.closest('[data-lotstop]'); if(st){ MHB.stop=true; $('#'+st.dataset.lotstop+'BMsg').textContent='Sẽ dừng sau video đang làm…'; return; }
+  const g=e.target.closest('[data-lotgo]'); if(g) lotGo(g.dataset.lotgo); });
+async function lotGo(p){ const L=LOTS[p], lib=L.lib(), sel=lotSel[p], msg=$('#'+p+'BMsg'); if(MHB.run||!sel.size) return; if(!aiNeed()) return; if(!evDirOK()){ toast('Làm cả loạt cần bản máy tính (Chrome) để tự lưu vào thư mục'); return; }
+  let dir=null; try{ dir=await evDir(true); }catch(e){} if(!dir){ toast('Chọn thư mục lưu video trước'); return; }
+  const d=new Date(), sub=`${L.dir} ${pad2(d.getDate())}-${pad2(d.getMonth()+1)}-${d.getFullYear()} ${pad2(d.getHours())}h${pad2(d.getMinutes())}`; try{ dir=await dir.getDirectoryHandle(sub,{create:true}); }catch(e){} MHB.dir=dir;
+  const list=[...sel], t0=document.title, ok=[], bad=[]; MHB.run=true; MHB.stop=false; $('#'+p+'BGo').disabled=true; $('#'+p+'BStop').hidden=false; if(S.vstyle!==L.style){ const b=document.querySelector(`[data-vmod="${L.style}"]`); if(b) b.click(); }
+  for(let k=0;k<list.length;k++){ if(MHB.stop) break; const i=list[k], m=lib[i], T=L.t(m); L.pick(i); S.voAuto=true; S.voText=''; voAutoFill(); persist(); ensureStory(true);
+    MHB.name=`${L.pre}-${pad2(k+1)}-${norm(T).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)}`; document.title=`⏳ ${k+1}/${list.length} video ${L.noun}`; msg.textContent=`Đang làm video ${k+1}/${list.length}: ${T}…`;
+    const before=lastVideo; try{ await $('#btnRender').onclick(); }catch(e){ console.warn('lot',e); }
+    if(lastVideo&&lastVideo!==before){ try{ await evWrite(dir,{name:MHB.name+'.json',blob:new Blob([JSON.stringify({caption:L.cap(m),meta:{kind:L.kind,title:T}})],{type:'application/json'})}); }catch(e){}
+      ok.push(T); const D=lotDone(L); D[T]=`${pad2(d.getDate())}/${pad2(d.getMonth()+1)}`; try{ localStorage.setItem(L.key,JSON.stringify(D)); }catch(e){} }
+    else bad.push(T); }
+  MHB.name=''; MHB.dir=null; MHB.run=false; $('#'+p+'BStop').hidden=true; document.title=t0; sel.clear(); lotRender(p);
+  msg.textContent=`📊 Xong ${ok.length}/${list.length} video, đã lưu vào thư mục "${sub}" (mỗi video kèm bài đăng).${bad.length?` ⚠ Chưa làm được: ${bad.join('; ')}.`:''} Bước tiếp: tab Edit → 📅 Đăng hẹn giờ → 📁 Chọn cả thư mục clip → chọn thư mục này, tích các fanpage rồi Lập lịch.`; toast(`Xong ${ok.length} video ${L.noun}`); }
 $('#mhLib').addEventListener('change',e=>{ const i=+e.target.value; if(i>=0) mhPick(i); else { S.mhLib=-1; persist(); } });
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-mhpick]'); if(!b) return; const i=+b.dataset.mhpick; $('#mhLib').value=String(i); mhPick(i); });
 $('#mhDirect').onclick=mhDirect; $('#mhProd').checked=S.mhProd!==false; $('#mhProd').onchange=e=>{ S.mhProd=e.target.checked; persist(); ensureStory(true); updateVsum(); }; $('#vprod').addEventListener('change',mhSuggest);
