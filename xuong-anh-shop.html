@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 74</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 75</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -402,6 +402,9 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label for="tcQuote">Câu nói</label>
             <select id="tcQuote"></select>
             <textarea id="tcText" rows="2" placeholder="Hoặc tự gõ câu của shop, xuống dòng để tách cảnh"></textarea>
+            <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px"><button class="btn" type="button" id="tcBgPick">🌄 Chọn thư mục cảnh đẹp làm nền</button><span class="sm" id="tcBgInfo"></span></div>
+            <label class="check"><input type="checkbox" id="tcAI" checked> Không có thư mục cảnh đẹp thì AI vẽ 3 cảnh hợp ý câu nói (~2.700đ/video)</label>
+            <p class="hint">Nền ưu tiên: clip/ảnh bối cảnh nhân viên thêm → thư mục cảnh đẹp (clip miễn phí bản quyền tải từ Pexels, Pixabay; nên để trên Google Drive) → AI vẽ.</p>
             <div class="field" id="tcBatchBox" style="border:1px dashed var(--line,#cbd5e1);border-radius:12px;padding:10px;margin-top:8px">
               <button class="btn primary" type="button" data-lotopen="tc">📚 Làm cả loạt 10–20 video câu nói hay (đăng nhiều fanpage)</button>
               <div id="tcBatch" hidden>
@@ -1644,29 +1647,29 @@ const MH_LIB=[
 var MH={shots:{},ver:0,busy:false};
 /*TC_LIB_START*/
 const TC_LIB = [
- {c:'Tự tin, yêu bản thân',q:'Phụ nữ đẹp nhất\nlà khi tự tin làm điều mình yêu.',a:'',y:'Vẻ đẹp bền lâu đến từ sự tự tin và niềm vui trong việc mình làm.'},
- {c:'Kiên trì',q:'Mỗi ngày một chút,\nrồi sẽ thành điều lớn lao.',a:'',y:'Không cần làm tất cả trong một ngày, chỉ cần đều đặn mỗi ngày.'},
- {c:'Tự tin, yêu bản thân',q:'Chăm sóc bản thân không phải ích kỷ,\nđó là yêu thương.',a:'',y:'Mình khoẻ và vui thì mới chăm được cho người mình thương.'},
- {c:'Gia đình',q:'Ngôi nhà ấm áp\nbắt đầu từ những điều nhỏ bé.',a:'',y:'Một bữa cơm, một lời hỏi han là đủ làm nhà ấm hơn.'},
- {c:'Sống trọn hôm nay',q:'Đừng đợi dịp đặc biệt,\nhãy làm hôm nay thật đặc biệt.',a:'',y:'Hôm nay là ngày duy nhất mình chắc chắn đang có.'},
- {c:'Kiên trì',q:'Cứ đi chậm cũng được,\nmiễn là đừng dừng lại.',a:'',y:'Tốc độ không quan trọng bằng việc mình vẫn bước tiếp.'},
- {c:'Tự tin, yêu bản thân',q:'Đẹp không phải để giống ai,\nđẹp là được là chính mình.',a:'',y:'Mỗi người có một nét đẹp riêng, không cần so với ai.'},
- {c:'Gia đình',q:'Hạnh phúc là bữa cơm nóng\nchờ người thương về.',a:'',y:'Hạnh phúc nhiều khi giản dị hơn mình nghĩ.'},
- {c:'Kiên trì',q:'Thành công là những nỗ lực nhỏ\nlặp lại mỗi ngày.',a:'',y:'Thói quen tốt mỗi ngày làm nên kết quả lớn.'},
- {c:'Biết ơn',q:'Biết ơn những điều đang có,\nđiều tốt sẽ tìm đến thêm.',a:'',y:'Người biết ơn thấy cuộc sống đủ đầy hơn.'},
- {c:'Bình an',q:'Gian bếp gọn gàng,\nlòng người thảnh thơi.',a:'',y:'Nhà gọn thì đầu óc cũng nhẹ nhõm hơn.'},
- {c:'Kiên trì',q:'Hôm nay mệt một chút,\nngày mai tự hào nhiều chút.',a:'',y:'Cố gắng hôm nay là món quà cho chính mình ngày mai.'},
- {c:'Tự tin, yêu bản thân',q:'Đừng so sánh hành trình của mình\nvới bất kỳ ai.',a:'',y:'Mỗi người một hoàn cảnh, một thời điểm nở hoa riêng.'},
- {c:'Tự tin, yêu bản thân',q:'Yêu bản thân\nlà khởi đầu của mọi điều đẹp đẽ.',a:'',y:'Biết trân trọng mình thì mới biết trân trọng người khác.'},
- {c:'Sống trọn hôm nay',q:'Sáng nay hãy mỉm cười,\nvì bạn xứng đáng có một ngày tốt lành.',a:'',y:'Một nụ cười buổi sáng làm cả ngày nhẹ nhàng hơn.'},
- {c:'Sống trọn hôm nay',q:'Khoác lên sự đam mê,\nsống trọn từng ngày.',a:'',y:'Làm việc gì cũng làm bằng cả trái tim.'},
+ {h:1,c:'Tự tin, yêu bản thân',q:'Phụ nữ đẹp nhất\nlà khi tự tin làm điều mình yêu.',a:'',y:'Vẻ đẹp bền lâu đến từ sự tự tin và niềm vui trong việc mình làm.'},
+ {h:1,c:'Kiên trì',q:'Mỗi ngày một chút,\nrồi sẽ thành điều lớn lao.',a:'',y:'Không cần làm tất cả trong một ngày, chỉ cần đều đặn mỗi ngày.'},
+ {h:1,c:'Tự tin, yêu bản thân',q:'Chăm sóc bản thân không phải ích kỷ,\nđó là yêu thương.',a:'',y:'Mình khoẻ và vui thì mới chăm được cho người mình thương.'},
+ {h:1,c:'Gia đình',q:'Ngôi nhà ấm áp\nbắt đầu từ những điều nhỏ bé.',a:'',y:'Một bữa cơm, một lời hỏi han là đủ làm nhà ấm hơn.'},
+ {h:1,c:'Sống trọn hôm nay',q:'Đừng đợi dịp đặc biệt,\nhãy làm hôm nay thật đặc biệt.',a:'',y:'Hôm nay là ngày duy nhất mình chắc chắn đang có.'},
+ {h:1,c:'Kiên trì',q:'Cứ đi chậm cũng được,\nmiễn là đừng dừng lại.',a:'',y:'Tốc độ không quan trọng bằng việc mình vẫn bước tiếp.'},
+ {h:1,c:'Tự tin, yêu bản thân',q:'Đẹp không phải để giống ai,\nđẹp là được là chính mình.',a:'',y:'Mỗi người có một nét đẹp riêng, không cần so với ai.'},
+ {h:1,c:'Gia đình',q:'Hạnh phúc là bữa cơm nóng\nchờ người thương về.',a:'',y:'Hạnh phúc nhiều khi giản dị hơn mình nghĩ.'},
+ {h:1,c:'Kiên trì',q:'Thành công là những nỗ lực nhỏ\nlặp lại mỗi ngày.',a:'',y:'Thói quen tốt mỗi ngày làm nên kết quả lớn.'},
+ {h:1,c:'Biết ơn',q:'Biết ơn những điều đang có,\nđiều tốt sẽ tìm đến thêm.',a:'',y:'Người biết ơn thấy cuộc sống đủ đầy hơn.'},
+ {h:1,c:'Bình an',q:'Gian bếp gọn gàng,\nlòng người thảnh thơi.',a:'',y:'Nhà gọn thì đầu óc cũng nhẹ nhõm hơn.'},
+ {h:1,c:'Kiên trì',q:'Hôm nay mệt một chút,\nngày mai tự hào nhiều chút.',a:'',y:'Cố gắng hôm nay là món quà cho chính mình ngày mai.'},
+ {h:1,c:'Tự tin, yêu bản thân',q:'Đừng so sánh hành trình của mình\nvới bất kỳ ai.',a:'',y:'Mỗi người một hoàn cảnh, một thời điểm nở hoa riêng.'},
+ {h:1,c:'Tự tin, yêu bản thân',q:'Yêu bản thân\nlà khởi đầu của mọi điều đẹp đẽ.',a:'',y:'Biết trân trọng mình thì mới biết trân trọng người khác.'},
+ {h:1,c:'Sống trọn hôm nay',q:'Sáng nay hãy mỉm cười,\nvì bạn xứng đáng có một ngày tốt lành.',a:'',y:'Một nụ cười buổi sáng làm cả ngày nhẹ nhàng hơn.'},
+ {h:1,c:'Sống trọn hôm nay',q:'Khoác lên sự đam mê,\nsống trọn từng ngày.',a:'',y:'Làm việc gì cũng làm bằng cả trái tim.'},
  {c:'Kiên trì',q:'Không có việc gì khó,\nchỉ sợ lòng không bền.\nĐào núi và lấp biển,\nquyết chí ắt làm nên.',a:'Hồ Chí Minh',y:'Việc khó đến đâu, giữ được quyết tâm thì sẽ làm được.'},
  {c:'Sống tử tế',q:'Điều mình không muốn,\nđừng làm cho người khác.',a:'Khổng Tử',y:'Đặt mình vào vị trí người khác là gốc của sự tử tế.'},
  {c:'Kiên trì',q:'Hành trình ngàn dặm\nbắt đầu từ một bước chân.',a:'Lão Tử',y:'Việc lớn nào cũng bắt đầu bằng một bước nhỏ, quan trọng là bắt đầu.'},
  {c:'Hiểu mình',q:'Biết người là trí,\nbiết mình là sáng.',a:'Lão Tử',y:'Hiểu người đã khó, hiểu chính mình còn quý hơn.'},
  {c:'Kiên trì',q:'Có công mài sắt,\ncó ngày nên kim.',a:'Tục ngữ Việt Nam',y:'Kiên nhẫn và bền bỉ thì việc khó mấy cũng thành.'},
  {c:'Biết ơn',q:'Uống nước nhớ nguồn.',a:'Tục ngữ Việt Nam',y:'Sống có trước có sau, nhớ người đã giúp mình.'},
- {c:'Biết ơn',q:'Ăn quả nhớ kẻ trồng cây.',a:'Tục ngữ Việt Nam',y:'Thành quả hôm nay có công sức của biết bao người.'},
+ {h:1,c:'Biết ơn',q:'Ăn quả nhớ kẻ trồng cây.',a:'Tục ngữ Việt Nam',y:'Thành quả hôm nay có công sức của biết bao người.'},
  {c:'Sống tử tế',q:'Một miếng khi đói\nbằng một gói khi no.',a:'Tục ngữ Việt Nam',y:'Giúp người đúng lúc họ cần mới là quý nhất.'},
  {c:'Sống tử tế',q:'Lá lành đùm lá rách.',a:'Tục ngữ Việt Nam',y:'Mình có điều kiện hơn thì san sẻ cho người khó khăn.'},
  {c:'Gia đình',q:'Thuận vợ thuận chồng,\ntát biển Đông cũng cạn.',a:'Ca dao Việt Nam',y:'Vợ chồng đồng lòng thì việc gì cũng vượt qua.'},
@@ -1674,28 +1677,50 @@ const TC_LIB = [
  {c:'Sống tử tế',q:'Tốt gỗ hơn tốt nước sơn.',a:'Tục ngữ Việt Nam',y:'Phẩm chất bên trong quý hơn vẻ ngoài.'},
  {c:'Sống tử tế',q:'Lời nói chẳng mất tiền mua,\nlựa lời mà nói cho vừa lòng nhau.',a:'Ca dao Việt Nam',y:'Một lời nói nhẹ nhàng giữ được hoà khí cả nhà.'},
  {c:'Đoàn kết',q:'Một cây làm chẳng nên non,\nba cây chụm lại nên hòn núi cao.',a:'Ca dao Việt Nam',y:'Cùng nhau thì làm được việc lớn hơn một mình.'},
- {c:'Kiên trì',q:'Thất bại là mẹ thành công.',a:'Tục ngữ',y:'Mỗi lần vấp ngã cho mình thêm một bài học.'},
- {c:'Học hỏi',q:'Học, học nữa, học mãi.',a:'V.I. Lênin',y:'Không bao giờ là muộn để học thêm điều mới.'},
+ {h:1,c:'Kiên trì',q:'Thất bại là mẹ thành công.',a:'Tục ngữ',y:'Mỗi lần vấp ngã cho mình thêm một bài học.'},
+ {h:1,c:'Học hỏi',q:'Học, học nữa, học mãi.',a:'V.I. Lênin',y:'Không bao giờ là muộn để học thêm điều mới.'},
  {c:'Thái độ sống',q:'Hạnh phúc không có sẵn.\nNó đến từ chính hành động của bạn.',a:'Đạt Lai Lạt Ma',y:'Muốn hạnh phúc thì bắt đầu từ việc mình làm hôm nay.'},
  {c:'Thái độ sống',q:'Người ta có thể lấy đi mọi thứ,\ntrừ quyền chọn thái độ\ntrước hoàn cảnh của mình.',a:'Viktor Frankl',y:'Hoàn cảnh không chọn được, nhưng cách mình đối diện thì chọn được.'},
  {c:'Thái độ sống',q:'Điều làm ta phiền lòng\nkhông phải là sự việc,\nmà là cách ta nhìn sự việc.',a:'Epictetus',y:'Đổi cách nhìn thì lòng cũng nhẹ đi nhiều.'},
  {c:'Thái độ sống',q:'Hạnh phúc của đời bạn\nphụ thuộc vào chất lượng\nsuy nghĩ của bạn.',a:'Marcus Aurelius',y:'Nghĩ tích cực là nuôi dưỡng hạnh phúc mỗi ngày.'},
  {c:'Bình an',q:'Bình an không phải là không có giông bão,\nmà là bình tĩnh giữa giông bão.',a:'',y:'Ai cũng có lúc khó khăn, giữ được bình tĩnh là đã thắng một nửa.'},
- {c:'Bình an',q:'Bớt so đo,\nlòng sẽ rộng.',a:'',y:'Buông bớt hơn thua thì ngày nào cũng nhẹ nhàng.'},
+ {h:1,c:'Bình an',q:'Bớt so đo,\nlòng sẽ rộng.',a:'',y:'Buông bớt hơn thua thì ngày nào cũng nhẹ nhàng.'},
  {c:'Sống tử tế',q:'Tử tế là thứ\nkhông bao giờ lỗi mốt.',a:'',y:'Thời nào thì sự tử tế cũng được trân trọng.'},
  {c:'Sống tử tế',q:'Hãy tử tế,\nvì ai cũng đang chiến đấu\nmột trận chiến của riêng họ.',a:'',y:'Mình không biết hết nỗi lòng người khác, nên nhẹ nhàng với nhau.'},
  {c:'Gia đình',q:'Nhà là nơi để về,\nkhông phải nơi để hơn thua.',a:'',y:'Về nhà là để được yêu thương, không phải để tranh cãi.'},
  {c:'Gia đình',q:'Con trẻ không nghe lời ta nói,\ncon nhìn cách ta sống.',a:'',y:'Cha mẹ là tấm gương đầu tiên của con.'},
- {c:'Gia đình',q:'Dành thời gian cho người thân\nlà món quà quý nhất.',a:'',y:'Quà nào cũng không bằng sự có mặt bên nhau.'},
+ {h:1,c:'Gia đình',q:'Dành thời gian cho người thân\nlà món quà quý nhất.',a:'',y:'Quà nào cũng không bằng sự có mặt bên nhau.'},
  {c:'Sống trọn hôm nay',q:'Điện thoại có thể đợi,\nngười thân thì không.',a:'',y:'Cất điện thoại một chút để nhìn và nghe người bên cạnh.'},
  {c:'Tự tin, yêu bản thân',q:'Bạn không cần hoàn hảo\nđể xứng đáng được yêu thương.',a:'',y:'Ai cũng có thiếu sót, và vẫn đáng được yêu thương.'},
- {c:'Tự tin, yêu bản thân',q:'Ngủ đủ, ăn ngon, cười nhiều,\nđó cũng là thành công.',a:'',y:'Sức khoẻ và niềm vui là nền móng của mọi thành công.'},
- {c:'Học hỏi',q:'Mỗi ngày học một điều mới,\nmột năm mình đã khác rất nhiều.',a:'',y:'Học một chút mỗi ngày là cách lớn lên bền vững nhất.'},
+ {h:1,c:'Tự tin, yêu bản thân',q:'Ngủ đủ, ăn ngon, cười nhiều,\nđó cũng là thành công.',a:'',y:'Sức khoẻ và niềm vui là nền móng của mọi thành công.'},
+ {h:1,c:'Học hỏi',q:'Mỗi ngày học một điều mới,\nmột năm mình đã khác rất nhiều.',a:'',y:'Học một chút mỗi ngày là cách lớn lên bền vững nhất.'},
  {c:'Làm việc',q:'Làm việc gì cũng vậy,\nlàm bằng cái tâm thì người ta sẽ thấy.',a:'',y:'Khách hàng, người thân đều cảm nhận được sự tận tâm.'},
  {c:'Làm việc',q:'Chữ tín\nquý hơn vàng.',a:'Tục ngữ Việt Nam',y:'Giữ lời hứa là giữ được lòng tin, thứ khó mua nhất.'},
  {c:'Biết ơn',q:'Trước khi ngủ,\nhãy nghĩ về ba điều làm mình biết ơn hôm nay.',a:'',y:'Thói quen nhỏ giúp lòng an yên và ngủ ngon hơn.'},
- {c:'Bình an',q:'Sống chậm lại,\nđể thấy mình đang có rất nhiều.',a:'',y:'Vội vàng quá dễ bỏ lỡ những điều đẹp ngay bên cạnh.'},
- {c:'Kiên trì',q:'Trời không phụ lòng người\nbiết cố gắng.',a:'',y:'Cứ chăm chỉ, kết quả sẽ đến vào lúc mình không ngờ.'},
+ {h:1,c:'Bình an',q:'Sống chậm lại,\nđể thấy mình đang có rất nhiều.',a:'',y:'Vội vàng quá dễ bỏ lỡ những điều đẹp ngay bên cạnh.'},
+ {h:1,c:'Kiên trì',q:'Trời không phụ lòng người\nbiết cố gắng.',a:'',y:'Cứ chăm chỉ, kết quả sẽ đến vào lúc mình không ngờ.'},
+ {c:'Lời Phật dạy',q:'Ý dẫn đầu các pháp,\nÝ làm chủ, ý tạo;\nNếu với ý thanh tịnh,\nAn lạc bước theo sau.',a:'Kinh Pháp Cú, kệ 2',y:'Giữ tâm trong sạch thì lời nói, việc làm đều mang lại bình an.'},
+ {c:'Lời Phật dạy',q:'Với hận diệt hận thù,\nĐời này không có được.\nKhông hận diệt hận thù,\nLà định luật ngàn thu.',a:'Kinh Pháp Cú, kệ 5',y:'Oán giận chỉ nuôi thêm oán giận, bao dung mới hoá giải được.'},
+ {c:'Lời Phật dạy',q:'Không nên nhìn lỗi người,\nNgười làm hay không làm.\nNên nhìn tự chính mình,\nCó làm hay không làm.',a:'Kinh Pháp Cú, kệ 50',y:'Soi lại mình trước khi trách người, lòng sẽ nhẹ hơn nhiều.'},
+ {c:'Lời Phật dạy',q:'Như đá tảng kiên cố,\nKhông gió nào lay động,\nCũng vậy, giữa khen chê,\nNgười trí không giao động.',a:'Kinh Pháp Cú, kệ 81',y:'Khen không vội mừng, chê không vội buồn, giữ vững lòng mình.'},
+ {c:'Lời Phật dạy',q:'Dầu nói ngàn ngàn lời,\nNhưng không gì lợi ích,\nTốt hơn một câu nghĩa,\nNghe xong, được tịnh lạc.',a:'Kinh Pháp Cú, kệ 100',y:'Nói ít mà đúng, mà tử tế, quý hơn nói nhiều mà vô ích.'},
+ {c:'Lời Phật dạy',q:'Dầu tại bãi chiến trường\nThắng ngàn ngàn quân địch,\nTự thắng mình tốt hơn,\nThật chiến thắng tối thượng.',a:'Kinh Pháp Cú, kệ 103',y:'Thắng được cơn giận, sự lười biếng của mình là chiến thắng lớn nhất.'},
+ {c:'Lời Phật dạy',q:'Chớ chê khinh điều thiện\nCho rằng "chưa đến mình",\nNhư nước nhỏ từng giọt,\nRồi bình cũng đầy tràn.',a:'Kinh Pháp Cú, kệ 122',y:'Việc tốt nhỏ mỗi ngày gom lại thành phúc lớn cho cả nhà.'},
+ {c:'Lời Phật dạy',q:'Chớ chê khinh điều ác,\nCho rằng "chưa đến mình",\nNhư nước nhỏ từng giọt,\nRồi bình cũng đầy tràn.',a:'Kinh Pháp Cú, kệ 121',y:'Thói xấu nhỏ cũng nên bỏ sớm, đừng để tích lại thành lớn.'},
+ {c:'Lời Phật dạy',q:'Chớ nói lời ác độc,\nNói ác, bị nói lại,\nKhổ thay lời phẫn nộ,\nĐao trượng phản chạm người.',a:'Kinh Pháp Cú, kệ 133',y:'Lời nói nặng nề làm đau người và quay lại làm đau chính mình.'},
+ {c:'Lời Phật dạy',q:'Không làm mọi điều ác.\nThành tựu các hạnh lành,\nTâm ý giữ trong sạch,\nChính lời chư Phật dạy.',a:'Kinh Pháp Cú, kệ 183',y:'Tránh điều xấu, làm điều tốt, giữ tâm trong sáng mỗi ngày.'},
+ {c:'Lời Phật dạy',q:'Vui thay, chúng ta sống,\nKhông hận, giữa hận thù!\nGiữa những người thù hận,\nTa sống, không hận thù!',a:'Kinh Pháp Cú, kệ 197',y:'Không để lòng mình nhiễm oán giận là cách sống an vui nhất.'},
+ {c:'Lời Phật dạy',q:'Không bệnh, lợi tối thượng,\nBiết đủ, tiền tối thượng.\nThành tín đối với nhau,\nLà bà con tối thượng.',a:'Kinh Pháp Cú, kệ 204',y:'Sức khoẻ, biết đủ và chữ tín là ba tài sản quý nhất đời người.'},
+ {c:'Lời Phật dạy',q:'Lấy không giận thắng giận,\nLấy thiện thắng không thiện,\nLấy thí thắng xan tham,\nLấy chơn thắng hư ngụy.',a:'Kinh Pháp Cú, kệ 223',y:'Đáp lại điều xấu bằng điều tốt, đó là sức mạnh thật sự.'},
+ {c:'Lời Phật dạy',q:'Dễ thay thấy lỗi người,\nLỗi mình thấy mới khó.',a:'Kinh Pháp Cú, kệ 252',y:'Nhận ra lỗi của mình là bước đầu để mình tốt lên mỗi ngày.'},
+ {c:'Lời Phật dạy',q:'Tự mình y chỉ mình,\nNào có y chỉ khác.\nNhờ khéo điều phục mình,\nĐược y chỉ khó được.',a:'Kinh Pháp Cú, kệ 160',y:'Muốn vững vàng, trước hết phải tự đứng được trên đôi chân mình.'},
+ {c:'Lời Phật dạy',q:'Hương các loại hoa thơm\nKhông ngược bay chiều gió.\nNhưng hương người đức hạnh\nNgược gió khắp tung bay.',a:'Kinh Pháp Cú, kệ 54',y:'Hoa thơm còn tùy gió, đức hạnh tốt thì ai cũng biết đến.'},
+ {c:'Thái độ sống',q:'Đừng phí thời gian bàn cãi\nngười tốt phải thế nào.\nHãy là người tốt.',a:'Marcus Aurelius',y:'Làm một việc tốt có giá trị hơn nói trăm điều hay.'},
+ {c:'Bình an',q:'Chúng ta khổ vì tưởng tượng\nnhiều hơn vì sự thật.',a:'Seneca',y:'Phần lớn nỗi lo chưa từng xảy ra, đừng để nó lấy mất hôm nay.'},
+ {c:'Sống tử tế',q:'Thiện căn ở tại lòng ta,\nChữ tâm kia mới bằng ba chữ tài.',a:'Nguyễn Du, Truyện Kiều',y:'Tài giỏi đến đâu cũng cần một tấm lòng tốt đi cùng.'},
+ {c:'Hiểu mình',q:'Biết thì nói là biết,\nkhông biết thì nói là không biết,\nthế mới thật là biết.',a:'Khổng Tử, Luận Ngữ',y:'Dám nhận mình chưa biết là bước đầu để học được điều mới.'},
+ {c:'Bình an',q:'Biết đủ thì không nhục,\nbiết dừng thì không nguy.',a:'Lão Tử, Đạo Đức Kinh',y:'Biết lúc nào là đủ, lúc nào nên dừng giúp mình giữ được bình yên.'},
+ {c:'Sống tử tế',q:'Sống trong đời sống\ncần có một tấm lòng.',a:'Trịnh Công Sơn',y:'Giữa bộn bề cuộc sống, giữ một tấm lòng rộng mở với mọi người.'},
 ];
 /*TC_LIB_END*/
 const QUOTES = TC_LIB.map(x=>x.q);
@@ -1988,7 +2013,7 @@ const SCENES = {
     if(sc.clip) drawMedia(ctx,sc.clip,0,0,W,H,1.04+.08*p); else if(sc.it) drawCoverAt(ctx,sc.it,0,0,W,H,1.08+.1*p,.45+.1*p,.5); else { ctx.fillStyle=mix(o.brand,'#000000',.6); ctx.fillRect(0,0,W,H); bokeh(ctx,W,H,lt,18,.2); }
     ctx.fillStyle='rgba(24,14,8,.5)'; ctx.fillRect(0,0,W,H); leak(ctx,W,H,lt,.18);
     ctx.save(); ctx.globalAlpha=.55*seg01(lt,0,.8); ctx.fillStyle=o.tag; ctx.font=fontOf(700,u*34,SERIF); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('“',W/2,H*.3); ctx.restore();
-    ctx.save(); ctx.shadowColor='rgba(0,0,0,.45)'; ctx.shadowBlur=u*2.4; const r=popWords(ctx,sc.t||'',W,H*.5,u*8.4,lt-.3,o,{font:SERIF,weight:'italic 500',hl:false,rise:true,anim:sc.ta,stagger:.2,maxLines:6}); ctx.restore();
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,.45)'; ctx.shadowBlur=u*2.4; const r=popWords(ctx,sc.t||'',W,H*.5,u*(Math.max(...String(sc.t||'').split('\n').map(x=>x.length))>21?7.2:8.4),lt-.3,o,{font:SERIF,weight:'italic 500',hl:false,rise:true,anim:sc.ta,stagger:Math.max(.05,Math.min(.2,(sc.d-1.8)/Math.max(1,String(sc.t||'').split(/\s+/).length))),maxLines:6}); ctx.restore(); /* câu dài: chữ hiện nhanh hơn để kịp đủ câu trước khi chuyển cảnh */
     if(sc.au){ const a=ease.out(seg01(lt,.9,1.6)); if(a>0){ ctx.save(); ctx.globalAlpha=a; ctx.fillStyle='#fff'; ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=u*1.5; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font=fontOf(700,u*4.4); ctx.fillText('— '+sc.au,W/2,H*.5+((r&&r.h)||u*20)/2+u*7); ctx.restore(); } } }, /* tác giả câu nói (Lão Tử, tục ngữ…) */
   outro(ctx,W,H,sc,lt,E){ const {o,u}=E; brandBg(ctx,W,H,o,.18); bokeh(ctx,W,H,lt,16,.16); ctx.textAlign='center'; ctx.textBaseline='middle'; /* cảnh kết: lời cảm ơn chị em đã xem, nhẹ nhàng */
     if(logoImg){ const a=ease.out(seg01(lt,0,.6)), lw=W*.24, lh=lw*logoImg.height/logoImg.width, s=.94+.06*a; ctx.save(); ctx.globalAlpha=a; ctx.translate(W/2,H*.31); ctx.scale(s,s); ctx.drawImage(logoImg,-lw/2,-lh/2,lw,lh); ctx.restore(); }
@@ -2273,7 +2298,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     out.push({k:'outro',d:D(6),t:`Theo dõi ${shop}`,t2:'Đặt mã để Nancy ship hàng nhanh nhé!',tr:'leak'}); }
   else if(st==='tc'){ const prods=groupsOf().flatMap(g=>g.its), all=prods.filter(it=>!imgInfo(it).white); const lines=quoteLines();
     // nền: xoay vòng ảnh/clip bối cảnh và ảnh chụp sản phẩm, xen cảnh máy quay chậm giữa các câu
-    const pool=clips.map(c=>({clip:c})).concat(all.map(it=>({it}))); let pi=0; const nextBg=()=>pool.length?pool[pi++%pool.length]:{};
+    const cb=clips.length?clips:tcBg, pool=cb.length?cb.map(c=>({clip:c})):all.map(it=>({it})); let pi=0; const nextBg=()=>pool.length?pool[pi++%pool.length]:{}; /* nền: clip nhân viên thêm > cảnh đẹp (thư mục / AI vẽ) > ảnh SP */
     const roll=prods.length?prods:[]; const trs=['','drop','twirl','iris'];
     const au=tcAuthor(); lines.forEach((l,i)=>{ const bg=nextBg(); out.push({k:'quote',d:D(7),t:l,au:lines.length>1?'':au,clip:bg.clip||null,it:bg.it||null,tr:trs[i%trs.length]});
       if(roll.length && i<lines.length-1) out.push({k:'dolly',d:D(5),it:roll[i%roll.length],dir:i%2?'out':'in',f:i,t:'',tr:'leak'}); });
@@ -2573,17 +2598,34 @@ async function finRecorded(r,W,H,onProg,raw){ if(!finOK() || !('requestVideoFram
 function sceneIndexAt(st,t){ let acc=0; for(let i=0;i<st.length;i++){ if(t<acc+st[i].d || i===st.length-1) return i; acc+=st[i].d; } return 0; }
 function clipSync(st,t){ if(!st) return; const i=sceneIndexAt(st,t); st.forEach((sc,j)=>{ const v=sc.clip&&sc.clip.v; if(!v) return;
   if(j===i){ if(v.paused && !v.ended){ if(!sc._on){ try{ v.currentTime=0; }catch(e){} sc._on=true; } v.play().catch(()=>{}); } } else { sc._on=false; if(!v.paused) v.pause(); } }); }
-function stopClips(){ clips.forEach(c=>{ try{ c.v&&c.v.pause(); }catch(e){} }); story.forEach(s=>s._on=false); }
+function stopClips(){ clips.concat(tcBg).forEach(c=>{ try{ c.v&&c.v.pause(); }catch(e){} }); story.forEach(s=>s._on=false); }
 async function waitClips(){ await Promise.all(clips.filter(c=>c.v).map(c=>c.v.readyState>=2?0:new Promise(r=>{ c.v.addEventListener('loadeddata',r,{once:true}); try{ c.v.play().then(()=>c.v.pause()).catch(()=>{}); }catch(e){} setTimeout(r,4000); }))); }
 function frameFn(){ if(S.vstyle==='tu'){ const segs=segments(); const o=optsImg(); return {total:segs.reduce((a,s)=>a+s.dur,0), st:null, draw:(ctx,W,H,t)=>drawAt(ctx,W,H,segs,t,o)}; }
   ensureStory(); const st=story.slice(); return {total:storyTotal(), st, draw:(ctx,W,H,t,E)=>drawDirector(ctx,W,H,st,t,E||envFor(W,H))}; }
 /* Mẹo hay luôn có thuyết minh: tạo giọng trước, kéo dài video cho đủ lời, rồi mới dựng cảnh khớp lời */
+// nền cảnh đẹp cho video Câu nói hay: thư mục clip/ảnh miễn phí bản quyền (app nhớ) > AI vẽ cảnh hợp ý câu nói; mỗi video lấy 3 cảnh, không lặp liền
+let tcBg=[], tcBgKey='', tcBgH=null, tcBgFiles=[], tcBgQ=[]; const tcAiCache={};
+async function tcBgDir(ask){ if(!evDirOK()) return null; if(!tcBgH && !ask) tcBgH=await evIdb('get',null,'tcbg'); if(!tcBgH && !ask) return null;
+  if(tcBgH && !ask){ try{ if((await tcBgH.queryPermission({mode:'read'}))==='granted' || (await tcBgH.requestPermission({mode:'read'}))==='granted') return tcBgH; }catch(e){} return null; }
+  try{ tcBgH=await showDirectoryPicker({id:'xas-tcbg',mode:'read',startIn:'videos'}); evIdb('put',tcBgH,'tcbg'); return tcBgH; }catch(e){ return null; } }
+async function tcBgLoad(ask){ const d=await tcBgDir(ask); tcBgFiles=[]; tcBgQ=[]; if(d){ try{ for await(const [n,h] of d.entries()) if(h.kind==='file' && /\.(mp4|mov|webm|m4v|jpe?g|png|webp)$/i.test(n)) tcBgFiles.push(h); }catch(e){ console.warn('tcbg dir',e); } }
+  const el=$('#tcBgInfo'); if(el) el.textContent=d?`📂 ${d.name}: ${tcBgFiles.length} cảnh${tcBgFiles.length?' · mỗi video lấy 3 cảnh ngẫu nhiên':' (chưa có clip .mp4 hay ảnh .jpg)'}`:(evDirOK()?'Chưa chọn thư mục cảnh đẹp':'Thư mục cảnh đẹp chỉ dùng ở bản máy tính (Chrome)'); return tcBgFiles.length; }
+function tcAiPrompt(m,k){ const sc=m.c==='Lời Phật dạy'?['a calm lotus pond at dawn with soft mist, pink lotus flowers, gentle ripples','a quiet Vietnamese pagoda courtyard in early morning, old bodhi tree, warm sun rays, light incense smoke','misty green mountains at sunrise seen from a stone path, peaceful and spacious']
+   :m.c==='Gia đình'?['a warm Vietnamese family dining table at golden hour, steaming rice bowls and green tea, soft window light, no people','a cozy home balcony with potted plants and a wooden chair at sunset','a small garden gate with bougainvillea flowers in late afternoon light']
+   :['sunrise over a calm sea with golden light on gentle waves','terraced rice fields in northern Vietnam with morning mist and soft sun','a quiet forest path with sun rays through tall trees, fresh green leaves'];
+  return `Vertical 9:16 cinematic photograph, ultra realistic, peaceful and beautiful: ${sc[k%sc.length]}. Mood that matches this meaning: "${m.y||m.q}". Soft natural light, gentle colors, shallow depth of field, slightly darker calm area in the middle third for overlay text. Absolutely no text, no letters, no watermark, no logo, no faces.`; }
+async function tcBgPrep(msg){ if(S.vstyle!=='tc' || clips.length) return; const i=(S.tcText||'').trim()?-1:S.tcQuote, key=i+'|'+(tcBgFiles.length?'f':'a');
+  if(tcBgKey===key && tcBg.length) return; tcBg=[]; tcBgKey=key;
+  if(!tcBgFiles.length && evDirOK() && !tcBgH) await tcBgLoad(false);
+  if(tcBgFiles.length){ for(let n=0;n<Math.min(3,tcBgFiles.length);n++){ if(!tcBgQ.length) tcBgQ=tcBgFiles.slice().sort(()=>Math.random()-.5); try{ const c=await clipOf(await tcBgQ.pop().getFile()); if(c) tcBg.push(c); }catch(e){} } }
+  else if(S.tcAI!==false && gKey() && !IN_CLAUDE && i>=0){ const m=TC_LIB[i]; if(tcAiCache[i]) tcBg=tcAiCache[i]; else { for(let k=0;k<3;k++){ if(msg) msg(`AI đang vẽ cảnh nền ${k+1}/3…`); try{ const b=await gImage(tcAiPrompt(m,k),[],'9:16'); const c=await clipOf(new File([b],`canh-${i}-${k}.png`,{type:b.type||'image/png'})); if(c) tcBg.push(c); }catch(e){ console.warn('tc ai bg',e); if(e&&/key|auth|quota/.test(e.code||'')) break; } } if(tcBg.length) tcAiCache[i]=tcBg; } }
+  ensureStory(true); }
 async function mhVoPrep(){ if(S.vstyle!=='mh' || IN_CLAUDE || !gKey()) return; if(S.vo==='none'){ S.vo='ai'; persist(); try{ voSync(); }catch(e){} } if(S.vo!=='ai') return;
   voAutoFill(true); let v=null; try{ v=await voMakeAI(false); }catch(e){ toast(aiErrText(e)); return; } if(!v) return;
   const L=voLines(); let t=.5; v.segs.forEach((s,i)=>{ t+=s.d+.3+mhVoGap(i); }); const need=Math.min(90,Math.ceil(t+1.5)); if(need>vdur()) vdurSet(need); else ensureStory(true); }
 let prevRun=null;
 $('#btnPreview').onclick=async()=>{ if(prevRun){ prevRun.stop(); return; } const actx=new (window.AudioContext||window.webkitAudioContext)(); try{ actx.resume(); }catch(e){}
-  const btn=$('#btnPreview'); btn.textContent='Đang chuẩn bị…'; await mhVoPrep(); const F=frameFn(); if(!F.total){ toast('Chưa có cảnh nào'); actx.close(); btn.textContent='▶ Xem thử'; return; }
+  const btn=$('#btnPreview'); btn.textContent='Đang chuẩn bị…'; await mhVoPrep(); await tcBgPrep(m=>btn.textContent=m); btn.textContent='Đang chuẩn bị…'; const F=frameFn(); if(!F.total){ toast('Chưa có cảnh nào'); actx.close(); btn.textContent='▶ Xem thử'; return; }
   await fontsReady(); await waitClips(); const vf=VFMTS[S.vfmt]; const W=Math.round(vf.w*.6), H=Math.round(vf.h*.6); const cv=$('#vprev'); cv.width=W; cv.height=H; cv.hidden=false; const ctx=cv.getContext('2d'); const E=envFor(W,H);
   let abuf=null; try{ abuf=await renderAudio(S.vstyle,F.st,F.total); }catch(e){}
   let src=null, a0=actx.currentTime+.05; if(abuf){ src=actx.createBufferSource(); src.buffer=abuf; src.connect(actx.destination); src.start(a0); }
@@ -2595,6 +2637,7 @@ $('#btnRender').onclick=async()=>{
   if(mime===null || !cv0.captureStream){ toast('Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome hoặc Safari bản mới.'); return; }
   if(prevRun) prevRun.stop(); const actx=new (window.AudioContext||window.webkitAudioContext)(); try{ actx.resume(); }catch(e){}
   if(S.vstyle==='mh' && S.vo!=='file' && gKey() && !IN_CLAUDE){ rendering=true; $('#renderBox').hidden=false; $('#renderMsg').textContent='Đang tạo giọng thuyết minh (AI Google)…'; await mhVoPrep(); rendering=false; }
+  if(S.vstyle==='tc' && !clips.length){ rendering=true; $('#renderBox').hidden=false; await tcBgPrep(m=>$('#renderMsg').textContent=m); rendering=false; }
   const F=frameFn(); if(!F.total){ toast(S.vstyle==='tu'?'Thêm ảnh ở bước 1 để tạo video.':'Chưa có cảnh nào trong kịch bản'); actx.close(); return; }
   rendering=true; const btn=$('#btnRender'); btn.disabled=true; btn.textContent='Đang tạo video…'; $('#renderBox').hidden=false; $('#videoOut').hidden=true; $('#renderMsg').textContent='Đang soạn nhạc và chuẩn bị cảnh…';
   await fontsReady(); await waitClips();
@@ -2604,7 +2647,7 @@ $('#btnRender').onclick=async()=>{
       const r=await finEncode({W,H,total,audio:au,bitrate:QBR[S.q]||12e6,onProg:p=>{ $('#barFill').style.width=Math.round(p*100)+'%'; $('#renderMsg').textContent=`Đang dựng ${QNAME[S.q]||''}, làm mịn và tăng nét: ${Math.round(p*100)}%`; },
         draw:async t=>{ await seekClips(F.st,t); F.draw(ctx,W,H,Math.min(t,total-.001),E); return finEnhance(cv,W,H,1); }});
       try{ wk&&wk.release(); }catch(e){} stopClips();
-      if(r){ try{ actx.close(); }catch(e){} if(lastVideo) URL.revokeObjectURL(lastVideo.url); lastVideo={blob:r.blob,url:URL.createObjectURL(r.blob),ext:'mp4'}; $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
+      if(r){ try{ actx.close(); }catch(e){} if(lastVideo) URL.revokeObjectURL(lastVideo.url); lastVideo={blob:r.blob,url:URL.createObjectURL(r.blob),ext:'mp4'}; if(S.vmusic==='lib'&&!S.musicId){ S.musRot=(S.musRot||0)+1; persist(); } $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
         $('#videoInfo').textContent=finInfo(r,total,au.lufs); $('#renderMsg').textContent=(await vAutoSave(autoDir))||'Xong. Video đã hoàn thiện, xem lại rồi bấm Lưu video.'; btn.disabled=false; btn.textContent='Tạo lại video'; rendering=false; return; } }
     catch(e){ console.warn('fin',e); toast('Máy chưa dựng được bản hoàn thiện, chuyển sang quay trực tiếp'); } }
   let wake=null; try{ wake=await navigator.wakeLock?.request('screen'); }catch(e){}
@@ -2619,7 +2662,7 @@ $('#btnRender').onclick=async()=>{
   rec.stop(); await done; stream.getTracks().forEach(t=>t.stop()); stopClips(); try{ actx.close(); }catch(e){} try{ wake&&wake.release(); }catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0]; const ext=type.includes('mp4')?'mp4':'webm';
   const blob=new Blob(chunks,{type}); if(lastVideo) URL.revokeObjectURL(lastVideo.url);
-  lastVideo={blob,url:URL.createObjectURL(blob),ext}; $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
+  lastVideo={blob,url:URL.createObjectURL(blob),ext}; if(S.vmusic==='lib'&&!S.musicId){ S.musRot=(S.musRot||0)+1; persist(); } $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
   $('#videoInfo').textContent=`${W}×${H} · ${total.toFixed(1).replace('.',',')} giây · ${(blob.size/1048576).toFixed(1).replace('.',',')} MB · .${ext}${hiddenWarn?' · Có lúc bạn rời màn hình, nếu video bị giật hãy tạo lại.':''}`;
   $('#renderMsg').textContent=(await vAutoSave(autoDir))||'Xong. Xem lại rồi bấm Lưu video.'; btn.disabled=false; btn.textContent='Tạo lại video'; rendering=false;
 };
@@ -2630,11 +2673,12 @@ async function vAutoSave(dir){ if(!dir||!lastVideo) return ''; try{ const nm=vNa
 $('#btnSaveVideo').onclick=async()=>{ if(!lastVideo) return; await saveFile(vName(),lastVideo.blob,'video'); };
 
 /* --- clip thêm + câu lệnh Veo --- */
-async function addClips(fs){ for(const f of fs){ if(clips.length>=6){ toast('Tối đa 6 ảnh/clip bối cảnh mỗi video'); break; } const url=URL.createObjectURL(f);
-    if(f.type.startsWith('image/')){ try{ const img=await loadImage(url); clips.push({id:++clipUid,name:f.name,url,type:'img',it:{img,rot:0,zoom:1,ox:0,oy:0},dur:4}); }catch(e){ URL.revokeObjectURL(url); toast('Không mở được ảnh '+f.name); } continue; }
-    const v=document.createElement('video'); v.muted=true; v.defaultMuted=true; v.playsInline=true; v.setAttribute('playsinline',''); v.setAttribute('muted',''); v.preload='auto'; v.src=url;
-    try{ await new Promise((res,rej)=>{ v.onloadedmetadata=res; v.onerror=rej; setTimeout(rej,15000); }); v.load(); clips.push({id:++clipUid,name:f.name,url,type:'vid',v,dur:isFinite(v.duration)?v.duration:5}); }
-    catch(err){ URL.revokeObjectURL(url); toast('Không mở được clip '+f.name+'. Nên dùng file .mp4'); } }
+async function clipOf(f){ const url=URL.createObjectURL(f);
+  if(f.type.startsWith('image/')||/\.(jpe?g|png|webp)$/i.test(f.name)){ try{ const img=await loadImage(url); return {id:++clipUid,name:f.name,url,type:'img',it:{img,rot:0,zoom:1,ox:0,oy:0},dur:4}; }catch(e){ URL.revokeObjectURL(url); toast('Không mở được ảnh '+f.name); return null; } }
+  const v=document.createElement('video'); v.muted=true; v.defaultMuted=true; v.playsInline=true; v.setAttribute('playsinline',''); v.setAttribute('muted',''); v.preload='auto'; v.src=url;
+  try{ await new Promise((res,rej)=>{ v.onloadedmetadata=res; v.onerror=rej; setTimeout(rej,15000); }); v.load(); return {id:++clipUid,name:f.name,url,type:'vid',v,dur:isFinite(v.duration)?v.duration:5}; }
+  catch(err){ URL.revokeObjectURL(url); toast('Không mở được clip '+f.name+'. Nên dùng file .mp4'); return null; } }
+async function addClips(fs){ for(const f of fs){ if(clips.length>=6){ toast('Tối đa 6 ảnh/clip bối cảnh mỗi video'); break; } const c=await clipOf(f); if(c) clips.push(c); }
   renderClips(); updateVsum(); }
 function renderClips(){ $('#clipList').innerHTML=clips.map(c=>`<div class="clip"><span>${c.type==='img'?'🖼️':'🎬'} ${esc(c.name)}${c.type==='vid'?' · '+Math.min(6,c.dur).toFixed(1).replace('.',',')+' giây':''}</span><button class="btn danger" type="button" data-clipdel="${c.id}">Bỏ</button></div>`).join(''); }
 $('#btnClip').onclick=()=>$('#clipFile').click();
@@ -2769,7 +2813,7 @@ async function mlibAdd(files){ const list=[...files].filter(f=>/^audio\//.test(f
 async function mlibSave(t){ try{ await mlibTx('meta','readwrite',os=>os.put(t)); }catch(e){} }
 async function mlibDel(id){ mlib=mlib.filter(t=>t.id!==id); mlibMem.delete(id); mlibDec.delete(id); if(S.musicId===id){ S.musicId=''; persist(); } try{ await mlibTx('meta','readwrite',os=>os.delete(id)); await mlibTx('buf','readwrite',os=>os.delete(id)); }catch(e){} }
 function mlibTrackFor(style){ if(!mlib.length) return null; if(S.musicId){ const t=mlib.find(x=>x.id===S.musicId); if(t) return t; }
-  for(const md of sugMoods(style)){ const c=mlib.filter(t=>t.mood===md); if(c.length){ const hot=c.filter(t=>t.cat==='hot'), pool=hot.length?hot:c; return pool[((S.fxSeed||1)-1)%pool.length]; } } return mlib[0]; }
+  for(const md of sugMoods(style)){ const c=mlib.filter(t=>t.mood===md); if(c.length){ const hot=c.filter(t=>t.cat==='hot'), pool=hot.length?hot:c; return pool[((S.fxSeed||1)-1+(S.musRot||0))%pool.length]; } } return mlib[(S.musRot||0)%mlib.length]; } /* musRot tăng sau mỗi video xuất: video sau lấy bài khác */
 function beatOf(st){ const t=S.vmusic==='lib'?mlibTrackFor(st):null; let bpm=t&&t.bpm?t.bpm:VSTYLES[st].bpm; while(bpm>140) bpm/=2; while(bpm<70) bpm*=2; return 60/bpm; }
 // phát bài vào OfflineAudioContext từ điểm bắt đầu, lặp lại nếu bài ngắn, có fade đầu
 async function mlibPlayInto(c,out,t,total){ try{ const ab=await mlibBuf(t.id); if(!ab) return false; const buf=await c.decodeAudioData(ab.slice(0)); const s=c.createBufferSource(); s.buffer=buf; s.loop=true;
@@ -2992,7 +3036,8 @@ $('#mlibSug').addEventListener('click',e=>{ const b=e.target.closest('[data-sg]'
   if(a==='play'){ mlibPlay(id); setTimeout(mlibSugRender,60); return; } if(a==='use'){ S.musicId=id; persist(); ensureStory(true); syncVideoUI(); mlibSugRender(); } });
 
 /* --- điều khiển kiểu video --- */
-$('#tcQuote').innerHTML=QUOTES.map((q,i)=>`<option value="${i}">${esc(q.replace('\n',' '))}</option>`).join('');
+$('#tcQuote').innerHTML=QUOTES.map((q,i)=>TC_LIB[i].h?'':`<option value="${i}">${esc(q.replace('\n',' '))}</option>`).join(''); /* câu quá đơn giản (h:1) ẩn đi, giữ số thứ tự cũ */
+if(TC_LIB[S.tcQuote]&&TC_LIB[S.tcQuote].h) S.tcQuote=TC_LIB.findIndex(x=>!x.h);
 function syncVideoUI(){ const st=S.vstyle, tu=st==='tu'; const md=modOf(st); $('#vmodSeg').querySelectorAll('[data-vmod]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.vmod===md)); $('#vstyleChips').hidden=md!=='sp'; $('#dirBox').hidden=tu; $('#tuBox').hidden=!tu; $('#vstyleHint').textContent=VSTYLES[st].hint.replace(/^28 giây/,vdur()+' giây'); $('#vdurField').hidden=tu||st==='fn';
   $('#vprodField').hidden=!(st==='ban'||st==='qb'||st==='lv'||st==='tt'||st==='mh'||st==='ts'||st==='fn'); $('#lvField').hidden=st!=='lv'; $('#ttField').hidden=st!=='tt'; $('#mhField').hidden=st!=='mh'; $('#tsField').hidden=st!=='ts'; $('#tcField').hidden=st!=='tc'; $('#thField').hidden=!(st==='th'||st==='tc');
   $('#thField').querySelectorAll('label[for="thVals"],#thVals').forEach(el=>el.hidden=st!=='th');
@@ -3078,7 +3123,7 @@ window.__xas = { dev:()=>({story, TR_VI, ENT_VI, TR_LEN}), thumb:(v,scale=1)=>{ 
   story:()=>{ ensureStory(); return story.map(s=>({k:s.k,d:s.d,t:s.t||'',t2:s.t2||'',tr:s.tr||'',enter:s.enter||'',cam:s.cam||''})); },
   frame:(t,scale=1)=>{ const vf=VFMTS[S.vfmt], W=Math.round(vf.w*scale), H=Math.round(vf.h*scale), c=document.createElement('canvas'); c.width=W; c.height=H; const F=frameFn(); F.draw(c.getContext('2d'),W,H,Math.min(t,F.total-.001)); return c.toDataURL('image/jpeg',.85); },
   audio:async()=>{ const F=frameFn(); const b=await renderAudio(S.vstyle,F.st,F.total); if(!b) return null; const d=b.getChannelData(0); let pk=0, rms=0; for(let i=0;i<d.length;i++){ const v=Math.abs(d[i]); if(v>pk) pk=v; rms+=d[i]*d[i]; } return {sec:b.duration, peak:pk, rms:Math.sqrt(rms/d.length)}; } };
-syncVideoUI(); mlibLoad().then(()=>{ syncVideoUI(); if(S.vmusic==='lib'){ ensureStory(true); updateVsum(); } });
+syncVideoUI(); mlibLoad().then(()=>{ if(mlib.length && S.vmusic==='auto' && !S.musV75){ S.vmusic='lib'; } S.musV75=1; persist(); /* có kho nhạc Suno thì mọi mục video mặc định lấy nhạc từ kho */ syncVideoUI(); if(S.vmusic==='lib'){ ensureStory(true); updateVsum(); } });
 
 /* ===== 4. EDIT VIDEO: sửa video gửi vào, cắt livestream thành clip (chạy hoàn toàn trên máy) ===== */
 let evSrc=[], evSegs=[], evOuts=[], evBusy=false, evUid=0, evActx=null, evSW=false; // evSW: máy kẹt bộ mã card đồ hoạ thì chuyển sang mã hoá phần mềm
@@ -3373,6 +3418,9 @@ $('#btnEvBuild').onclick=async()=>{ if(evBusy) return; if(S.evMode==='live') for
     document.title=t0; $('#evMsg').textContent=byC?`Xong. Đã tự xuất ${use.filter(g=>g.done&&!g.need).length} video cho ${use.filter(g=>g.done&&!g.need).reduce((s,g)=>s+Math.max(1,evCodesOf(g).length),0)} mã, ${use.filter(g=>g.done==='saved').length} video đã lưu vào thư mục ${autoDir?(autoDir.label||autoDir.name):'(chưa chọn thư mục, bấm Lưu)'}.${ND.length?` ⚠ ${ND.length} mã cần anh/chị xử lý: ${ND.map(x=>x.g.code||'Clip '+(x.i+1)).join(', ')}. Xem lý do ngay bên dưới, sửa xong bấm "Xuất ${ND.length} clip".`:' Không có mã nào cần sửa.'}`:autoDir?`Xong. ${jobs.length-(bad.skip||0)} ${live?'clip':'video'} đã tự lưu vào thư mục ${autoDir.label||autoDir.name}.${bad.skip?` ${bad.skip} clip bị bỏ qua, xem danh sách ⚠ bên dưới.`:''}`:live?'Xong. Xem lại từng clip, lưu video và sao chép bài đăng.':'Xong. Xem lại rồi bấm Lưu video.'; }
   catch(err){ toast(err.message==='nosupport'?'Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome hoặc Safari bản mới.':'Có lỗi khi quay video, thử lại'); console.error(err); }
   document.title=t0; EVC_COV=null; evBusy=false; btn.disabled=false; evRenderSegs(); };
+$('#tcBgPick').onclick=async()=>{ const n=await tcBgLoad(true); tcBgKey=''; toast(n?`Đã chọn thư mục cảnh đẹp: ${n} cảnh`:'Thư mục chưa có clip .mp4 hay ảnh .jpg'); };
+$('#tcAI').checked=S.tcAI!==false; $('#tcAI').onchange=e=>{ S.tcAI=e.target.checked; tcBgKey=''; persist(); };
+setTimeout(()=>{ if(evDirOK()) evIdb('get',null,'tcbg').then(h=>{ const el=$('#tcBgInfo'); if(h){ tcBgH=h; el.textContent=`📂 ${h.name} (bấm Xem thử/Xuất là app lấy cảnh trong thư mục này)`; } else el.textContent='Chưa chọn thư mục cảnh đẹp'; }); else $('#tcBgInfo').textContent='Thư mục cảnh đẹp chỉ dùng ở bản máy tính (Chrome)'; },400);
 $('#evMusPick').onclick=async()=>{ const n=await evMusLoad(true); toast(n?`Đã chọn thư mục nhạc nền: ${n} bài`:'Thư mục chưa có file nhạc'); };
 setTimeout(()=>{ if(evDirOK()) evIdb('get',null,'music').then(h=>{ if(h){ evMusH=h; $('#evMusInfo').textContent=`📂 ${h.name} (bấm Xuất là app tự lấy nhạc trong thư mục này)`; } else $('#evMusInfo').textContent='Chưa chọn thư mục nhạc nền'; }); else { $('#evMusPick').hidden=true; } },0);
 // thư mục lưu clip (bản máy tính): chọn/tạo một lần, Lưu video và Lưu tất cả đều lưu vào đó; nhớ cả khi mở lại app
@@ -3850,7 +3898,7 @@ function voSuggest(){ const G=chosenGroups(), g=G[0], st=S.vstyle; const nm=g?St
   const v=(S.voVar=((S.voVar|0)+1))%3, end=s=>String(s).trim().replace(/[.!…]+$/,'')+'.', ben=g?realBenefits(g.p).slice(0,2).map(end):[], sz=g?sizesOf(g.p.size):[];
   const name=nm?end(nm.charAt(0).toUpperCase()+nm.slice(1)):'', cta=code?`Chị em gõ mã ${code} để đặt hàng.`:'Chị em nhắn Nancy để đặt hàng.';
   let L=[];
-  if(st==='tc'){ const tq=(S.tcText||'').trim()?null:TC_LIB[S.tcQuote]; L=[...(quoteLines().join(' ').match(/[^.!?…]+[.!?…]*/g)||[]).map(x=>x.trim().replace(/,$/,'')).filter(Boolean).map(end), ...(tq&&tq.a?[(/^(Tục ngữ|Ca dao)/.test(tq.a)?'':'Lời của ')+tq.a+'.']:[]), ...(tq&&tq.y?[end(tq.y)]:[]), ["Nancy's Shop chúc chị em luôn bình an và rạng rỡ.","Hãy dịu dàng với chính mình, chị em nhé.","Mỗi ngày một chút, rồi chị em sẽ thấy mình đã đi rất xa."][v]]; }
+  if(st==='tc'){ const tq=(S.tcText||'').trim()?null:TC_LIB[S.tcQuote]; L=[...(quoteLines().join(' ').match(/[^.!?…]+[.!?…]*/g)||[]).map(x=>x.trim().replace(/,$/,'')).filter(Boolean).map(end), ...(tq&&tq.a?[(/^(Tục ngữ|Ca dao)/.test(tq.a)?'':/^Kinh /.test(tq.a)?'Lời Phật dạy trong ':'Lời của ')+tq.a+'.']:[]), ...(tq&&tq.y?[end(tq.y)]:[]), ["Nancy's Shop chúc chị em luôn bình an và rạng rỡ.","Hãy dịu dàng với chính mình, chị em nhé.","Mỗi ngày một chút, rồi chị em sẽ thấy mình đã đi rất xa."][v]]; }
   else if(st==='th'){ L=[S.thSlogan?end(S.thSlogan):["Nancy's Shop.","Có một nơi luôn chọn đồ đẹp thay chị em.","Đẹp không cần ồn ào."][v], ...(S.thVals||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3).map(end), ["Nancy's Shop, đồng hành cùng chị em trên từng lựa chọn.","Cảm ơn chị em đã tin Nancy, mỗi ngày.","Chọn kỹ, để chị em chỉ việc tận hưởng."][v]]; }
   else if(st==='lv'){ const cs=G.map(x=>x.code).filter(Boolean).slice(0,4); L=[[`${S.lvTime||'Tối nay'}, Nancy lên live.`,`Chị em ơi, ${S.lvTime||'tối nay'} mình gặp nhau trên live.`,`Đếm ngược thôi, ${S.lvTime||'tối nay'} Nancy lên sóng.`][v], cs.length?`Nancy mang lên các mã ${cs.join(', ')}.`:'', 'Bật thông báo ngay, để không lỡ khoảnh khắc chốt đơn.', ['Hẹn chị em đúng giờ, Nancy chờ.','Đến sớm, chọn trước.','Gặp nhau trên live nhé chị em.'][v]]; }
   else if(st==='mh'){ const why=(S.mhWhy||'').trim(), note=(S.mhNote||'').trim(); const pr=mvPrepTools(mvPlan(S.mhTitle||'',mhSteps())).map(x=>x.lb.toLowerCase().replace(/°c/g,' độ')); L=[S.mhTitle?end(S.mhTitle):'Một mẹo nhỏ, đỡ cả buổi dọn dẹp.', pr.length>=2?'Chuẩn bị: '+pr.join(', ')+'.':'', ...mhSteps().map((s,i)=>`Bước ${i+1}, ${end(s).charAt(0).toLowerCase()+end(s).slice(1)}`), why?'Vì sao hiệu quả? '+end(why):'', note?'Lưu ý: '+end(note):'', S.mhProd!==false&&nm&&code?`Nancy đang dùng ${nm}. Chị em gõ mã ${code} để đặt hàng.`:'', 'Lưu lại ngay, có ngày chị em sẽ cần đến.'].filter(Boolean); }
@@ -4952,26 +5000,28 @@ const LOTS={
   tc:{lib:()=>TC_LIB, t:m=>m.q.replace(/\n/g,' '), key:'xas-tcdone', pre:'cau-noi-hay', dir:'Cau noi hay', kind:'quote', noun:'câu nói', style:'tc', cap:tcbCaption, pick:i=>{ S.tcQuote=i; S.tcText=''; $('#tcQuote').value=String(i); $('#tcText').value=''; persist(); }}};
 const lotDone=L=>{ try{ return JSON.parse(localStorage.getItem(L.key)||'{}'); }catch(e){ return {}; } };
 const lotSel={mh:new Set(),tc:new Set()};
-function lotRender(p){ const L=LOTS[p], lib=L.lib(), D=lotDone(L), sel=lotSel[p], cats=[...new Set(lib.map(m=>m.c))];
-  $('#'+p+'BList').innerHTML=cats.map(c=>`<div class="lbl" style="margin-top:6px">${esc(c)}</div>`+lib.map((m,i)=>m.c!==c?'':`<label class="check" style="display:flex"><input type="checkbox" data-lot="${p}:${i}"${sel.has(i)?' checked':''}> ${esc(L.t(m))}${D[L.t(m)]?` <span class="hint">· đã làm ${esc(D[L.t(m)])}</span>`:''}</label>`).join('')).join('');
-  const n=sel.size, left=lib.filter(m=>!D[L.t(m)]).length; $('#'+p+'BSum').textContent=(n?`Đã chọn ${n} ${L.noun} · máy tự làm khoảng ${n*3}–${n*6} phút (có thể đi làm việc khác) · giọng AI khoảng ${(n*300).toLocaleString('vi-VN')}đ cả loạt.`:`Chưa chọn ${L.noun} nào.`)+` Thư viện còn ${left}/${lib.length} ${L.noun} chưa làm.`; $('#'+p+'BGo').disabled=!n||MHB.run; }
+function lotRender(p){ const L=LOTS[p], lib=L.lib(), D=lotDone(L), sel=lotSel[p], cats=[...new Set(lib.filter(m=>!m.h).map(m=>m.c))];
+  $('#'+p+'BList').innerHTML=cats.map(c=>`<div class="lbl" style="margin-top:6px">${esc(c)}</div>`+lib.map((m,i)=>m.c!==c||m.h?'':`<label class="check" style="display:flex"><input type="checkbox" data-lot="${p}:${i}"${sel.has(i)?' checked':''}> ${esc(L.t(m))}${D[L.t(m)]?` <span class="hint">· đã làm ${esc(D[L.t(m)])}</span>`:''}</label>`).join('')).join('');
+  const n=sel.size, left=lib.filter(m=>!m.h&&!D[L.t(m)]).length; $('#'+p+'BSum').textContent=(n?`Đã chọn ${n} ${L.noun} · máy tự làm khoảng ${n*3}–${n*6} phút (có thể đi làm việc khác) · AI (giọng${p==='tc'&&!tcBgFiles.length&&S.tcAI!==false?' + vẽ cảnh nền':''}) khoảng ${(n*(p==='tc'&&!tcBgFiles.length&&S.tcAI!==false?3000:300)).toLocaleString('vi-VN')}đ cả loạt.${mlib.length?` Nhạc nền: ${mlib.length} bài trong Thư viện nhạc shop (kho Suno), mỗi video 1 bài.`:' Chưa có nhạc trong Thư viện nhạc shop: thêm thư mục Nhạc nền Suno trên Drive để mỗi video 1 bài.'}`:`Chưa chọn ${L.noun} nào.`)+` Thư viện còn ${left}/${lib.filter(m=>!m.h).length} ${L.noun} chưa làm.`; $('#'+p+'BGo').disabled=!n||MHB.run; }
 document.addEventListener('change',e=>{ const c=e.target.closest('[data-lot]'); if(!c) return; const [p,k]=c.dataset.lot.split(':'), i=+k, sel=lotSel[p]; if(c.checked){ if(sel.size>=20){ c.checked=false; toast('Mỗi loạt tối đa 20 video'); return; } sel.add(i); } else sel.delete(i); lotRender(p); });
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-lotn]'); if(b){ const [p,k]=b.dataset.lotn.split(':'), n=+k, L=LOTS[p], lib=L.lib(), sel=lotSel[p]; sel.clear();
-    if(n){ const D=lotDone(L), q=[...new Set(lib.map(m=>m.c))].map(c=>lib.map((m,i)=>i).filter(i=>lib[i].c===c&&!D[L.t(lib[i])])); while(sel.size<n && q.some(x=>x.length)) q.forEach(x=>{ if(x.length&&sel.size<n) sel.add(x.shift()); }); /* xen kẽ các nhóm cho loạt bài đa dạng */
-      if(sel.size<n) lib.forEach((m,i)=>{ if(sel.size<n) sel.add(i); }); } lotRender(p); return; }
+    if(n){ const D=lotDone(L), q=[...new Set(lib.map(m=>m.c))].map(c=>lib.map((m,i)=>i).filter(i=>lib[i].c===c&&!lib[i].h&&!D[L.t(lib[i])])); while(sel.size<n && q.some(x=>x.length)) q.forEach(x=>{ if(x.length&&sel.size<n) sel.add(x.shift()); }); /* xen kẽ các nhóm cho loạt bài đa dạng */
+      if(sel.size<n) lib.forEach((m,i)=>{ if(sel.size<n&&!m.h) sel.add(i); }); } lotRender(p); return; }
   const o=e.target.closest('[data-lotopen]'); if(o){ const p=o.dataset.lotopen, bx=$('#'+p+'Batch'); bx.hidden=!bx.hidden; if(!bx.hidden) lotRender(p); return; }
   const st=e.target.closest('[data-lotstop]'); if(st){ MHB.stop=true; $('#'+st.dataset.lotstop+'BMsg').textContent='Sẽ dừng sau video đang làm…'; return; }
   const g=e.target.closest('[data-lotgo]'); if(g) lotGo(g.dataset.lotgo); });
 async function lotGo(p){ const L=LOTS[p], lib=L.lib(), sel=lotSel[p], msg=$('#'+p+'BMsg'); if(MHB.run||!sel.size) return; if(!aiNeed()) return; if(!evDirOK()){ toast('Làm cả loạt cần bản máy tính (Chrome) để tự lưu vào thư mục'); return; }
   let dir=null; try{ dir=await evDir(true); }catch(e){} if(!dir){ toast('Chọn thư mục lưu video trước'); return; }
   const d=new Date(), sub=`${L.dir} ${pad2(d.getDate())}-${pad2(d.getMonth()+1)}-${d.getFullYear()} ${pad2(d.getHours())}h${pad2(d.getMinutes())}`; try{ dir=await dir.getDirectoryHandle(sub,{create:true}); }catch(e){} MHB.dir=dir;
+  if(!mlibReady) await mlibLoad(); const md=sugMoods(L.style), mm=mlib.filter(t=>md.includes(t.mood)), mq=(mm.length>=3?mm:mlib).slice().sort(()=>Math.random()-.5), vm0=S.vmusic, mid0=S.musicId; /* nhạc nền: kho Suno trong Thư viện nhạc shop, mỗi video 1 bài khác */
   const list=[...sel], t0=document.title, ok=[], bad=[]; MHB.run=true; MHB.stop=false; $('#'+p+'BGo').disabled=true; $('#'+p+'BStop').hidden=false; if(S.vstyle!==L.style){ const b=document.querySelector(`[data-vmod="${L.style}"]`); if(b) b.click(); }
-  for(let k=0;k<list.length;k++){ if(MHB.stop) break; const i=list[k], m=lib[i], T=L.t(m); L.pick(i); S.voAuto=true; S.voText=''; voAutoFill(); persist(); ensureStory(true);
+  for(let k=0;k<list.length;k++){ if(MHB.stop) break; const i=list[k], m=lib[i], T=L.t(m); L.pick(i); if(mq.length){ S.vmusic='lib'; S.musicId=mq[k%mq.length].id; } S.voAuto=true; S.voText=''; voAutoFill(); persist(); ensureStory(true);
     MHB.name=`${L.pre}-${pad2(k+1)}-${norm(T).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)}`; document.title=`⏳ ${k+1}/${list.length} video ${L.noun}`; msg.textContent=`Đang làm video ${k+1}/${list.length}: ${T}…`;
     const before=lastVideo; try{ await $('#btnRender').onclick(); }catch(e){ console.warn('lot',e); }
     if(lastVideo&&lastVideo!==before){ try{ await evWrite(dir,{name:MHB.name+'.json',blob:new Blob([JSON.stringify({caption:L.cap(m),meta:{kind:L.kind,title:T}})],{type:'application/json'})}); }catch(e){}
       ok.push(T); const D=lotDone(L); D[T]=`${pad2(d.getDate())}/${pad2(d.getMonth()+1)}`; try{ localStorage.setItem(L.key,JSON.stringify(D)); }catch(e){} }
     else bad.push(T); }
+  S.vmusic=vm0; S.musicId=mid0; persist();
   MHB.name=''; MHB.dir=null; MHB.run=false; $('#'+p+'BStop').hidden=true; document.title=t0; sel.clear(); lotRender(p);
   msg.textContent=`📊 Xong ${ok.length}/${list.length} video, đã lưu vào thư mục "${sub}" (mỗi video kèm bài đăng).${bad.length?` ⚠ Chưa làm được: ${bad.join('; ')}.`:''} Bước tiếp: tab Edit → 📅 Đăng hẹn giờ → 📁 Chọn cả thư mục clip → chọn thư mục này, tích các fanpage rồi Lập lịch.`; toast(`Xong ${ok.length} video ${L.noun}`); }
 $('#mhLib').addEventListener('change',e=>{ const i=+e.target.value; if(i>=0) mhPick(i); else { S.mhLib=-1; persist(); } });
