@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 70</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 71</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -645,6 +645,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
               <button class="chip" type="button" data-evcl="60">60 giây</button>
             </div>
             <label class="check"><input type="checkbox" id="evPrice"> Hiện giá bán lên clip</label>
+            <label class="check"><input type="checkbox" id="evSizeGuide"> Cuối clip giày dép, quần áo: hiện bảng hướng dẫn chốt đơn &amp; hủy đơn theo size</label>
             <div class="row"><button class="btn primary" type="button" id="btnEvAI">🤖 AI nghe live, tìm từng mã</button></div>
             <p class="hint">AI Google nghe tiếng livestream, tìm chỗ bắt đầu giới thiệu từng mã tới lúc chuyển sang mã sau, ghi lại tên, giá và các ý chị chủ nói để làm chữ trên clip. Chỉ chạy ở bản máy tính; ước khoảng 3.000đ cho 1 giờ live.</p>
             <div class="evcov">
@@ -3069,7 +3070,22 @@ function evIntro(ctx,W,H,t,P,E){ const {o,u}=E, a=ease.out(seg01(t,.02,.35))*(1-
   ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=u*2.2; const r=popWords(ctx,P.hook,W,cy,f.size,t-.15,o,{stagger:.08,maxLines:2,anim:'rise',maxW:W*.92}); ctx.shadowColor='transparent';
   const b=f.lines.length>1?0:ease.out(seg01(t,.3+r.n*.09,.8+r.n*.09)); if(b>0){ ctx.fillStyle=o.tag; const lw=W*.2*b; ctx.fillRect(W/2-lw/2,cy+r.h/2+u*1.6,lw,Math.max(2,u*.45)); }
   ctx.restore(); }
-function evCtaRaw(ctx,W,H,ct,P,E){ const {o,u}=E, a=ease.out(seg01(ct,0,.5)), th=EV_CTA-2.2; ctx.save(); const gy=H*.72, g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(.4,`rgba(0,0,0,${.5*a})`); g.addColorStop(1,`rgba(0,0,0,${.65*a})`); ctx.fillStyle=g; ctx.fillRect(0,gy,W,H-gy); ctx.textAlign='center'; ctx.textBaseline='middle'; /* live: chỉ dải đáy, không phủ đen cả khung, không che sản phẩm */
+/* bảng HƯỚNG DẪN CHỐT ĐƠN & HỦY ĐƠN cuối clip giày dép, quần áo (Ông Chủ gửi mẫu 24/10): mỗi size một dòng, mã liền size | mã-1 */
+function evSizeGuide(ctx,W,H,ct,P,E){ const {u}=E, G=P.guide, c0=G.codes[0], rows=G.sizes.map(z=>[c0+z,(G.shoe?'size ':'size ')+z,c0+z+'-1']), n=rows.length;
+  const a=ease.out(seg01(ct,0,.45)), rh=u*(n>6?5.6:6.6), fs=rh*(n>6?.72:.68), cw=W*.92, pad=u*3.2, th=u*6, hh=u*6.4, fh=u*5.2, more=G.codes.length>1;
+  const ch=pad+th+u*1.2+hh+n*rh+u*1.6+fh*2*1.25+(more?fh*1.25:0)+pad, cx=(W-cw)/2, cy=H*.968-ch+(1-a)*u*6;
+  ctx.save(); ctx.globalAlpha=a; ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=u*3; ctx.fillStyle='rgba(255,255,255,.95)'; rrect(ctx,cx,cy,cw,ch,u*3.2); ctx.fill(); ctx.shadowColor='transparent';
+  ctx.textBaseline='middle'; ctx.textAlign='center'; let y=cy+pad+th/2; const tf=fitLines(ctx,'HƯỚNG DẪN CHỐT ĐƠN & HỦY ĐƠN',FONT,800,u*5.2,cw-pad*2,1); ctx.font=fontOf(800,tf.size); ctx.fillStyle='#15202C'; ctx.fillText(tf.lines[0],W/2,y);
+  y+=th/2+u*1.2; const xm=cx+cw*.6, hy=y+hh/2; ctx.fillStyle='#e8f6ee'; rrect(ctx,cx+pad*.5,y,xm-cx-pad*.5-u*.6,hh,u*1.4); ctx.fill(); ctx.fillStyle='#fdecec'; rrect(ctx,xm+u*.6,y,cx+cw-pad*.5-xm-u*.6,hh,u*1.4); ctx.fill();
+  ctx.font=fontOf(800,u*4.3); ctx.fillStyle='#14834a'; ctx.fillText('✓ CHỐT ĐƠN',(cx+pad*.5+xm)/2,hy+u*.2); ctx.fillStyle='#d32f2f'; ctx.fillText('✕ HỦY ĐƠN',(xm+cx+cw-pad*.5)/2,hy+u*.2);
+  y+=hh; rows.forEach((r,i)=>{ const k=ease.out(seg01(ct,.25+i*.12,.6+i*.12)), ry=y+rh*(i+.5); ctx.save(); ctx.globalAlpha=a*k; ctx.translate((1-k)*-u*4,0);
+    if(i%2){ ctx.fillStyle='rgba(21,32,44,.045)'; ctx.fillRect(cx+pad*.5,ry-rh/2,cw-pad,rh); }
+    ctx.textAlign='left'; ctx.font=fontOf(800,fs); ctx.fillStyle='#15202C'; const lx=cx+pad*1.2; ctx.fillText(r[0],lx,ry+u*.15); const w0=ctx.measureText(r[0]).width; ctx.font=fontOf(600,fs*.92); ctx.fillStyle='#4b5563'; ctx.fillText(' = '+r[1],lx+w0,ry+u*.15);
+    ctx.fillStyle='rgba(21,32,44,.25)'; ctx.fillRect(xm-1,ry-rh*.36,2,rh*.72); ctx.textAlign='left'; ctx.font=fontOf(800,fs); ctx.fillStyle='#d32f2f'; ctx.fillText(r[2],xm+pad*.9,ry+u*.15); ctx.restore(); });
+  y+=n*rh+u*1.6; ctx.textAlign='center'; const L=['Chị em chọn đúng size, bình luận mã để chốt đơn nhé!','Muốn hủy đơn, thêm -1 sau mã đã chốt nhé!'].concat(more?['Màu khác thay mã: '+G.codes.slice(1).join(', ')]:[]);
+  L.forEach((t,i)=>{ const f=fitLines(ctx,t,FONT,i?700:800,u*4.4,cw-pad*2,1); ctx.font=fontOf(i?700:800,f.size); ctx.fillStyle=i===0?'#c2410c':i===1?'#be185d':'#15202C'; ctx.fillText(f.lines[0],W/2,y+fh*1.25*(i+.5)); });
+  ctx.restore(); }
+function evCtaRaw(ctx,W,H,ct,P,E){ if(P.guide){ const g=ctx.createLinearGradient(0,H*.45,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,`rgba(0,0,0,${.45*ease.out(seg01(ct,0,.5))})`); ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,H*.45,W,H*.55); ctx.restore(); evSizeGuide(ctx,W,H,ct,P,E); return; } const {o,u}=E, a=ease.out(seg01(ct,0,.5)), th=EV_CTA-2.2; ctx.save(); const gy=H*.72, g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(.4,`rgba(0,0,0,${.5*a})`); g.addColorStop(1,`rgba(0,0,0,${.65*a})`); ctx.fillStyle=g; ctx.fillRect(0,gy,W,H-gy); ctx.textAlign='center'; ctx.textBaseline='middle'; /* live: chỉ dải đáy, không phủ đen cả khung, không che sản phẩm */
   const f=fitLines(ctx,P.cta||'',FONT,800,u*4.8,W*.88,2), lh=f.size*1.25, yb=H*.955-f.lines.length*lh;
   const cy=yb-u*8; if(P.code) codeBadge(ctx,W/2,cy,P.stamp||P.code,u*7.4,W*.8,o,ease.out(seg01(ct,.1,.5))*(1-seg01(ct,th,th+.4)));
   const k=ease.out(seg01(ct,P.code?th+.25:th,(P.code?th+.25:th)+.6)); if(k>0){ ctx.save(); ctx.globalAlpha=k; ctx.fillStyle='#fff'; ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=u*1.5; const g=fitLines(ctx,'Cảm ơn chị em đã xem clip',SERIF,'italic 600',u*6,W*.88,1); ctx.fillText(g.lines[0],W/2,cy+(1-k)*u*1.5); ctx.restore(); } /* 2 giây cuối: lời cảm ơn thay chỗ nhãn mã, câu đặt hàng vẫn giữ */
@@ -3263,7 +3279,7 @@ $('#btnEvBuild').onclick=async()=>{ if(evBusy) return; if(S.evMode==='live') for
   const shop=S.shopName||"Nancy's Shop"; const jobs=live?use.map(g=>[g]):[use]; const slots=evSlots(jobs.length); const order=live?jobs.map((j,i)=>i).sort((a,b)=>(jobs[b][0].score||0)-(jobs[a][0].score||0)):[0];
   try{ for(let j=0;j<jobs.length;j++){ const segs=jobs[j]; const gcs=live?evCodesOf(segs[0]):[]; const info=evInfo(live?(gcs[0]||S.evProd):S.evProd), g0=segs[0], byCode=live&&S.evBy==='code'; if(byCode&&(g0.name||'').trim()) info.name=g0.name.trim(); if(byCode&&gcs.length>1) info.name=evNoColor(info.name); if(byCode&&g0.pman) info.price=g0.price||''; const vh=byCode?evVidHooks(evPostData(info,gcs.length?gcs:[info.code].filter(Boolean),g0)):[], qt=byCode&&g0.quote&&!/\blive\b|lai-?v/i.test(g0.quote)?g0.quote:''; const hook=(S.evHook||'').trim()||(vh.length?vh[j%vh.length]:'')||qt||info.hook||(live?'Chị em xem kỹ mẫu này nhé':'');
       const P={raw:live,hook,name:info.name,code:info.code,stamp:info.stamp,cta:info.cta,outro:info.code?'Gõ mã để đặt hàng':'Theo dõi Nancy để xem hàng mới',shop,lines:byCode?evLines(g0):[],price:byCode&&S.evPrice?(info.price||g0.price||''):''};
-      const szs=byCode?evSizesOf(g0,info):[]; if(byCode&&info.code&&szs.length) P.cta=orderLine([info.code],true); EVC_COV=byCode&&S.evCov&&info.code?evCovFor(g0,info,szs):null;
+      const szs=byCode?evSizesOf(g0,info):[]; if(byCode&&info.code&&szs.length) P.cta=orderLine([info.code],true); if(byCode&&info.code&&szs.length&&S.evSizeGuide!==false) P.guide={codes:gcs.length>1?gcs:[info.code],sizes:szs.slice(0,8),shoe:/^\d+$/.test(szs[0])}; EVC_COV=byCode&&S.evCov&&info.code?evCovFor(g0,info,szs):null;
       if(byCode&&gcs.length>1){ P.code=P.stamp=evGroupItems(g0).map(x=>x.code+(x.color?' '+x.color:'')).join(' · '); P.cta=`Gõ mã ${gcs.slice(0,-1).join(', ')} hoặc ${gcs[gcs.length-1]}${szs.length?' kèm size':''} để đặt hàng`; } // cụm nhiều màu: hiện đủ các mã + màu, giá chung một lần
       if(EVC_COV&&S.evCovAuto){ $('#evMsg').textContent=`${live?`Clip ${j+1}/${jobs.length}: `:''}đang dò vị trí ô xanh…`; const br=await evDetectBoxes(g0.src.v,g0.a,g0.b); if(br) g0.src.boxR=br; EVC_COV.rect=br||g0.src.boxR||null; } // dò lại cho TỪNG clip: ô danh sách mã xanh lá dài thêm khi host thêm mã trong buổi live
       let r=null; if(live && segs.length===1){ // canh treo: 90 giây không nhích thì dừng clip, làm lại bằng bộ mã phần mềm; vẫn kẹt thì bỏ qua, chạy clip sau
@@ -4539,11 +4555,12 @@ evSync=function(){ evSync0(); const live=S.evMode==='live', code=live&&S.evBy===
   $('#evByChips').querySelectorAll('[data-evby]').forEach(c=>c.setAttribute('aria-pressed',c.dataset.evby===S.evBy)); $('#evCLChips').querySelectorAll('[data-evcl]').forEach(c=>c.setAttribute('aria-pressed',c.dataset.evcl===String(S.evCL)));
   $('#evHotBox').hidden=S.evBy!=='hot'; $('#evCodeBox').hidden=S.evBy!=='code'; $('#evDurField').hidden=code; $('#evProdField').hidden=code;
   $('#evHint').textContent=live?(code?'Chọn video livestream dài trên máy. AI nghe tiếng live, cắt riêng mỗi mã một clip từ lúc bắt đầu giới thiệu tới hết phần đọc mã và giá (30–60 giây), chèn tên, mã, các ý chị chủ nói và câu "Gõ mã … để đặt hàng". Không có AI thì tự đánh dấu từng mã. Live bị OBS chia nhiều file thì cứ chọn hết các file trong thư mục (Ctrl+A): app tự bỏ file trùng .mkv/.mp4, xếp đúng giờ quay và nối chỗ bị cắt. Chạy tốt nhất trên máy tính.':EV_HINT.live):EV_HINT[S.evMode];
-  $('#evCodes').value=S.evCodes||''; $('#evPrice').checked=!!S.evPrice; evCodeList(); const v=$('#evMark'), x=evMarkSrc(); if(x){ if(v.dataset.u!==x.url){ v.src=x.url; v.dataset.u=x.url; } } else { v.removeAttribute('src'); v.dataset.u=''; } };
+  $('#evCodes').value=S.evCodes||''; $('#evPrice').checked=!!S.evPrice; $('#evSizeGuide').checked=S.evSizeGuide!==false; evCodeList(); const v=$('#evMark'), x=evMarkSrc(); if(x){ if(v.dataset.u!==x.url){ v.src=x.url; v.dataset.u=x.url; } } else { v.removeAttribute('src'); v.dataset.u=''; } };
 $('#evByChips').addEventListener('click',e=>{ const b=e.target.closest('[data-evby]'); if(!b||evBusy) return; S.evBy=b.dataset.evby; persist(); evSegs=[]; evSync(); });
 $('#evCLChips').addEventListener('click',e=>{ const b=e.target.closest('[data-evcl]'); if(!b) return; S.evCL=b.dataset.evcl==='auto'?'auto':+b.dataset.evcl; persist(); evSync(); });
 $('#evCodes').addEventListener('input',e=>{ S.evCodes=e.target.value; persist(); });
 $('#evPrice').addEventListener('change',e=>{ S.evPrice=e.target.checked; persist(); evRenderSegs(); });
+$('#evSizeGuide').addEventListener('change',e=>{ S.evSizeGuide=e.target.checked; persist(); });
 $('#btnEvAI').onclick=evAIRun; { const r0=evRenderSegs; evRenderSegs=function(){ r0.apply(this,arguments); evAiSave(); }; } $('#evSegs').addEventListener('input',evAiSave); $('#btnEvMark').onclick=evMarkAdd; $('#evMarkCode').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); evMarkAdd(); } });
 evSync();
 const evRenderSrc0=evRenderSrc;
