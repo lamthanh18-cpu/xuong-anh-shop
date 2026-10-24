@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 63</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 64</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -411,10 +411,20 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <p class="hint">Xoay váy, bước đi, ngồi đổi dáng, nghe điện thoại… App soạn sẵn câu lệnh cho Gemini (Veo). Tải clip về, đặt tên theo mã (TT01-xoay.mp4) rồi bấm "+ Thêm ảnh/clip bối cảnh": clip tự xếp ngay sau ảnh của mã đó.</p>
           </div>
           <div class="field" id="mhField">
+            <label for="mhLib">Thư viện mẹo hay (đã kiểm chứng, có giải thích vì sao + lưu ý an toàn)</label>
+            <select id="mhLib"></select>
+            <p class="hint" id="mhSug"></p>
             <label for="mhTitle">Tên mẹo (câu mở đầu)</label>
             <input type="text" id="mhTitle" placeholder="Ví dụ: Giặt áo trắng không bị ố vàng">
             <label for="mhSteps">Các bước làm (mỗi dòng 1 bước, tối đa 4)</label>
             <textarea id="mhSteps" rows="4" placeholder="Ngâm áo với nước ấm 10 phút&#10;Cho 1 viên giặt vào máy&#10;Giặt chế độ thường, phơi nơi thoáng"></textarea>
+            <label for="mhWhy">💡 Vì sao hiệu quả (kiến thức cho khách)</label>
+            <textarea id="mhWhy" rows="2" placeholder="Giải thích ngắn, đúng khoa học, vì sao cách này hiệu quả"></textarea>
+            <label for="mhNote">⚠ Lưu ý an toàn</label>
+            <textarea id="mhNote" rows="2" placeholder="Bề mặt nào không dùng, chất nào không trộn, ai cần cẩn thận"></textarea>
+            <label class="check"><input type="checkbox" id="mhProd" checked> Cuối video giới thiệu sản phẩm đang chọn + chốt mã (bỏ tích nếu mẹo không liên quan sản phẩm)</label>
+            <button class="btn" type="button" id="mhDirect">🎬 Đạo diễn vẽ ảnh từng bước (AI, ~900đ/ảnh)</button>
+            <p class="hint" id="mhMsg"></p>
             <p class="hint">Chỉ ghi cách làm shop đã thử thật. Ảnh/clip bối cảnh (tay đang làm) sẽ được dùng cho từng bước, không có thì app dùng ảnh sản phẩm. Video mẹo hay được lưu và chia sẻ nhiều, kéo tương tác cho trang.</p>
           </div>
           <div class="field" id="fnField" hidden>
@@ -922,7 +932,7 @@ const DEF = {v:2, fmt:'4x5', fit:'cover', bgColor:'#ffffff', bright:0, prefix:'A
   logo:null, logoPos:'tl', logoSize:14, shopName:"Nancy's Shop", headline:'', cta:'',
   showPrice:false, showCode:true, showName:false, border:false, brand:'#0B2442', tag:'#E8131B',
   vfmt:'9x16', vsec:2.5, eff:'zoom', vtrans:true, vover:true, vintro:'', voutro:'Bình luận mã sản phẩm\nNancy giữ hàng ngay', q:'1080',
-  vstyle:'ban', vstyleSp:'ban', thumbV:0, vmusic:'auto', musicId:'', mlibF:'all', vsfx:true, tcQuote:0, tcText:'', lvTime:'20:00 tối nay', fxSeed:1, ttTitle:'', mhTitle:'', mhSteps:'', tsTitle:'', evMode:'short', evBy:'code', evCL:'auto', evPrice:false, evCodes:'', evFit:'blur', evAud:'mix', evColor:true, evPunch:true, evN:'5', evProd:'', evHook:'', thumbText:'', thSlogan:'Khoác lên sự đam mê', thVals:'Chọn kỹ từng mã hàng\nLivestream cho chị em xem hàng tận mắt\nBình luận mã, Nancy giữ hàng ngay',
+  vstyle:'ban', vstyleSp:'ban', thumbV:0, vmusic:'auto', musicId:'', mlibF:'all', vsfx:true, tcQuote:0, tcText:'', lvTime:'20:00 tối nay', fxSeed:1, ttTitle:'', mhTitle:'', mhSteps:'', mhWhy:'', mhNote:'', mhLib:-1, tsTitle:'', evMode:'short', evBy:'code', evCL:'auto', evPrice:false, evCodes:'', evFit:'blur', evAud:'mix', evColor:true, evPunch:true, evN:'5', evProd:'', evHook:'', thumbText:'', thSlogan:'Khoác lên sự đam mê', thVals:'Chọn kỹ từng mã hàng\nLivestream cho chị em xem hàng tận mắt\nBình luận mã, Nancy giữ hàng ngay',
   postPrice:false, lspSize:false, vdur:'28'};
 let S = Object.assign({}, DEF);
 try { const saved = JSON.parse(localStorage.getItem('xas-settings') || '{}'); Object.assign(S, saved); if(S.vmusic==='file') S.vmusic='lib'; if(!['1080','1440','2160'].includes(String(S.q))) S.q='1080'; if(!(+S.vdur>=6 && +S.vdur<=90)) S.vdur='28';
@@ -1540,6 +1550,45 @@ var FN_TPL=[
   {name:'Tủ quần áo hết chỗ',set:'phòng ngủ, tủ quần áo mở toang, tất vứt dưới sàn',lines:['Bố: Em ơi, tủ quần áo anh còn đúng một cái móc!','Mẹ: Em mua toàn đồ cần thiết mà.','Bố: Cái váy thứ mười cũng cần thiết à?','Mẹ: Váy thứ mười… để đi đám cưới thứ mười chứ sao!','Con: Bố mẹ ơi, con có cách hòa cả làng.','Con: {SP:Mẹ mua {sp} cho bố nữa, tủ chia đôi, ai cũng có đồ mới!|Mẹ dọn một ngăn cho bố, bố nhặt tất cho mẹ, xong!}','Bố: Nghe hợp lý đấy… nhưng ai trả tiền?','Con: Bố! Vì bố là người… than trước!']},
   {name:'Mẹ lại chốt đơn',set:'phòng khách, có vài hộp hàng mới giao trên bàn',lines:['Bố: Em lại chốt đơn à? Shipper biết tên con chó nhà mình rồi đấy!','Mẹ: Anh mua cần câu thứ năm thì sao không nói?','Bố: Cần câu là đầu tư! Có ngày anh câu được cá to!','Mẹ: Ba năm rồi, con cá to nhất anh mang về… mua ở chợ!','Con: Bố mẹ bình tĩnh, đơn hôm nay là con đặt.','Con: {SP:Con đặt {sp}, cả nhà cùng dùng, không ai cãi nữa!|Con đặt một hộp kẹo, chia đều cho cả nhà!}','Mẹ: Ơ, con lấy điện thoại của ai?','Con: Của bố! Mật khẩu là ngày sinh mẹ, dễ đoán lắm!','Mẹ: Ôi… anh vẫn nhớ ngày sinh em à?']},
   {name:'Áo trắng thành áo hồng',set:'góc giặt đồ cạnh máy giặt, giỏ quần áo',lines:['Bố: Em ơi, áo sơ mi trắng của anh sao thành màu hồng thế này?','Mẹ: Tại anh vứt chung với áo đỏ của con chứ ai!','Bố: Mai anh đi họp, mặc áo hồng thì sếp nghĩ sao?','Con: Sếp nghĩ bố… đang yêu!','Mẹ: Đúng đấy, cả phòng lại tưởng anh mới cưới!','Con: {SP:Từ nay nhà mình dùng {sp}, đồ trắng ra đồ trắng, đồ màu ra đồ màu!|Từ nay đồ trắng một giỏ, đồ màu một giỏ, con làm trưởng ban giặt giũ!}','Bố: Thế cái áo hồng này tính sao?','Con: Bố cứ mặc! Hôm qua mẹ bảo bố mặc hồng trẻ ra mười tuổi!','Mẹ: Em bảo bao giờ?!']}];
+/*MH_LIB_START*/
+/* Thư viện mẹo việc nhà (bản 64): đã đối chiếu nguồn báo chí, khuyến cáo EVN, sơ cứu chuẩn. Mỗi mẹo: c nhóm, n tên, s các bước, w vì sao hiệu quả, l lưu ý an toàn, k từ khoá khớp sản phẩm */
+const MH_LIB=[
+ {c:'Giặt giũ',n:'Cổ áo trắng hết ố vàng',s:['Pha 1 thìa baking soda vào 1 lít nước ấm khoảng 40 độ','Ngâm áo 30 phút','Chà nhẹ cổ, nách bằng bàn chải mềm với ít nước giặt','Giặt như thường, phơi nơi thoáng gió'],w:'Baking soda có tính kiềm nhẹ, làm mềm lớp mồ hôi và dầu da bám ở cổ áo nên chà là bong.',l:'Không ngâm đồ len, lụa. Xem nhãn mác trước khi giặt nước ấm.',k:'giặt|bột giặt|nước giặt|viên giặt|áo|sơ mi|baking'},
+ {c:'Giặt giũ',n:'Đồ mới mua giặt không phai màu',s:['Giặt riêng 2 đến 3 lần đầu','Lộn trái quần áo','Dùng nước lạnh, không ngâm quá 30 phút','Phơi chỗ râm, tránh nắng gắt'],w:'Thuốc nhuộm thừa ra nhiều nhất ở vài lần giặt đầu. Nước nóng làm sợi vải nở ra nên càng thôi màu.',l:'Không giặt chung đồ đậm màu với đồ trắng.',k:'giặt|áo|quần|váy|đầm|jean'},
+ {c:'Giặt giũ',n:'Vết dầu mỡ trên áo',s:['Thấm bớt dầu bằng giấy ăn, không chà lan','Phủ vài giọt nước rửa bát lên vết, xoa nhẹ','Để yên 10 phút','Giặt bằng nước ấm'],w:'Nước rửa bát chứa chất hoạt động bề mặt chuyên bẻ nhỏ dầu mỡ để nước cuốn trôi.',l:'Vải màu nên thử trước ở góc khuất.',k:'nước rửa|rửa bát|rửa chén|giặt|áo'},
+ {c:'Giặt giũ',n:'Vết máu trên quần áo',s:['Xả ngay dưới vòi nước LẠNH, mặt trái vết bẩn','Xoa xà phòng hoặc nước giặt lên vết','Vò nhẹ, xả lại nước lạnh','Giặt như thường'],w:'Máu chứa protein. Nước nóng làm protein đông lại, bám chặt vào sợi vải, càng giặt càng khó sạch.',l:'Tuyệt đối không dùng nước nóng. Không sấy khi vết chưa sạch.',k:'giặt|xà phòng|nước giặt'},
+ {c:'Giặt giũ',n:'Máy giặt hết mùi hôi',s:['Cho bột vệ sinh lồng giặt theo liều trên bao bì','Chạy chế độ vệ sinh lồng hoặc nước nóng nhất, không có quần áo','Lau sạch gioăng cao su ở cửa máy','Giặt xong để hé cửa máy cho khô'],w:'Mùi hôi đến từ cặn bột giặt và nấm mốc đọng ở lồng và gioăng luôn ẩm.',l:'Không trộn bột vệ sinh lồng với nước tẩy khác.',k:'máy giặt|lồng giặt|vệ sinh lồng'},
+ {c:'Giặt giũ',n:'Phơi đồ mùa nồm không hôi',s:['Giặt xong phơi ngay, không để trong máy','Vắt thêm 1 lần cho thật ráo','Phơi giãn cách trong phòng đóng kín cửa','Bật máy hút ẩm hoặc điều hòa chế độ Dry'],w:'Mùi hôi là do vi khuẩn sinh sôi khi đồ ẩm quá lâu. Khô nhanh thì vi khuẩn không kịp phát triển.',l:'Không cất đồ còn ẩm vào tủ.',k:'giặt|nước xả|xả vải|máy hút ẩm|móc|phơi'},
+ {c:'Nhà bếp',n:'Lò vi sóng sạch bong không cần chà',s:['Cho nước và vài lát chanh vào bát chịu nhiệt','Quay 3 đến 5 phút','Đóng cửa để yên 2 phút cho hơi nước làm mềm vết bẩn','Lau bằng khăn mềm'],w:'Hơi nước nóng làm mềm vết thức ăn khô. Axit trong chanh giúp khử mùi.',l:'Mở cửa từ từ, cẩn thận bỏng hơi nước. Không dùng bát kim loại.',k:'lò vi sóng|chanh|khăn'},
+ {c:'Nhà bếp',n:'Lưới lọc máy hút mùi sạch dầu mỡ',s:['Tắt bếp, rút điện, tháo lưới lọc','Ngâm vào nước nóng pha nước rửa bát và 2 thìa baking soda, 20 phút','Chải nhẹ bằng bàn chải mềm','Tráng sạch, để khô rồi lắp lại'],w:'Nước nóng làm mỡ đông chảy ra, chất tẩy rửa và kiềm nhẹ cuốn mỡ đi.',l:'Lưới nhôm không ngâm quá lâu. Đeo găng tay khi làm.',k:'hút mùi|rửa bát|rửa chén|baking|bếp'},
+ {c:'Nhà bếp',n:'Nồi inox cháy đáy',s:['Đổ nước ngập vết cháy, thêm 2 thìa baking soda','Đun sôi 10 phút','Để nguội','Cạo nhẹ bằng muỗng gỗ rồi rửa sạch'],w:'Nhiệt và kiềm nhẹ làm lớp cháy bong khỏi mặt inox, không cần chà mạnh làm xước nồi.',l:'Chỉ dùng cho nồi inox. Nồi chống dính, nồi nhôm không dùng cách này.',k:'nồi|chảo|inox|baking'},
+ {c:'Nhà bếp',n:'Thớt gỗ hết mùi tanh',s:['Rắc muối hạt lên mặt thớt','Chà bằng nửa quả chanh','Để 5 phút rồi rửa sạch','Dựng đứng thớt nơi thoáng cho khô'],w:'Muối giúp chà sạch thớ gỗ. Mùi tanh cá có tính kiềm nên axit chanh trung hòa được.',l:'Không ngâm thớt gỗ lâu trong nước, không cho vào máy rửa bát.',k:'thớt|dao|chanh|muối'},
+ {c:'Nhà bếp',n:'Tay hết mùi tanh sau khi làm cá',s:['Xoa tay với nước cốt chanh hoặc giấm pha loãng','Để 1 phút','Rửa lại bằng xà phòng','Lau khô tay'],w:'Mùi tanh cá do chất amin có tính kiềm. Axit trong chanh, giấm trung hòa nên hết mùi.',l:'Tay đang có vết xước thì dùng giấm thật loãng.',k:'rửa tay|xà phòng|chanh'},
+ {c:'Nhà bếp',n:'Dao cùn mài nhanh bằng bát sứ',s:['Úp ngược một chiếc bát sứ','Tìm vòng gốm thô không tráng men dưới đáy bát','Đặt dao nghiêng khoảng 20 độ, kéo 10 lần mỗi bên','Rửa sạch bụi gốm, lau khô'],w:'Vòng gốm thô dưới đáy bát có độ nhám như đá mài mịn, đủ làm sắc lại lưỡi dao.',l:'Kéo dao ra xa người, giữ chắc bát trên mặt phẳng.',k:'dao|bát|kéo'},
+ {c:'Bảo quản thực phẩm',n:'Rau xanh tươi lâu trong tủ lạnh',s:['Nhặt bỏ lá dập, không rửa trước khi cất','Bọc rau trong giấy thấm khô','Cho vào túi có lỗ thoáng','Để ngăn rau của tủ lạnh'],w:'Nước đọng trên lá làm rau úng nhanh. Rau vẫn thở sau khi hái nên cần túi có lỗ.',l:'Rửa ngay trước khi nấu, không ngâm rồi cất lại.',k:'tủ lạnh|hộp|túi|rau'},
+ {c:'Bảo quản thực phẩm',n:'Chuối chín chậm hơn',s:['Tách rời từng quả khỏi nải','Bọc kín cuống bằng màng bọc thực phẩm','Để nơi thoáng mát, tránh nắng','Không để cạnh táo, bơ đang chín'],w:'Cuống chuối thải khí ethylene thúc trái chín. Bọc cuống làm chậm quá trình này.',l:'Chuối đã chín vàng có thể cho ngăn mát, vỏ thâm nhưng ruột vẫn ngon.',k:'màng bọc|túi|hộp'},
+ {c:'Bảo quản thực phẩm',n:'Rã đông thịt đúng cách',s:['Chuyển thịt xuống ngăn mát từ tối hôm trước','Cần gấp thì ngâm cả túi kín trong nước lạnh','Thay nước 30 phút một lần','Rã đông bằng nước hay lò vi sóng thì nấu ngay'],w:'Vi khuẩn sinh sôi rất nhanh ở khoảng 5 đến 60 độ. Rã đông ngoài bàn nhiều giờ là để thịt nằm đúng vùng nguy hiểm.',l:'Không rã đông ở nhiệt độ phòng nhiều giờ. Không ngâm nước nóng.',k:'tủ lạnh|tủ đông|hộp|túi zip|thịt'},
+ {c:'Bảo quản thực phẩm',n:'Tủ lạnh hết mùi',s:['Mở nắp một hộp baking soda đặt ở ngăn mát','Đậy kín thức ăn có mùi mạnh như sầu riêng, mắm','Lau tủ bằng nước ấm pha baking soda mỗi tháng','Thay hộp baking soda sau 3 tháng'],w:'Baking soda hút và trung hòa nhiều phân tử gây mùi, cả loại axit lẫn loại kiềm.',l:'Rút điện trước khi lau tủ. Không dùng chất tẩy mạnh trong tủ đựng thức ăn.',k:'tủ lạnh|baking|hộp'},
+ {c:'Bảo quản thực phẩm',n:'Rửa rau quả đúng cách',s:['Ngâm rau trong nước sạch 5 đến 10 phút','Rửa dưới vòi nước chảy 2 đến 3 lần','Rau ăn sống thì chà nhẹ từng lá','Để ráo rồi mới cắt'],w:'Dòng nước chảy cuốn trôi đất cát và vi sinh vật tốt hơn ngâm trong chậu nước đứng.',l:'Ngâm nước muối đặc không loại được thuốc trừ sâu tốt hơn, còn làm rau héo. Cắt trước khi rửa làm mất vitamin.',k:'rau|rổ|chậu|máy rửa'},
+ {c:'Phòng tắm',n:'Vòi sen tắc cặn chảy mạnh trở lại',s:['Đổ giấm trắng vào túi nilon','Bọc túi quanh đầu vòi sen, buộc chun','Ngâm 1 đến 2 giờ','Chải lỗ phun bằng bàn chải, xả nước 1 phút'],w:'Cặn trắng là đá vôi (canxi cacbonat). Axit trong giấm hòa tan cặn này.',l:'Vòi mạ vàng, mạ đồng không ngâm lâu. Thử ở chỗ khuất trước.',k:'vòi sen|giấm|nhà tắm'},
+ {c:'Phòng tắm',n:'Kính nhà tắm hết mờ cặn nước',s:['Pha giấm trắng với nước tỉ lệ 1:1 vào bình xịt','Xịt đều lên kính, để 10 phút','Lau bằng khăn sợi microfiber','Gạt khô bằng cây gạt kính'],w:'Vệt mờ là cặn khoáng từ nước. Giấm hòa tan cặn, gạt khô ngay để cặn không đọng lại.',l:'Không dùng giấm trên đá tự nhiên như đá hoa cương, đá marble vì sẽ làm rỗ mặt đá.',k:'kính|lau kính|khăn|giấm'},
+ {c:'Phòng tắm',n:'Đường ron gạch hết đen',s:['Trộn baking soda với ít nước thành bột nhão','Phết lên đường ron, để 10 phút','Chải bằng bàn chải cứng','Xả sạch, lau khô, mở cửa cho thoáng'],w:'Bột baking soda vừa chà mòn nhẹ vừa đánh bật cặn bẩn trong rãnh ron.',l:'Ron mốc đen nặng thì dùng sản phẩm diệt nấm mốc theo hướng dẫn, đeo găng, mở cửa thoáng. Không trộn với chất tẩy khác.',k:'gạch|ron|bàn chải|baking|tẩy'},
+ {c:'Phòng tắm',n:'Bồn rửa bát chảy chậm, có mùi',s:['Đổ 1 ấm nước nóng khoảng 70 độ pha nước rửa bát vào lỗ thoát','Chờ 5 phút','Dùng dụng cụ thông cống cao su ấn mạnh vài lần','Lắp lưới chắn rác để phòng lần sau'],w:'Thủ phạm chính ở bồn rửa bát là mỡ đông. Nước nóng làm mỡ chảy, nước rửa bát cuốn mỡ đi.',l:'Ống nhựa không đổ nước sôi 100 độ. Không trộn các loại hóa chất thông cống với nhau.',k:'thông cống|bồn rửa|rửa bát|lưới'},
+ {c:'Khử mùi, côn trùng',n:'Giày hết mùi hôi',s:['Rắc 1 thìa baking soda vào mỗi chiếc giày','Để qua đêm','Sáng đổ hết bột ra','Luân phiên 2 đôi để giày kịp khô'],w:'Mùi hôi do vi khuẩn phân hủy mồ hôi tạo ra axit. Baking soda hút ẩm và trung hòa axit đó.',l:'Giày da lộn thì rắc vào túi vải rồi đặt vào giày.',k:'giày|dép|baking|khử mùi'},
+ {c:'Khử mùi, côn trùng',n:'Diệt muỗi tận gốc trong nhà',s:['Đổ hết nước đọng ở chậu, lốp xe, vỏ hộp','Úp ngược xô chậu không dùng','Thay nước bình hoa 2 đến 3 ngày một lần','Đậy kín bể, chum chứa nước'],w:'Muỗi đẻ trứng trong nước đọng, khoảng 7 ngày là thành muỗi. Phá nơi đẻ là chặn muỗi từ gốc.',l:'Nhà có trẻ nhỏ ưu tiên màn, lưới cửa hơn xịt hóa chất.',k:'muỗi|màn|vợt'},
+ {c:'Khử mùi, côn trùng',n:'Kiến không bò vào bếp',s:['Lau sạch vệt kiến đi bằng nước xà phòng','Đậy kín đường, mật ong, đồ ngọt','Lau ngay vết nước ngọt rơi vãi','Bịt khe hở chỗ kiến chui vào'],w:'Kiến đi theo vệt mùi do con đầu đàn để lại. Lau sạch vệt mùi thì đàn kiến mất đường.',l:'Không xịt thuốc côn trùng gần thức ăn, bát đĩa.',k:'kiến|hộp|lọ'},
+ {c:'Mùa nồm',n:'Nhà khô ráo mùa nồm',s:['Đóng kín cửa khi trời nồm','Lau sàn bằng khăn khô, không lau ướt','Bật máy hút ẩm hoặc điều hòa chế độ Dry','Không bật quạt thổi sàn'],w:'Mở cửa cho hơi ẩm bên ngoài tràn vào, gặp sàn lạnh là đọng nước. Quạt làm mặt sàn lạnh thêm nên càng đọng.',l:'Sàn ướt dễ trượt ngã, nhà có người già, trẻ nhỏ cần lau khô ngay.',k:'hút ẩm|lau nhà|cây lau|khăn'},
+ {c:'Mùa nồm',n:'Tủ quần áo không ẩm mốc',s:['Đặt túi hút ẩm hoặc gói hạt silica gel trong tủ','Không cất đồ còn ẩm','Không xếp quá chật, để khí lưu thông','Ngày khô ráo mở cửa tủ cho thoáng'],w:'Nấm mốc cần độ ẩm cao. Hút bớt ẩm và giữ thông thoáng thì mốc không phát triển.',l:'Thay túi hút ẩm khi đầy nước. Để xa tầm tay trẻ nhỏ.',k:'hút ẩm|tủ|móc|túi'},
+ {c:'Tiết kiệm điện',n:'Điều hòa mát mà đỡ tốn điện',s:['Đặt nhiệt độ từ 26 độ trở lên','Bật thêm quạt cho gió lưu thông','Đóng kín cửa phòng','Vệ sinh lưới lọc định kỳ'],w:'Mỗi độ đặt thấp hơn là máy phải chạy lâu hơn. Quạt giúp hơi mát lan đều nên thấy mát hơn ở cùng nhiệt độ.',l:'Không để gió điều hòa thổi thẳng vào người, nhất là trẻ nhỏ.',k:'điều hòa|quạt'},
+ {c:'Tiết kiệm điện',n:'Tủ lạnh chạy êm, tốn ít điện',s:['Để thức ăn nguội hẳn mới cho vào tủ','Hạn chế mở cửa tủ, mở ra thì lấy nhanh','Đặt tủ cách tường khoảng 10 cm','Không chất đồ quá đầy che lỗ gió'],w:'Thức ăn nóng và mỗi lần mở cửa đều đưa hơi nóng vào, máy nén phải chạy bù.',l:'Ngăn mát nên giữ dưới 5 độ, ngăn đông khoảng âm 18 độ để thực phẩm an toàn.',k:'tủ lạnh|hộp'},
+ {c:'Tiết kiệm điện',n:'Rút phích, cắt điện chờ',s:['Rút sạc điện thoại khi pin đầy','Tắt tivi bằng nút nguồn hoặc ổ cắm, không chỉ bằng điều khiển','Dùng ổ cắm có công tắc cho cụm thiết bị','Nồi cơm nấu xong ăn ngay thì rút điện'],w:'Thiết bị ở chế độ chờ vẫn hao điện suốt ngày đêm, cộng cả tháng thành con số đáng kể.',l:'Kiểm tra ổ cắm, dây điện cũ nóng, nứt thì thay ngay.',k:'ổ cắm|sạc|nồi cơm|ấm'},
+ {c:'Tiết kiệm điện',n:'Bình nóng lạnh an toàn, tiết kiệm',s:['Bật bình trước khi tắm 15 đến 30 phút','Ngắt điện bình khi bắt đầu tắm','Dùng bình có chống giật, có tiếp đất','Kiểm tra bình định kỳ'],w:'Để bình bật cả ngày là liên tục đun lại nước nguội. Ngắt khi tắm vừa an toàn vừa đỡ điện.',l:'Không tự sửa bình khi đang có điện. Thấy rò điện thì ngắt cầu dao, gọi thợ.',k:'bình nóng|nóng lạnh|cầu dao'},
+ {c:'An toàn',n:'3 cặp chất tẩy tuyệt đối không trộn',s:['Nước javel với giấm hoặc nước tẩy bồn cầu: sinh khí clo độc','Nước javel với nước có amoniac: sinh khí độc','Hai loại nước thông cống khác nhau: có thể phản ứng mạnh','Dùng từng loại riêng, xả sạch nước trước khi đổi loại'],w:'Khí sinh ra khi trộn gây cay mắt, ho, khó thở, nặng có thể nguy hiểm, nhất là trong nhà tắm kín.',l:'Lỡ hít phải: ra ngay chỗ thoáng, rửa mắt bằng nước sạch, khó thở thì gọi 115.',k:'tẩy|javel|bồn cầu|nước lau|thông cống|giấm'},
+ {c:'An toàn',n:'Chảo dầu bốc cháy: làm gì?',s:['Tắt bếp ngay','Đậy kín vung hoặc tấm chống cháy lên chảo','Không di chuyển chảo đang cháy','Tuyệt đối không dội nước'],w:'Nước gặp dầu nóng bốc hơi tức thì, hất dầu cháy văng ra khắp bếp. Đậy vung là cắt ô xy nên lửa tắt.',l:'Lửa lan ra ngoài chảo thì rời khỏi bếp, gọi 114.',k:'chảo|bếp|dầu|vung'},
+ {c:'An toàn',n:'Bị bỏng nhẹ khi nấu ăn',s:['Xả vết bỏng dưới vòi nước mát 20 phút','Tháo nhẫn, đồng hồ gần chỗ bỏng','Che nhẹ bằng gạc sạch','Không chọc vỡ bọng nước'],w:'Nước mát kéo nhiệt ra khỏi da, giảm đau và giảm độ sâu của vết bỏng.',l:'Không bôi kem đánh răng, nước mắm, đá lạnh. Bỏng rộng hoặc ở mặt, trẻ nhỏ thì đi viện ngay.',k:'bếp|nồi|ấm|chảo'}
+];
+/*MH_LIB_END*/
+var MH={shots:{},ver:0,busy:false};
 const QUOTES = [
   'Phụ nữ đẹp nhất\nlà khi tự tin làm điều mình yêu.',
   'Mỗi ngày một chút,\nrồi sẽ thành điều lớn lao.',
@@ -1557,9 +1606,9 @@ const QUOTES = [
   'Yêu bản thân\nlà khởi đầu của mọi điều đẹp đẽ.',
   'Sáng nay hãy mỉm cười,\nvì bạn xứng đáng có một ngày tốt lành.',
   'Khoác lên sự đam mê,\nsống trọn từng ngày.'];
-const KIND_VI = {step:'Bước làm', before:'Ảnh TRƯỚC', after:'Ảnh SAU', compare:'Thanh kéo so sánh trước – sau', cover:'Bìa tạp chí', look:'LOOK người mẫu (lướt đầu tới chân)', tri:'Ba khung dọc', polaroid:'Ảnh polaroid rơi', flash:'Cắt nhanh theo nhịp', sizes:'Thẻ chọn size', live:'Báo giờ live', logo:'Logo mở màn', hook:'Câu mở', hero:'Sản phẩm', detail:'Cận cảnh', studio:'Sân khấu', grid:'Bộ sưu tập', title:'Tựa đề',
+const KIND_VI = {tip:'Thẻ kiến thức mẹo hay', step:'Bước làm', before:'Ảnh TRƯỚC', after:'Ảnh SAU', compare:'Thanh kéo so sánh trước – sau', cover:'Bìa tạp chí', look:'LOOK người mẫu (lướt đầu tới chân)', tri:'Ba khung dọc', polaroid:'Ảnh polaroid rơi', flash:'Cắt nhanh theo nhịp', sizes:'Thẻ chọn size', live:'Báo giờ live', logo:'Logo mở màn', hook:'Câu mở', hero:'Sản phẩm', detail:'Cận cảnh', studio:'Sân khấu', grid:'Bộ sưu tập', title:'Tựa đề',
   value:'Điều shop cam kết', cta:'Đóng dấu mã', quote:'Câu nói', outro:'Kết', clip:'Bối cảnh', orbit:'Lia vòng quanh', dolly:'Zoom', split:'Chia đôi: sản phẩm + bối cảnh', pip:'Khung lồng sản phẩm', talk:'Lời thoại'};
-const EDIT_KEY = {step:'t', before:'t', after:'t', compare:'t', cover:'t', look:'t', tri:'t', flash:'t', sizes:'t2', live:'t', logo:'t2', hook:'t', hero:'t', detail:'t', studio:'t', grid:'t', title:'t', value:'t', cta:'t2', quote:'t', outro:'t', orbit:'t', dolly:'t', split:'t', pip:'t', clip:'t'};
+const EDIT_KEY = {tip:'t', step:'t', before:'t', after:'t', compare:'t', cover:'t', look:'t', tri:'t', flash:'t', sizes:'t2', live:'t', logo:'t2', hook:'t', hero:'t', detail:'t', studio:'t', grid:'t', title:'t', value:'t', cta:'t2', quote:'t', outro:'t', orbit:'t', dolly:'t', split:'t', pip:'t', clip:'t'};
 const TR_LEN = {whip:.28, zoom:.4, flash:.3, fade:.5, slide:.35, spin:.45, leak:.6, drop:.6, iris:.5, twirl:.6};
 const TARGET_SEC = 28; // cửa sổ điệp khúc khi phân tích nhạc
 // độ dài video do nhân viên chọn (mặc định 28 giây, Ông Chủ khuyên dùng)
@@ -1753,11 +1802,30 @@ const SCENES = {
   step(ctx,W,H,sc,lt,E){ const {o,u}=E; const p=clamp01(lt/sc.d);
     if(sc.clip) drawMedia(ctx,sc.clip,0,0,W,H,1.04+.08*p,.5,.5); else if(sc.it){ if(imgInfo(sc.it).white){ brandBg(ctx,W,H,o,.15); stage(ctx,sc.it,W,H,o,{z:.88+.06*p,cy:.42,box:.7}); } else drawCoverAt(ctx,sc.it,0,0,W,H,1.06+.1*p); } else brandBg(ctx,W,H,o);
     const g=ctx.createLinearGradient(0,H*.5,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.8)'); ctx.fillStyle=g; ctx.fillRect(0,H*.5,W,H*.5);
-    const a=ease.out(seg01(lt,0,.45)); ctx.save(); ctx.translate(W*.07-(1-a)*W*.4,H*.09); ctx.font=fontOf(800,u*5.4); const lb='BƯỚC '+(sc.n||1), tw=ctx.measureText(lb).width;
-    ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=u*2; ctx.fillStyle=o.tag; rrect(ctx,0,0,tw+u*7,u*10,u*5); ctx.fill(); ctx.shadowBlur=0; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(lb,u*3.5,u*5.3);
-    for(let i=0;i<(sc.of||3);i++){ ctx.fillStyle=i<(sc.n||1)?'#fff':'rgba(255,255,255,.4)'; ctx.beginPath(); ctx.arc(u*1.6+i*u*4.4,u*14,u*1.3,0,Math.PI*2); ctx.fill(); } ctx.restore();
+    const a=ease.out(seg01(lt,0,.45)); ctx.save(); ctx.translate(W*.07-(1-a)*W*.4,H*.09); ctx.font=fontOf(800,u*5.4); const lb=sc.lb||('BƯỚC '+(sc.n||1)), tw=ctx.measureText(lb).width;
+    ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=u*2; ctx.fillStyle=sc.warn?'#D97706':sc.lb?'#0E7A6B':o.tag; rrect(ctx,0,0,tw+u*7,u*10,u*5); ctx.fill(); ctx.shadowBlur=0; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(lb,u*3.5,u*5.3);
+    for(let i=0;i<(sc.of===0?0:sc.of||3);i++){ ctx.fillStyle=i<(sc.n||1)?'#fff':'rgba(255,255,255,.4)'; ctx.beginPath(); ctx.arc(u*1.6+i*u*4.4,u*14,u*1.3,0,Math.PI*2); ctx.fill(); } ctx.restore();
     if(sc.t){ ctx.save(); ctx.shadowColor='rgba(0,0,0,.55)'; ctx.shadowBlur=u*2; const f=fitLines(ctx,sc.t,FONT,800,u*6.6,W*.86,3);
       f.lines.forEach((l,i)=>{ const b=ease.out(seg01(lt,.25+i*.12,.7+i*.12)); ctx.globalAlpha=b; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillText(l,W*.07,H*.7+i*f.size*1.22+(1-b)*u*4); }); ctx.restore(); } },
+  /* thẻ kiến thức mẹo hay: biểu tượng lớn nảy, con số chạy (30 phút, 40 độ…), chữ hiện theo từ, thanh tiến độ */
+  tip(ctx,W,H,sc,lt,E){ const {o,u}=E, p=clamp01(lt/sc.d), kind=sc.lb?(sc.warn?'note':'why'):'step', EMO_F=s=>`${s}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`;
+    const pal=kind==='note'?['#FFF4E0','#FFE2B8','#D97706']:kind==='why'?['#E6F7F3','#C8EEE5','#0E7A6B']:['#FFF7EF','#FCE6EC','#E5344D'];
+    const g=ctx.createLinearGradient(0,0,W,H); g.addColorStop(0,pal[0]); g.addColorStop(1,pal[1]); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.save(); ctx.globalAlpha=.08; ctx.fillStyle=pal[2]; for(let i=0;i<9;i++){ const r=W*(.08+.1*rnd(i+3)), x=W*rnd(i*7.1), y=((rnd(i*3.3)*H)+lt*u*(6+i))%(H+r*2)-r; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); } ctx.restore();
+    const a0=ease.out(seg01(lt,0,.4)); ctx.save(); ctx.globalAlpha=a0; ctx.textBaseline='middle'; ctx.textAlign='left'; ctx.font=fontOf(800,u*4.6); const lb=sc.lb||('BƯỚC '+(sc.n||1)+(sc.of?' / '+sc.of:'')), tw=ctx.measureText(lb).width;
+    ctx.fillStyle=pal[2]; rrect(ctx,W*.07,H*.1,tw+u*7,u*9,u*4.5); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillText(lb,W*.07+u*3.5,H*.1+u*4.7);
+    if(sc.of){ const bw=W*.86, bx=W*.07, by=H*.1+u*13; ctx.fillStyle='rgba(0,0,0,.08)'; rrect(ctx,bx,by,bw,u*1.6,u*.8); ctx.fill(); ctx.fillStyle=pal[2]; rrect(ctx,bx,by,bw*((sc.n-1)+ease.inout(seg01(lt,.2,1)))/sc.of,u*1.6,u*.8); ctx.fill(); }
+    if(sc.tt){ ctx.font=fontOf(700,u*3.2); ctx.fillStyle='rgba(21,32,44,.6)'; ctx.fillText(sc.tt.length>40?sc.tt.slice(0,39)+'…':sc.tt,W*.07,H*.1+u*20); } ctx.restore();
+    const cx=W/2, cy=H*.37, R=W*.26, b=ease.back(seg01(lt,.1,.6)); if(b>0){ ctx.save(); ctx.translate(cx,cy+Math.sin(lt*2.4)*u*.8); ctx.scale(b,b);
+      if(kind==='why'){ const gl=ctx.createRadialGradient(0,0,R*.3,0,0,R*1.5); gl.addColorStop(0,'rgba(255,214,90,'+(.45+.2*Math.sin(lt*4))+')'); gl.addColorStop(1,'rgba(255,214,90,0)'); ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(0,0,R*1.5,0,Math.PI*2); ctx.fill(); }
+      ctx.shadowColor='rgba(0,0,0,.15)'; ctx.shadowBlur=u*4; ctx.shadowOffsetY=u*1.2; ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.fill(); ctx.shadowColor='transparent';
+      ctx.lineWidth=u*1.2; ctx.strokeStyle=pal[2]; ctx.beginPath(); ctx.arc(0,0,R*1.08,-Math.PI/2,-Math.PI/2+Math.PI*2*ease.inout(seg01(lt,.2,Math.min(2.2,sc.d*.6)))); ctx.stroke();
+      ctx.rotate(kind==='note'?.08*Math.sin(lt*9)*Math.max(0,1-lt/1.2):.05*Math.sin(lt*2)); ctx.font=EMO_F(R*1.05); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(sc.ic||(kind==='why'?'💡':kind==='note'?'⚠️':'✨'),0,R*.06);
+      ctx.restore(); }
+    if(sc.num){ const m=sc.num, c=ease.out(seg01(lt,.45,1.3)), v=m.v*c, txt=(m.v%1?v.toFixed(1):Math.round(v))+' '+m.u; ctx.save(); ctx.font=fontOf(900,u*8.5); const w2=ctx.measureText(txt).width+u*8; const y=cy+R+u*7, a2=ease.back(seg01(lt,.4,.8));
+      if(a2>0){ ctx.translate(cx,y); ctx.scale(a2,a2); ctx.shadowColor='rgba(0,0,0,.2)'; ctx.shadowBlur=u*2; ctx.fillStyle=pal[2]; rrect(ctx,-w2/2,-u*6,w2,u*12,u*6); ctx.fill(); ctx.shadowColor='transparent'; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(txt,0,u*.5); } ctx.restore(); }
+    if(sc.t){ const f=fitLines(ctx,sc.t,FONT,800,u*(sc.t.length>70?5.2:6.4),W*.86,5), lh=f.size*1.28, y0=H*(sc.num?.66:.62); const nW=sc.t.split(/\s+/).length, kk=clamp01((lt-.3)/Math.max(.8,sc.d*.32))*nW+1; let wi=0;
+      ctx.save(); ctx.font=fontOf(800,f.size); ctx.textBaseline='top'; f.lines.forEach((l,i)=>{ const ws=l.split(' '); let x=W/2-ctx.measureText(l).width/2; ws.forEach(wd=>{ wi++; const al=clamp01(kk-wi+1); ctx.globalAlpha=.25+.75*al; ctx.fillStyle=mix('#7a8693','#15202C',al); ctx.fillText(wd,x,y0+i*lh+(1-al)*u*1.2); x+=ctx.measureText(wd+' ').width; }); }); ctx.restore(); } },
   before(ctx,W,H,sc,lt,E){ baShot(ctx,W,H,sc,lt,E,false); },
   after(ctx,W,H,sc,lt,E){ baShot(ctx,W,H,sc,lt,E,true); },
   compare(ctx,W,H,sc,lt,E){ const {o,u}=E; const p=clamp01(lt/sc.d); const A=sc.it, B=sc.it2||sc.it; const pos=p<.4?1-.85*ease.inout(p/.4):p<.72?.15+.7*ease.inout((p-.4)/.32):.85-.35*ease.inout((p-.72)/.28);
@@ -1771,6 +1839,8 @@ const SCENES = {
     if(sc.it && !imgInfo(sc.it).white){ blurFill(ctx,sc.it,W,H,z,.5); } else brandBg(ctx,W,H,o,.25); bokeh(ctx,W,H,lt,12,.12);
     const sw=seg01(lt,0,.9); if(sw>0&&sw<1){ ctx.save(); const x=-W*.6+sw*W*2.2, g=ctx.createLinearGradient(x-W*.35,0,x+W*.35,H*.25); g.addColorStop(0,'rgba(255,255,255,0)'); g.addColorStop(.5,`rgba(255,255,255,${.25*Math.sin(sw*Math.PI)})`); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); ctx.restore(); }
     ctx.save(); ctx.shadowColor='rgba(0,0,0,.55)'; ctx.shadowBlur=u*2.5; const r=popWords(ctx,(sc.t||'').toUpperCase(),W,H*.46,u*10.8,lt,o,{stagger:E.style==='ban'||E.style==='lv'?.11:.16,anim:sc.ta}); ctx.restore();
+    if(sc.ics&&sc.ics.length){ const n=sc.ics.length, gap=W*.2; ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font=`${u*11}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`;
+      sc.ics.forEach((ic,i)=>{ const b=ease.back(seg01(lt,.5+i*.15,.85+i*.15)); if(b<=0) return; ctx.save(); ctx.translate(W/2+(i-(n-1)/2)*gap,H*.7+Math.sin(lt*3+i)*u*.8); ctx.scale(b,b); ctx.fillStyle='rgba(255,255,255,.92)'; ctx.beginPath(); ctx.arc(0,0,u*8,0,Math.PI*2); ctx.fill(); ctx.fillText(ic,0,u*.6); ctx.restore(); }); ctx.restore(); }
   },
   hero(ctx,W,H,sc,lt,E){ const {o,u}=E; const p=ease.inout(clamp01(lt/sc.d)); const z=sc.cam==='out'?1.28-.28*p:sc.cam==='pan'?1.06:1+.12*p; const dx=sc.cam==='pan'?(p-.5)*-W*.12:0;
     let ent=null; const eT=seg01(lt,0,.75); if(sc.enter && eT<1) ent=entOf(sc.enter,eT,W,H);
@@ -2001,7 +2071,7 @@ function drawDirector(ctx,W,H,st,t,E){ FXT=t; let acc=0, i=0; for(; i<st.length-
   else { const cm=camOn(ctx,W,H,sc,lt,E); drawScene(ctx,W,H,sc,lt,E); if(cm) ctx.restore(); }
   post(ctx,W,H,t,E);
   // mở đầu: dải sáng mở màn từ giữa khung; kết thúc: tối dần
-  const u=E.u; if(i===0 && lt<.9){ const a=ease.inout(seg01(lt,0,.9)), bh=H*a/2; ctx.save(); ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H/2-bh); ctx.fillRect(0,H/2+bh,W,H/2-bh);
+  const u=E.u; if(i===0 && lt<.4){ /* mở màn nhanh, khung đầu đã thấy 60% hình (khung đầu là ảnh xem trước trên Facebook, không để đen) */ const a=.6+.4*ease.out(seg01(lt,0,.4)), bh=H*a/2; ctx.save(); ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H/2-bh); ctx.fillRect(0,H/2+bh,W,H/2-bh);
     const gl=ctx.createLinearGradient(0,0,W,0); gl.addColorStop(0,'rgba(255,240,220,0)'); gl.addColorStop(.5,`rgba(255,244,230,${1-a})`); gl.addColorStop(1,'rgba(255,240,220,0)'); ctx.fillStyle=gl;
     ctx.fillRect(0,H/2-bh-u*.5,W,u); ctx.fillRect(0,H/2+bh-u*.5,W,u); ctx.restore(); }
   const total=st.reduce((x,s)=>x+s.d,0); if(t>total-.7){ ctx.fillStyle=`rgba(0,0,0,${ease.inout(seg01(t,total-.7,total-.05))})`; ctx.fillRect(0,0,W,H); } }
@@ -2108,11 +2178,16 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     if(roll.length) out.push({k:'orbit',d:D(6),it:roll[0],dir:1,t:'',tr:'iris'});
     if(lines.length>1){ const bg=nextBg(); out.push({k:'quote',d:D(8),t:lines.join('\n'),clip:bg.clip||null,it:bg.it||null,tr:'twirl'}); }
     out.push({k:'outro',d:D(5),t:S.thSlogan||shop,t2:shop,tr:'leak'}); }
-  else if(st==='mh'){ const G=chosenGroups().slice(0,1); const g=G[0]; const its=g?g.its:[]; const title=(S.mhTitle||'').trim()||'Mẹo hay việc nhà';
-    let steps=(S.mhSteps||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,4); if(!steps.length) steps=['Chuẩn bị đồ cần dùng','Làm theo hướng dẫn trên bao bì sản phẩm','Lau lại cho sạch, cất gọn'];
-    out.push({k:'hook',d:D(4),t:/^m[eẹ]o/i.test(title)?title+'?':'Mẹo hay: '+title+'?',it:its[0]||null,tr:''});
-    const media=clips.slice(); steps.forEach((t,i)=>{ const m=media[i]||null; if(m) used.add(m.id); out.push({k:'step',d:D(6),n:i+1,of:steps.length,t,clip:m,it:m?null:(its[i%Math.max(1,its.length)]||null),tr:''}); });
-    if(g){ out.push({k:'hero',d:D(5),it:its[0],cam:'out',t:g.a.base||g.p.name||'',t2:g.code,tr:''}); if(g.code) out.push({k:'cta',d:D(5),t:g.code,t2:sizeHint(g)?`Bình luận ${sizeHint(g)} để Nancy giữ hàng`:`Bình luận ${g.code} để Nancy giữ hàng`,it:its[0],tr:''}); }
+  else if(st==='mh'){ const G=chosenGroups().slice(0,1); const g=S.mhProd===false?null:G[0]; const its=g?g.its:[]; const title=(S.mhTitle||'').trim()||'Mẹo hay việc nhà';
+    let steps=mhSteps(); if(!steps.length) steps=['Chuẩn bị đồ cần dùng','Làm theo hướng dẫn trên bao bì sản phẩm','Lau lại cho sạch, cất gọn'];
+    const sh=steps.map(t=>MH.shots[mhKey(title,t)]||null), first=sh.find(Boolean)||null;
+    out.push({k:'hook',d:D(4),t:/[?!]$/.test(title)?title:/^m[eẹ]o/i.test(title)?title+'?':'Mẹo hay: '+title+'?',it:first||null,ics:first?null:[...new Set(steps.map(mhIcon))].slice(0,4),tr:''}); /* chưa có ảnh bước thì nền thương hiệu, không dùng ảnh SP không liên quan */
+    const media=clips.slice(), TRS=['slide','zoom','whip','push']; steps.forEach((t,i)=>{ const m=sh[i]?null:(media[i]||null); if(m) used.add(m.id); const tr=i?TRS[i%TRS.length]:'zoom';
+      if(sh[i]||m) out.push({k:'step',d:D(6),n:i+1,of:steps.length,t,clip:m,it:sh[i]||null,tr}); else out.push({k:'tip',d:D(6),n:i+1,of:steps.length,t,tt:title,ic:mhIcon(t),num:mhNum(t),tr}); });
+    const why=(S.mhWhy||'').trim(), note=(S.mhNote||'').trim();
+    if(why) out.push({k:'tip',d:D(7),lb:'💡 VÌ SAO HIỆU QUẢ?',t:why,tt:title,tr:'zoom'});
+    if(note) out.push({k:'tip',d:D(6),lb:'⚠ LƯU Ý AN TOÀN',warn:true,t:note,tt:title,tr:'slide'});
+    if(g){ out.push({k:'hero',d:D(5),it:its[0],cam:'out',t:g.a.base||g.p.name||'',t2:g.code,tr:''}); if(g.code) out.push({k:'cta',d:D(5),t:g.code,head:'GÕ MÃ',t2:orderLine([g.code],!!sizeHint(g)),it:its[0],tr:''}); }
     out.push({k:'outro',d:D(4),t:'Lưu lại mẹo này và theo dõi Nancy nhé',t2:shop,tr:''}); }
   else if(st==='ts'){ const G=chosenGroups().slice(0,1); const g=G[0]; if(!g){ story=[]; return; } const its=g.its; const fn=it=>norm(it.file||it.name||'');
     let bf=its.find(it=>/truoc|before/.test(fn(it))), af=its.find(it=>/(^|[-_ ])sau|after/.test(fn(it)) && it!==bf); const rest=its.filter(it=>it!==bf && it!==af);
@@ -2150,7 +2225,7 @@ function varyFx(st,mod,seed){ const P=(FX_POOL[mod]||FX_POOL.sp).slice(), TA=TA_
   st.forEach((sc,i)=>{ if(i && sc.k==='cta' && mod!=='tc') sc.tr=mod==='qb'?'flash':'shake'; if(i && sc.k==='after') sc.tr='wipe-r'; if(i && sc.k==='compare') sc.tr='zoom'; }); }
 // câu chốt cảnh cuối: khách gõ đúng mã sản phẩm để đặt
 const orderLine=(codes,size)=>codes.length===1?`Gõ mã ${codes[0]}${size?' kèm size':''} để đặt hàng`:codes.length?`Gõ mã sản phẩm${size?' kèm size':''} để đặt hàng`:'Nhắn Nancy để đặt hàng';
-const MINB = {step:5, before:4, after:4, compare:7, cover:4, look:5, tri:4, polaroid:5, flash:3, sizes:5, live:4, split:5,pip:5,hook:3,hero:4,orbit:5,dolly:4,detail:3,studio:4,grid:4,title:4,value:4,cta:5,quote:5,outro:4,logo:4,clip:4};
+const MINB = {tip:5, step:5, before:4, after:4, compare:7, cover:4, look:5, tri:4, polaroid:5, flash:3, sizes:5, live:4, split:5,pip:5,hook:3,hero:4,orbit:5,dolly:4,detail:3,studio:4,grid:4,title:4,value:4,cta:5,quote:5,outro:4,logo:4,clip:4};
 const GROW = ['compare','step','after','before','look','polaroid','tri','cover','live','orbit','split','pip','dolly','hero','cta','quote','detail','value','studio','title','grid','outro','hook','logo'];
 // canh tổng thời lượng về độ dài đã chọn, mỗi cảnh tròn số nhịp nhạc; video ngắn thì bỏ bớt cảnh phụ, giữ câu mở + sản phẩm + chốt mã
 const DROP2 = ['split','pip','polaroid','studio','value','title','grid','orbit','sizes','dolly','detail','tri','flash','step','look','hero','before','compare','after','clip','quote','live','logo','cover','outro'];
@@ -2175,7 +2250,7 @@ function stretchStory(st,b){ const T=vdur(); let nat=st.reduce((a,s)=>a+s.d,0); 
     if(s.k==='hero'){ const rk=['dolly','orbit','detail','studio'][n%4]; c={k:rk,d:s.d,it:it2,t:'',t2:'',tr:'',dir:rk==='dolly'?(n%2?'out':'in'):(n%2?-1:1),f:n}; } /* thêm cảnh để đủ độ dài: đổi kiểu máy quay, không lặp một cảnh sản phẩm */
     st.splice(i+1,0,c); cand=cand.map(x=>x>i?x+1:x); nat+=c.d; n++; }
   return st; }
-function sigNow(){ const mt=S.vmusic==='lib'?mlibTrackFor(S.vstyle):null; return [mt?mt.id+':'+mt.bpm:'',S.vmusic,S.ttTitle,S.mhTitle,S.mhSteps,S.tsTitle,S.fxSeed,S.lvTime,clips.length,S.vstyle,S.vprod,items.map(i=>i.id+':'+i.code+':'+i.rot).join(','),clips.map(c=>c.id).join(','),S.tcQuote,S.tcText,S.thSlogan,S.thVals,S.shopName,curId,S.vstyle==='fn'?fnSig():''].join('|'); }
+function sigNow(){ const mt=S.vmusic==='lib'?mlibTrackFor(S.vstyle):null; return [mt?mt.id+':'+mt.bpm:'',S.vmusic,S.ttTitle,S.mhTitle,S.mhSteps,S.mhWhy,S.mhNote,S.mhProd,MH.ver,S.tsTitle,S.fxSeed,S.lvTime,clips.length,S.vstyle,S.vprod,items.map(i=>i.id+':'+i.code+':'+i.rot).join(','),clips.map(c=>c.id).join(','),S.tcQuote,S.tcText,S.thSlogan,S.thVals,S.shopName,curId,S.vstyle==='fn'?fnSig():''].join('|'); }
 function ensureStory(force){ const sg=sigNow(); if(force || sg!==storySig){ buildStory(); storySig=sg; renderStory(); } }
 const storyTotal = () => story.reduce((a,s)=>a+s.d,0);
 function renderStory(){ const box=$('#story'); if(!box) return; const vf=VFMTS[S.vfmt]; const tw=88, th=Math.round(tw*vf.h/vf.w);
@@ -2321,7 +2396,7 @@ function finEnhance(src,W,H,strength){ const gl=finSetup(W,H); if(!gl) return sr
   try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); }catch(e){ return src; }
   const r=W>=2000?1.6:W>=1400?1.25:1; gl.uniform2f(gl._u.px,r/W,r/H); gl.uniform1f(gl._u.amt,.6*(strength||1)); gl.uniform1f(gl._u.sm,.45); gl.uniform1f(gl._u.sat,1.04);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4); return FIN.cv; }
-// âm thanh: 48 kHz stereo, lọc ù dưới 30 Hz, đo độ to (LUFS, chuẩn EBU R128 rút gọn), đưa về −14 LUFS, chặn đỉnh −1,5 dB
+// âm thanh: 48 kHz stereo, lọc ù dưới 30 Hz, đo độ to (LUFS, chuẩn EBU R128 rút gọn), đưa về −14 LUFS, chặn đỉnh −2,5 dB (đỉnh thật sau nén ≤ −1 dBTP)
 async function finAudio(buf,total){ const sr=48000, len=Math.max(1,Math.ceil(total*sr)); const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
   if(!buf){ return {sr,L:new Float32Array(len),R:new Float32Array(len),lufs:null}; }
   const c=new OAC(2,len,sr), s=c.createBufferSource(); s.buffer=buf; const hp=c.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=30; s.connect(hp); hp.connect(c.destination); s.start(); const r=await c.startRendering();
@@ -2333,7 +2408,7 @@ async function finAudio(buf,total){ const sr=48000, len=Math.max(1,Math.ceil(tot
     const lu=m=>-0.691+10*Math.log10(m+1e-12), avg=a=>a.reduce((x,y)=>x+y,0)/Math.max(1,a.length); const g1=ms.filter(m=>lu(m)>-70); if(!g1.length) return null;
     const rel=lu(avg(g1))-10, g2=g1.filter(m=>lu(m)>rel); return lu(avg(g2.length?g2:g1)); };
   // tăng/giảm về đích, chặn đỉnh −1,5 dB có nhìn trước 5 ms nên không vỡ tiếng
-  const ceil=Math.pow(10,-1.5/20), la=Math.round(sr*.005), relK=1-Math.exp(-1/(sr*.08)), env=new Float32Array(len);
+  const ceil=Math.pow(10,-2.5/20), /* −2,5 dB mẫu để sau nén AAC/Opus đỉnh thật vẫn dưới −1 dBTP */ la=Math.round(sr*.005), relK=1-Math.exp(-1/(sr*.08)), env=new Float32Array(len);
   const apply=gain=>{ for(let i=0;i<len;i++){ const pk=Math.max(Math.abs(L[i]),Math.abs(R[i]))*gain; env[i]=pk>ceil?ceil/pk:1; } for(let i=len-2;i>=0;i--) env[i]=Math.min(env[i],env[i+1]+1/la);
     let g=1; for(let i=0;i<len;i++){ g=env[i]<g?env[i]:g+(env[i]-g)*relK; const m=gain*g; let a=L[i]*m, b=R[i]*m; L[i]=a>ceil?ceil:a<-ceil?-ceil:a; R[i]=b>ceil?ceil:b<-ceil?-ceil:b; } };
   const I0=await measure(); if(I0==null) return {sr,L,R,lufs:null}; apply(Math.min(8,Math.pow(10,(-14-I0)/20)));
@@ -2869,7 +2944,7 @@ bind('thumbText','thumbText','input',()=>renderThumbs());
 $('#btnThumb').onclick=async()=>{ await fontsReady(); const vf=VFMTS[S.vfmt]; const W=vf.w*1.5, H=vf.h*1.5; const c=document.createElement('canvas'); c.width=W; c.height=H; drawThumbV(c.getContext('2d'),W,H,+S.thumbV,thumbData());
   const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.92)); const d=new Date(); await saveFile(`anh-bia-${pad2(d.getDate())}${pad2(d.getMonth()+1)}-${pad2(d.getHours())}${pad2(d.getMinutes())}.jpg`,b,'image'); };
 chipGroup('#vmusicChips','vmusic','vmusic',syncVideoUI);
-bind('vsfx','vsfx','change',null); bind('tcText','tcText','input',()=>updateVsum()); bind('thSlogan','thSlogan','input',()=>updateVsum()); bind('lvTime','lvTime','input',()=>updateVsum()); bind('ttTitle','ttTitle','input',()=>updateVsum()); bind('mhTitle','mhTitle','input',()=>updateVsum()); bind('mhSteps','mhSteps','input',()=>updateVsum()); bind('tsTitle','tsTitle','input',()=>updateVsum()); bind('thVals','thVals','input',()=>updateVsum());
+bind('vsfx','vsfx','change',null); bind('tcText','tcText','input',()=>updateVsum()); bind('thSlogan','thSlogan','input',()=>updateVsum()); bind('lvTime','lvTime','input',()=>updateVsum()); bind('ttTitle','ttTitle','input',()=>updateVsum()); bind('mhTitle','mhTitle','input',()=>updateVsum()); bind('mhSteps','mhSteps','input',()=>updateVsum()); bind('mhWhy','mhWhy','input',()=>updateVsum()); bind('mhNote','mhNote','input',()=>updateVsum()); bind('tsTitle','tsTitle','input',()=>updateVsum()); bind('thVals','thVals','input',()=>updateVsum());
 $('#tcQuote').value=S.tcQuote; $('#tcQuote').onchange=e=>{ S.tcQuote=+e.target.value; S.tcText=''; $('#tcText').value=''; persist(); updateVsum(); };
 $('#vprod').onchange=e=>{ S.vprod=e.target.value; persist(); updateVsum(); };
 $('#btnFx').onclick=()=>{ S.fxSeed=(S.fxSeed||1)+1; persist(); ensureStory(true); updateVsum(); toast('Đã đổi sang bộ chuyển cảnh và kiểu xuất hiện khác'); };
@@ -3588,7 +3663,7 @@ function voSuggest(){ const G=chosenGroups(), g=G[0], st=S.vstyle; const nm=g?St
   if(st==='tc'){ L=[...quoteLines().map(end), ["Nancy's Shop chúc chị em luôn bình an và rạng rỡ.","Hãy dịu dàng với chính mình, chị em nhé.","Mỗi ngày một chút, rồi chị em sẽ thấy mình đã đi rất xa."][v]]; }
   else if(st==='th'){ L=[S.thSlogan?end(S.thSlogan):["Nancy's Shop.","Có một nơi luôn chọn đồ đẹp thay chị em.","Đẹp không cần ồn ào."][v], ...(S.thVals||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3).map(end), ["Nancy's Shop, đồng hành cùng chị em trên từng lựa chọn.","Cảm ơn chị em đã tin Nancy, mỗi ngày.","Chọn kỹ, để chị em chỉ việc tận hưởng."][v]]; }
   else if(st==='lv'){ const cs=G.map(x=>x.code).filter(Boolean).slice(0,4); L=[[`${S.lvTime||'Tối nay'}, Nancy lên live.`,`Chị em ơi, ${S.lvTime||'tối nay'} mình gặp nhau trên live.`,`Đếm ngược thôi, ${S.lvTime||'tối nay'} Nancy lên sóng.`][v], cs.length?`Nancy mang lên các mã ${cs.join(', ')}.`:'', 'Bật thông báo ngay, để không lỡ khoảnh khắc chốt đơn.', ['Hẹn chị em đúng giờ, Nancy chờ.','Đến sớm, chọn trước.','Gặp nhau trên live nhé chị em.'][v]]; }
-  else if(st==='mh'){ L=[S.mhTitle?end(S.mhTitle):'Một mẹo nhỏ, đỡ cả buổi dọn dẹp.', ...(S.mhSteps||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,4).map((s,i)=>`Bước ${i+1}, ${end(s).charAt(0).toLowerCase()+end(s).slice(1)}`), nm?`Nancy đang dùng ${nm}, mã ${code}.`:'', 'Lưu lại ngay, có ngày chị em sẽ cần đến.']; }
+  else if(st==='mh'){ const why=(S.mhWhy||'').trim(), note=(S.mhNote||'').trim(); L=[S.mhTitle?end(S.mhTitle):'Một mẹo nhỏ, đỡ cả buổi dọn dẹp.', ...mhSteps().map((s,i)=>`Bước ${i+1}, ${end(s).charAt(0).toLowerCase()+end(s).slice(1)}`), why?'Vì sao hiệu quả? '+end(why):'', note?'Lưu ý: '+end(note):'', S.mhProd!==false&&nm&&code?`Nancy đang dùng ${nm}. Chị em gõ mã ${code} để đặt hàng.`:'', 'Lưu lại ngay, có ngày chị em sẽ cần đến.'].filter(Boolean); }
   else if(st==='ts'){ L=[S.tsTitle?end(S.tsTitle):['Nhìn kỹ nhé, khác biệt nằm ở đây.','Trước và sau, chỉ cách nhau một lần dùng.','Chị em đoán xem, điều gì đã thay đổi?'][v], 'Đây là lúc trước khi dùng.', 'Và đây, sau khi dùng.', nm?`Khác biệt đến từ ${nm}, mã ${code}.`:'', cta]; }
   else if(st==='tt'){ const szl=sz.length?`Đủ size ${sz.join(', ')}, chị em chọn đúng dáng mình.`:'';
     const ctz=code?`Chị em gõ mã ${code} kèm size, ví dụ ${code}M, để đặt hàng.`:cta;
@@ -4446,6 +4521,36 @@ if(/^https?:$/.test(location.protocol)&&!window.claude){ [['manifest','manifest.
 (async()=>{ document.title='Xưởng Ảnh Shop · Bản '+($('#appVer').textContent.match(/\d+/)||[''])[0]; /* số phiên bản hiện cả trên tab Chrome */ await setLogo(S.logo); persist();
   $('#brandMark').innerHTML=`<img src="${LOGO_SHOP}" alt="">`; $('#brandMark').style.cssText='background:transparent;transform:none';
   await fontsReady(); await makeSamples(); renderGrid(); updateVsum(); })();
+
+const MH_ICONS=[[/javel|tẩy|clo|amoniac|khí độc/i,'☣️'],[/cháy|lửa/i,'🧯'],[/bỏng/i,'🩹'],[/baking soda/i,'🧂'],[/giấm/i,'🫙'],[/chanh/i,'🍋'],[/muối/i,'🧂'],[/ngâm|nước ấm|nước nóng|nước lạnh|vòi|xả/i,'💧'],[/phút|giờ|qua đêm/i,'⏱️'],[/chà|chải|bàn chải/i,'🪥'],[/phơi|nắng|thoáng/i,'☀️'],[/giặt|lộn trái|áo|quần/i,'👕'],[/lau|khăn/i,'🧽'],[/đun|sôi|bếp|lò/i,'🔥'],[/tủ lạnh|ngăn mát|ngăn đông/i,'🧊'],[/điều hòa|độ từ/i,'❄️'],[/quạt/i,'🌀'],[/rút|ổ cắm|sạc|điện/i,'🔌'],[/rau|lá/i,'🥬'],[/chuối/i,'🍌'],[/thịt/i,'🥩'],[/giày/i,'👟'],[/muỗi/i,'🦟'],[/kiến/i,'🐜'],[/dao|mài/i,'🔪'],[/thớt/i,'🪵'],[/kính|gương/i,'🪟'],[/hút ẩm|ẩm|nồm/i,'💨'],[/đóng|cửa/i,'🚪'],[/găng/i,'🧤'],[/túi|bọc/i,'🛍️']];
+function mhIcon(t){ const m=MH_ICONS.find(x=>x[0].test(t)); return m?m[1]:'✨'; }
+function mhNum(t){ const m=String(t).match(/(\d+(?:[.,]\d+)?)\s*(phút|giờ|độ|thìa|lần|cm|lít)/i); if(!m) return null; const v=parseFloat(m[1].replace(',','.')); return v>0&&v<1000?{v,u:m[2].toLowerCase()==='độ'?'°C':m[2].toLowerCase()}:null; }
+/* --- Mẹo hay: thư viện mẹo + đạo diễn vẽ ảnh từng bước --- */
+function mhSteps(){ return (S.mhSteps||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,4); }
+function mhKey(title,step){ return 'mh:'+fnHash([title,step].join('|')); }
+function mhLibRender(){ const sel=$('#mhLib'); if(!sel) return; const cats=[...new Set(MH_LIB.map(m=>m.c))]; sel.innerHTML='<option value="-1">Tự gõ mẹo của shop</option>'+cats.map(c=>`<optgroup label="${esc(c)}">`+MH_LIB.map((m,i)=>m.c===c?`<option value="${i}">${esc(m.n)}</option>`:'').join('')+'</optgroup>').join(''); sel.value=String(S.mhLib==null?-1:S.mhLib); if(sel.value!==String(S.mhLib)) sel.value='-1'; mhSuggest(); }
+function mhPick(i){ const m=MH_LIB[i]; S.mhLib=i; if(m){ S.mhTitle=m.n; S.mhSteps=m.s.join('\n'); S.mhWhy=m.w; S.mhNote=m.l; ['mhTitle','mhSteps','mhWhy','mhNote'].forEach(id=>$('#'+id).value=S[id]); } persist(); mhLoad(); try{ voAutoFill(); }catch(e){} ensureStory(true); updateVsum(); }
+function mhSuggest(){ const el=$('#mhSug'); if(!el) return; const g=(chosenGroups()||[])[0]; const nm=g?norm(String(g.a.base||g.p.name||'')):''; if(!nm){ el.textContent=`${MH_LIB.length} mẹo, ${new Set(MH_LIB.map(m=>m.c)).size} nhóm. Chọn sản phẩm để app gợi ý mẹo hợp.`; return; }
+  const hit=MH_LIB.map((m,i)=>({i,m})).filter(x=>x.m.k.split('|').some(w=>{ const n=norm(w); return n && (' '+nm+' ').includes(' '+n+' '); })).slice(0,4);
+  el.innerHTML=hit.length?'Hợp với sản phẩm đang chọn: '+hit.map(x=>`<button class="chip" type="button" data-mhpick="${x.i}">${esc(x.m.n)}</button>`).join(' '):'Chưa có mẹo khớp tên sản phẩm này, chọn trong danh sách.'; }
+async function mhLoad(){ let ch=0; const t=(S.mhTitle||'').trim(); for(const st of mhSteps()){ const k=mhKey(t,st); if(MH.shots[k]) continue; const b=await idbGet(k); if(b){ const it=await fnItOf(b).catch(()=>null); if(it){ MH.shots[k]=it; ch++; } } } if(ch){ MH.ver++; if(S.vstyle==='mh'){ ensureStory(true); updateVsum(); } } }
+async function mhDirect(){ if(!aiNeed()||MH.busy) return; const title=(S.mhTitle||'').trim(), steps=mhSteps(), msg=$('#mhMsg'); if(!title||!steps.length){ toast('Chọn mẹo trong thư viện hoặc gõ tên mẹo và các bước trước'); return; }
+  const todo=steps.filter(st=>!MH.shots[mhKey(title,st)]); if(!todo.length){ msg.textContent='Các bước đã có ảnh. Đổi bước hoặc tên mẹo để vẽ lại.'; return; }
+  MH.busy=true; const g=(chosenGroups()||[])[0], pimg=g&&g.its[0]?g.its[0].img:null, nm=g?String(g.a.base||g.p.name||'').trim():''; let done=0;
+  try{ for(const st of todo){ const i=steps.indexOf(st); msg.textContent=`Đạo diễn đang vẽ bước ${done+1}/${todo.length}… (mỗi ảnh khoảng 900đ, giữ trang mở)`;
+      const prompt=`Vertical 9:16 photo for a Vietnamese home-tips video "${title}". Step ${i+1} of ${steps.length}: "${st}" (Vietnamese; show this exact action, do NOT write any text).
+Director's staging: realistic close-up of a Vietnamese woman's hands doing exactly this step in a clean, bright, ordinary Vietnamese home (kitchen, bathroom, laundry corner or living room as fits the step). Show the tools and materials the step names (amounts and containers believable). The action must be visually obvious at a glance; tidy background, no clutter.
+Continuity: same home, same hands, same sleeve color and lighting across all steps of this tip.
+${pimg&&nm?`The product from the reference image ("${nm}") appears naturally in the scene only if this step uses it, same shape, colors and label, realistic size. `:''}Camera: 50mm, eye-level or slight top-down, shallow depth of field, soft natural window light, true-to-life colors, looks like a real phone photo, not CGI.
+Safety: never show unsafe practice (no mixing chemicals, no bare hands in harsh chemicals unless gloves, no water on burning oil).
+No text, no letters, no captions, no watermark, no faces needed.`;
+      const blob=await gImage(prompt,pimg?[pimg]:[],'9:16'); const k=mhKey(title,st); await idbPut(k,blob); MH.shots[k]=await fnItOf(blob); MH.ver++; done++; ensureStory(true); updateVsum(); }
+    msg.textContent=`✓ Đã vẽ ${done} ảnh bước làm. Bấm ▶ Xem thử. Bước nào chưa ưng thì sửa chữ bước đó rồi bấm vẽ lại.`; }
+  catch(e){ msg.textContent=(done?`Đã vẽ ${done} ảnh, dừng lại vì: `:'')+aiErrText(e); } MH.busy=false; }
+$('#mhLib').addEventListener('change',e=>{ const i=+e.target.value; if(i>=0) mhPick(i); else { S.mhLib=-1; persist(); } });
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-mhpick]'); if(!b) return; const i=+b.dataset.mhpick; $('#mhLib').value=String(i); mhPick(i); });
+$('#mhDirect').onclick=mhDirect; $('#mhProd').checked=S.mhProd!==false; $('#mhProd').onchange=e=>{ S.mhProd=e.target.checked; persist(); ensureStory(true); updateVsum(); }; $('#vprod').addEventListener('change',mhSuggest);
+['mhWhy','mhNote'].forEach(id=>$('#'+id).value=S[id]||''); mhLibRender(); mhLoad();
 })();
 </script>
 </body></html>
