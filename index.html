@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 68</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 69</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -791,7 +791,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="row"><button class="btn" type="button" id="aiClose">Đóng</button></div>
   </div>
 </div>
-<div class="modal" id="aiImgModal" hidden>
+<div class="modal" id="aiImgModal" hidden style="z-index:60">
   <div class="sheet" role="dialog" aria-labelledby="aiImgTitle">
     <h3 id="aiImgTitle">✨ Tạo ảnh bằng AI từ ảnh thật</h3>
     <p class="hint" id="aiImgCode"></p>
@@ -903,7 +903,16 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
       <label class="check"><input type="checkbox" id="postSize"> Hàng có size</label>
       <label class="check"><input type="checkbox" id="postPrice"> Ghi giá trong bài</label>
     </div>
+    <div class="field" id="postAIBox">
+      <button class="btn" type="button" id="postAIGo">✨ AI viết 3 bài hay hơn (Gemini, dưới 100đ)</button>
+      <div class="chips" id="postAIPick" hidden></div>
+      <p class="hint" id="postAIMsg">AI viết theo cách viết bài trên fanpage Nancy's Shop và bộ công thức bán hàng (nỗi đau → giải pháp, AIDA, kể chuyện). Chỉ dùng thông tin thật của mã, không bịa.</p>
+    </div>
     <textarea class="post" id="postText" aria-label="Nội dung bài viết"></textarea>
+    <div class="field">
+      <span class="lbl">Ảnh đăng kèm (bấm ảnh để sửa bằng AI: làm đẹp, đổi bối cảnh, tay cầm…)</span>
+      <div id="postImgs" style="display:flex;gap:8px;overflow-x:auto;padding:4px 0"></div>
+    </div>
     <div id="postCheck"></div>
     <div class="row">
       <button class="btn primary grow" type="button" id="postQuick">📲 Đăng nhanh: chép bài + lưu ảnh</button>
@@ -3667,6 +3676,58 @@ $('#aiImgUse').onclick=async()=>{ const it=AIIMG.it; if(!AIIMG.blob) return; con
   const nu={id:++uid,img,url:img.src,name:it.name,code:it.code,price:it.price,old:it.old,zoom:1,ox:0,oy:0,rot:0,sample:false,file:(it.code||'anh')+'-ai'+n,ai:true}; items.splice(items.indexOf(it)+1,0,nu); AIIMG.blob=null; AIIMG.url='';
   renderGrid(); updateVsum&&updateVsum(); $('#aiImgModal').hidden=true; toast('Đã thêm ảnh AI ngay sau ảnh gốc'); };
 $('#aiImgCtx').onclick=async()=>{ const it=AIIMG.it; if(!AIIMG.blob) return; await addClips([new File([AIIMG.blob],`${it.code||'anh'}-boi-canh.jpg`,{type:AIIMG.blob.type||'image/png'})]); AIIMG.blob=null; AIIMG.url=''; $('#aiImgModal').hidden=true; toast('Đã thêm làm ảnh bối cảnh ở mục Video'); };
+
+/* --- mục Ảnh: AI viết bài bán hàng (bộ skill bán hàng + cách viết trên fanpage Nancy's Shop) và sửa ảnh ngay trong hộp bài viết --- */
+function postImgsRender(){ if(!PS) return; const code=String(PS.p.code||'').trim().toUpperCase(), its=items.filter(i=>!i.sample && String(i.code||'').trim().toUpperCase()===code);
+  $('#postImgs').innerHTML=its.length?its.map(it=>`<button type="button" class="chip" data-pimg="${it.id}" title="Sửa ảnh này bằng AI" style="padding:0;position:relative;flex:0 0 auto;border-radius:10px;overflow:hidden"><img src="${esc(it.url||'')}" alt="Ảnh ${esc(code)}" style="width:76px;height:96px;object-fit:cover;display:block">${it.ai?'<span style="position:absolute;left:3px;top:3px;background:#7c3aed;color:#fff;font-size:10px;padding:1px 5px;border-radius:6px">AI</span>':''}<span style="position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:2px 0">✨ Sửa</span></button>`).join('')
+    :'<p class="hint">Mã này chưa có ảnh. Thêm ảnh ở bước 1 (đặt tên file theo mã, ví dụ '+esc(code||'C320')+'-1.jpg).</p>'; }
+$('#postImgs').addEventListener('click',e=>{ const b=e.target.closest('[data-pimg]'); if(!b) return; const it=items.find(i=>String(i.id)===b.dataset.pimg); if(!it) return; aiImgOpen(it); $('#aiImgKind').value='clean'; aiImgFill(); });
+{ const _use=$('#aiImgUse').onclick; $('#aiImgUse').onclick=async()=>{ await _use(); postImgsRender(); }; }
+{ const _open=openPost; openPost=function(p){ _open(p); $('#postAIPick').hidden=true; $('#postAIPick').innerHTML=''; $('#postAIMsg').textContent=IN_CLAUDE?'AI viết bài chỉ chạy ở bản máy tính (Chrome). Ở đây dùng bài mẫu bên dưới, sửa rồi chép.':"AI viết theo cách viết bài trên fanpage Nancy's Shop và bộ công thức bán hàng (nỗi đau → giải pháp, AIDA, kể chuyện). Chỉ dùng thông tin thật của mã, không bịa."; postImgsRender(); }; }
+const POST_AI={list:[]};
+function postAIAsk(){ const p=PS.p, a=analyse(p), code=String(p.code||'').trim().toUpperCase(), sz=sizesOf(p.size), ex=sz.includes(PS.cat==='giay'?'37':'M')?(PS.cat==='giay'?'37':'M'):(sz[0]||(PS.cat==='giay'?'37':'M'));
+  const facts=[`Mã: ${code}`,`Tên: ${a.base||p.name||''}`,a.brand?`Thương hiệu: ${a.brand}`:'',a.type&&a.type!=='sản phẩm'?`Loại: ${a.type}`:'',`Ngành hàng: ${CATS[PS.cat]||PS.cat}`,p.desc?`Mô tả/Công dụng (nguồn duy nhất về chất liệu, thông số, công dụng): ${String(p.desc).slice(0,900)}`:'Mô tả: (không có)',
+    PS.hasSize&&sz.length?`Size còn: ${sz.join(', ')}`:'',PS.price&&p.price?`Giá bán: ${vnd(p.price)}${p.old>p.price?` (giá hãng ${vnd(p.old)})`:''}`:'(Không ghi giá trong bài)',p.qty?`Số lượng đợt này: ${p.qty}`:''].filter(Boolean).join('\n');
+  const order=PS.hasSize?`📌 Chốt mã: ${code}, bình luận ${code} + size viết liền (ví dụ ${code}${ex}) để Nancy giữ hàng`:`📌 Chốt mã: ${code}, bình luận ${code} để Nancy giữ hàng`;
+  const tone=VOICES[PS.voice]||'Thân thiết', plat={fb:'bài Facebook fanpage (60–150 chữ)',reels:'caption Reels (3–5 dòng ngắn)',tiktok:'caption TikTok (2–4 dòng ngắn)',zalo:'tin nhắn Zalo gửi khách quen (4–6 dòng, xưng Nancy, gọi chị)'}[PS.plat]||'bài Facebook';
+  return `Bạn là người viết bài bán hàng giỏi nhất của Nancy's Shop (fanpage Facebook bán thời trang và hàng tiêu dùng nhập khẩu, khách chủ yếu là chị em 28–55 tuổi). Viết 3 phiên bản ${plat} cho sản phẩm dưới đây, giọng "${tone}".
+
+THÔNG TIN THẬT CỦA SẢN PHẨM (chỉ được dùng các thông tin này; ảnh đính kèm chỉ để nhìn màu, kiểu dáng):
+${facts}
+
+CÁCH VIẾT CỦA FANPAGE NANCY (học theo các bài đã đăng):
+- Dòng 1 là câu mở in HOA, 1–2 emoji (🔥 😍 ✨ 💎), gây tò mò hoặc chạm nỗi đau, ngắn gọn. Ví dụ phong cách: "HÀNG HIỆU NHẬT – LÀ PHẲNG CỰC ĐÃ, GIÁ CÀNG ĐÁNG MÊ! 🔥", "BẾP NƯỚNG ĐỨC – ĐƯA TIỆC NHÀ LÊN TẦM 5 SAO! ⭐".
+- Dòng 2: tên sản phẩm + thương hiệu + thông số chính (nếu có trong dữ liệu), có cờ xuất xứ nếu biết.
+- 2–3 dòng lợi ích, mỗi dòng 1 emoji đầu dòng (💎 ✨ ✅), nói LỢI ÍCH dùng thật trước, tính năng sau, có con số nếu dữ liệu có.
+- Dòng chốt đơn, giữ ĐÚNG câu này: ${order}
+- Dòng cuối 3–5 hashtag: #NancyShop${a.brand?' #'+hashWord(a.brand):''}${a.type&&a.type!=='sản phẩm'?' #'+hashWord(a.type):''} #${code}
+- Câu ngắn, xuống dòng nhiều, 2 dòng đầu phải đủ hấp dẫn để khách bấm "Xem thêm".
+
+3 PHIÊN BẢN, mỗi bản một công thức khác nhau:
+1. "Nỗi đau → giải pháp" (PAS): mở bằng phiền toái quen thuộc mà sản phẩm giải quyết.
+2. "AIDA": mở bằng điểm nổi bật hấp dẫn nhất → lợi ích → mong muốn → chốt.
+3. "Kể chuyện": một tình huống đời thường ngắn (2 câu) của chị em, rồi tới sản phẩm.
+
+LUẬT BẮT BUỘC:
+- Tuyệt đối không bịa: không thêm chất liệu, thông số, xuất xứ, công dụng, đánh giá khách, số lượng đã bán, giải thưởng, khan hàng, khuyến mãi nếu dữ liệu không có. Thiếu thông tin thì viết lợi ích chung chung nhưng thật, không đoán số.
+- Không dùng: tốt nhất, rẻ nhất, duy nhất, số 1, cam kết 100%, chữa, trị, trị mụn, trị nám, giảm béo, vĩnh viễn, thần tốc.
+- Lịch sự, sang, không giật gân, không sấc xược, không lặp "ạ/dạ" cuối câu, không nói "inbox để được tư vấn".
+- Không ghi giá nếu dữ liệu ghi "(Không ghi giá trong bài)". Không có giá nhập, lợi nhuận.
+- Không dùng dấu ngoặc vuông.
+
+Trả về DUY NHẤT JSON: [{"cong_thuc":"Nỗi đau → giải pháp","bai":"..."},{"cong_thuc":"AIDA","bai":"..."},{"cong_thuc":"Kể chuyện","bai":"..."}]`; }
+function postAIParse(t){ const m=String(t).replace(/```json|```/g,'').match(/\[[\s\S]*\]/); if(!m) return []; try{ return JSON.parse(m[0]).filter(x=>x&&x.bai).map(x=>({f:String(x.cong_thuc||'Bản AI'),t:String(x.bai).replace(/\r/g,'').replace(/\n{3,}/g,'\n\n').trim()})); }catch(e){ return []; } }
+function postAIFix(t){ const code=String(PS.p.code||'').trim().toUpperCase(); if(!new RegExp('\\b'+code.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(t)) t=t.replace(/\n(#[^\n]*)$/,'\n📌 Chốt mã: '+code+', bình luận '+code+' để Nancy giữ hàng\n$1'); return t; }
+$('#postAIGo').onclick=async()=>{ if(!aiNeed()) return; const btn=$('#postAIGo'); btn.disabled=true; $('#postAIMsg').textContent='AI đang viết 3 bài, khoảng 10–20 giây…';
+  try{ const code=String(PS.p.code||'').trim().toUpperCase(), it=items.find(i=>!i.sample && !i.ai && String(i.code||'').trim().toUpperCase()===code); const ask=postAIAsk(); let j;
+    const input=[{type:'text',text:ask}]; if(it){ try{ input.push({type:'image',mime_type:'image/jpeg',data:await imgB64((it.orig&&it.orig.img)||it.img,1024)}); }catch(e){} }
+    try{ j=await gFetch('interactions',{model:gModel('txt'),input}); }
+    catch(e){ if(e.code!=='nomodel' && e.code!=='api') throw e; const parts=input.map(x=>x.type==='text'?{text:x.text}:{inlineData:{mimeType:'image/jpeg',data:x.data}}); j=await gFetch(`models/${gModel('txt')}:generateContent`,{contents:[{role:'user',parts}],generationConfig:{responseMimeType:'application/json'}}); }
+    const L=postAIParse(gText(j)).map(x=>({f:x.f,t:postAIFix(x.t)})); if(!L.length) throw aiErr('empty'); POST_AI.list=L;
+    $('#postAIPick').innerHTML=L.map((x,i)=>`<button class="chip" type="button" data-aip="${i}" aria-pressed="${i===0}">Bản ${i+1}: ${esc(x.f)}</button>`).join(''); $('#postAIPick').hidden=false;
+    $('#postText').value=L[0].t; checkView(); $('#postAIMsg').textContent='Đã có 3 bài. Bấm từng bản để xem, sửa thẳng trong ô rồi bấm Đăng nhanh. Kiểm lại thông tin cho đúng hàng thật.'; }
+  catch(e){ $('#postAIMsg').textContent=aiErrText(e); } btn.disabled=false; };
+$('#postAIPick').addEventListener('click',e=>{ const c=e.target.closest('[data-aip]'); if(!c) return; const x=POST_AI.list[+c.dataset.aip]; if(!x) return; $('#postAIPick').querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===c)); $('#postText').value=x.t; checkView(); });
 
 /* --- câu lệnh Veo: tạo ngay bằng AI Google --- */
 $('#veoGo').onclick=async()=>{ if(!aiNeed()) return; const g=veoGroup(); const it=g&&g.its[0]; if(!it){ toast('Thêm ảnh sản phẩm trước'); return; } const k=$('#veoKind').value; const btn=$('#veoGo'); const msg=$('#veoAiMsg');
