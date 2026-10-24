@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 62</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 63</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -432,6 +432,8 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label for="fnScript">Lời thoại: mỗi dòng "Bố: …", "Mẹ: …" hoặc "Con: …"; dòng trong [ ] là bối cảnh</label>
             <textarea id="fnScript" rows="9"></textarea>
             <label class="check"><input type="checkbox" id="fnProd"> Lồng sản phẩm đang chọn vào câu Con giải quyết, cuối video chốt mã</label>
+            <label class="check"><input type="checkbox" id="fnLaugh" checked> Tràng cười khán giả + hiệu ứng ngạc nhiên, bối rối (😱 !?, ❓ mồ hôi, 😂 HA HA)</label>
+            <p class="hint">Muốn chỉ định tay: thêm <b>(ngạc nhiên)</b> hoặc <b>(bối rối)</b> vào câu thoại, ví dụ "Mẹ: (ngạc nhiên) Anh nấu thật á?". Không gõ thì app và đạo diễn AI tự đoán.</p>
             <div class="row"><button class="btn primary" type="button" id="btnFnShots">✨ Tạo ảnh từng cảnh (AI)</button><button class="btn" type="button" id="btnFnClear">Xoá ảnh cảnh</button></div>
             <p class="hint" id="fnMsg">Nên tạo ảnh cảnh AI: video đẹp như phim hoạt hình, máy quay tự lia vào người đang nói, bong bóng thoại chạy chữ theo giọng. Chưa có ảnh cảnh thì app ghép nhân vật lên nền phòng. Mỗi ảnh cảnh AI khoảng 900đ, một tập 7 câu khoảng 6.300đ.</p>
             <div id="fnShotList" class="cliplist"></div>
@@ -2212,6 +2214,20 @@ function sPad(c,out,t,notes,dur,v,cut=900){ notes.forEach(m=>[-9,9].forEach(dt=>
 function sSweep(c,out,t,dur,v,f0,f1,shape){ const s=c.createBufferSource(); s.buffer=c._noise; s.loop=true; const f=c.createBiquadFilter(); f.type='bandpass'; f.Q.value=1.1; f.frequency.setValueAtTime(f0,t); f.frequency.exponentialRampToValueAtTime(f1,t+dur);
   const g=c.createGain(); g.gain.setValueAtTime(0.0001,t); if(shape==='rise'){ g.gain.linearRampToValueAtTime(v,t+dur); g.gain.linearRampToValueAtTime(0.0001,t+dur+.03); } else { g.gain.linearRampToValueAtTime(v,t+dur*.65); g.gain.linearRampToValueAtTime(0.0001,t+dur); }
   s.connect(f); f.connect(g); g.connect(out); s.start(t); s.stop(t+dur+.06); }
+function sGlide(c,out,t,dur,f0,f1,v){ const o=c.createOscillator(), g=c.createGain(); o.type='sine'; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+dur); const vb=c.createOscillator(), vg=c.createGain(); vb.frequency.value=6; vg.gain.value=f0*.02; vb.connect(vg); vg.connect(o.frequency);
+  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(v,t+.03); g.gain.setValueAtTime(v,t+dur*.8); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(out); o.start(t); vb.start(t); o.stop(t+dur+.05); vb.stop(t+dur+.05); }
+function sCricket(c,out,t,v){ for(let j=0;j<3;j++){ const o=c.createOscillator(), g=c.createGain(); o.type='sine'; o.frequency.value=4600; const s=t+j*.05; g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(v,s+.008); g.gain.exponentialRampToValueAtTime(0.0001,s+.035); o.connect(g); g.connect(out); o.start(s); o.stop(s+.05); } }
+function sTom(c,out,t,f,v){ const o=c.createOscillator(), g=c.createGain(); o.frequency.setValueAtTime(f,t); o.frequency.exponentialRampToValueAtTime(f*.55,t+.18); aEnv(g,t,.003,v,.25); o.connect(g); g.connect(out); o.start(t); o.stop(t+.3); sNoise(c,out,t,.06,'bandpass',1800,1,v*.35); }
+/* tiếng cười khán giả tổng hợp: nhiều giọng "ha ha" (nguồn răng cưa qua 2 formant), lệch nhịp, có hơi thở + vang phòng */
+function sLaugh(c,out,t,lv,seed){ const n=lv>1?14:9, len=lv>1?2.3:1.4, bus=c.createGain(); bus.gain.value=lv>1?.8:1.5;
+  if(!c._room){ const sr=c.sampleRate, b=c.createBuffer(2,Math.floor(sr*.9),sr); for(let ch=0;ch<2;ch++){ const d=b.getChannelData(ch); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3); } c._room=c.createConvolver(); c._room.buffer=b; const rg=c.createGain(); rg.gain.value=.35; c._room.connect(rg); rg.connect(out); }
+  const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3800; bus.connect(lp); lp.connect(out); lp.connect(c._room);
+  for(let v=0;v<n;v++){ const R=k=>rnd(seed*31+v*7.3+k), fem=R(1)>.45, f0=fem?210+R(2)*90:115+R(2)*55, st=t+R(3)*(lv>1?.45:.25), rate=4.2+R(4)*2, hs=Math.max(3,Math.round((len-(st-t))*rate*(.6+R(5)*.4)));
+    const o=c.createOscillator(); o.type='sawtooth'; const g=c.createGain(); g.gain.value=0.0001; const f1=c.createBiquadFilter(), f2=c.createBiquadFilter(); f1.type=f2.type='bandpass'; f1.frequency.value=(fem?850:700)+R(6)*150; f2.frequency.value=(fem?1450:1150)+R(7)*250; f1.Q.value=6; f2.Q.value=8;
+    const pan=c.createStereoPanner?c.createStereoPanner():null; o.connect(f1); o.connect(f2); f1.connect(g); f2.connect(g); if(pan){ pan.pan.value=R(8)*1.6-.8; g.connect(pan); pan.connect(bus); } else g.connect(bus);
+    for(let h=0;h<hs;h++){ const a=st+h/rate, amp=.2*(1-h/hs*.75)*(.7+R(9+h)*.3); o.frequency.setValueAtTime(f0*(1.12-h/hs*.18),a); o.frequency.exponentialRampToValueAtTime(f0*(.97-h/hs*.15),a+.11);
+      g.gain.setValueAtTime(0.0001,a); g.gain.exponentialRampToValueAtTime(amp,a+.025); g.gain.exponentialRampToValueAtTime(0.0001,a+.13); }
+    o.start(st); o.stop(st+hs/rate+.2); sNoise(c,bus,st,hs/rate,'bandpass',1600+R(10)*600,1.2,.03); } }
 function sImpact(c,out,t,v){ const o=c.createOscillator(), g=c.createGain(); o.frequency.setValueAtTime(95,t); o.frequency.exponentialRampToValueAtTime(30,t+.9); aEnv(g,t,.005,v,1.3); o.connect(g); g.connect(out); o.start(t); o.stop(t+1.4); sNoise(c,out,t,.3,'lowpass',1000,.7,v*.5); }
 const MUSIC = {
   ban:{bpm:120,prog:[[60,64,67],[55,59,62],[57,60,64],[53,57,60]],bass:[36,31,33,29]},
@@ -2245,7 +2261,11 @@ function composeMusic(c,out,style,total){ const M=MUSIC[style]||MUSIC.ban, b=60/
       if(k>=1){ const arp=[0,1,2,1]; for(let e=0;e<4;e++) sPiano(c,out,t0+b*e+b/2,ch[arp[e]]+12,.07,1.2); }
       if(k>=2){ sKick(c,out,t0,.45); sKick(c,out,t0+2*b,.35); } } } }
 function addSfx(c,out,st,style){ let acc=0; st.forEach((sc,i)=>{ const t=acc;
-  if(sc.k==='talk'){ const tp=t+(sc.i===0?.4:.02); sTone(c,out,tp,86,.07,'sine',.11); sTone(c,out,tp+.05,91,.06,'sine',.08); }
+  if(sc.k==='talk'){ const tp=t+(sc.i===0?.4:.02), r0=t+fnRx0(sc); if(!sc.rx||sc.rx==='chot'){ sTone(c,out,tp,86,.07,'sine',.11); sTone(c,out,tp+.05,91,.06,'sine',.08); }
+    if(sc.rx==='ngac'){ /* đĩa than rít + "tưng" ngạc nhiên + bùm trầm */ sSweep(c,out,Math.max(0,r0-.04),.15,.55,2600,500); sSweep(c,out,r0+.11,.12,.4,600,3000); sImpact(c,out,r0+.02,.5); sTone(c,out,r0+.06,96,.55,'triangle',.16); sTone(c,out,r0+.06,103,.5,'sine',.1); }
+    if(sc.rx==='boi'){ /* còi trượt xuống "tuồi…" + dế kêu trong khoảng lặng */ sGlide(c,out,r0+.08,.6,1050,330,.13); sCricket(c,out,r0+.8,.05); sCricket(c,out,r0+1.35,.04); }
+    const le=t+(sc.le||sc.d-.6); if(sc.lau) sLaugh(c,out,le+(sc.lau>1?.4:.06),sc.lau,sc.i);
+    if(sc.rx==='chot'||(sc.lau>1&&sc.i===sc.n-1)){ /* trống "ba dum tsss" sau câu chốt */ const tc=le+.03; sTom(c,out,tc,190,.5); sTom(c,out,tc+.13,140,.5); sNoise(c,out,tc+.27,.7,'highpass',7000,.7,.32); } }
   if(i>0 && /^(whip|zoom|slide|spin|push|wipe|stripes|blinds|cube|doors|halves|clock|diamond|flip|grow|shrink|irisout|rise|blur)/.test(sc.tr||'')) sSweep(c,out,Math.max(0,t-.2),.38,.42,300,4500);
   if(i>0 && (sc.tr==='shake'||sc.tr==='glitch')){ sImpact(c,out,t,.5); sNoise(c,out,t,.12,'bandpass',2200,1.2,.25); }
   if(sc.k==='hero' && sc.enter && sc.enter!=='drop') sSweep(c,out,t,.5,.3,300,3800);
@@ -3619,7 +3639,7 @@ function voSpeech(buf){ const sr=buf.sampleRate, d=buf.getChannelData(0), hop=Ma
 function voCuesFrom(lines,segs,a,b){ if(!lines.length) return []; if(segs && segs.length===lines.length) return lines.map((t,i)=>({s:segs[i][0],e:segs[i][1]+.15,text:t}));
   if(segs && segs.length){ a=segs[0][0]; b=segs[segs.length-1][1]; } const w=lines.map(l=>Math.max(2,l.length)), W=w.reduce((x,y)=>x+y,0); let t=a; return lines.map((text,i)=>{ const s=t, e=t+(b-a)*w[i]/W; t=e; return {s,e:e-.05,text}; }); }
 function voCues(total){ const L=voLines(); if(!L.length) return []; let cues;
-  if(S.vo==='ai' && VO.ai && VO.sig===voSig()){ let t=.5; cues=VO.ai.segs.map(s=>{ const c={s:t,e:t+s.d,text:s.text}; t+=s.d+.3; return c; }); }
+  if(S.vo==='ai' && VO.ai && VO.sig===voSig()){ let t=.5; cues=VO.ai.segs.map((s,i)=>{ const c={s:t,e:t+s.d,text:s.text}; t+=s.d+.3+fnVoGap(i); return c; }); }
   else if(S.vo==='file' && VO.file){ cues=voCuesFrom(L,voSpeech(VO.file).map(x=>[x[0]+.3,x[1]+.3]),.3,.3+VO.file.duration); }
   else return []; /* chưa có giọng đọc thì không hiện phụ đề: tránh chữ lệch cảnh, trùng chữ trên cảnh */
   return subSplit(cues.filter(c=>c.s<total).map(c=>({s:c.s,e:Math.min(total,c.e),text:c.text}))); }
@@ -3670,7 +3690,7 @@ renderAudio=async function(style,st,total){ let vo=null; if(S.vo==='ai'||S.subOn
   const base=await renderAudio0(style,st,total); const file=S.vo==='file'?VO.file:null; if(!(vo||file)) return base;
   const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext, sr=44100, c=new OAC(2,Math.ceil((total+.25)*sr),sr); const cues=[];
   const vg=c.createGain(); vg.gain.value=1; const comp=c.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=3; comp.attack.value=.004; comp.release.value=.15; vg.connect(comp); comp.connect(c.destination);
-  if(vo){ let t=.5; vo.segs.forEach(sg=>{ if(t<total){ const s=c.createBufferSource(); s.buffer=sg.buf; s.connect(vg); s.start(t,sg.off,Math.min(sg.d,total-t)); cues.push([t,t+sg.d]); } t+=sg.d+.3; }); }
+  if(vo){ let t=.5; vo.segs.forEach((sg,i)=>{ if(t<total){ const s=c.createBufferSource(); s.buffer=sg.buf; s.connect(vg); s.start(t,sg.off,Math.min(sg.d,total-t)); cues.push([t,t+sg.d]); } t+=sg.d+.3+fnVoGap(i); }); }
   else { const s=c.createBufferSource(); s.buffer=file; s.connect(vg); s.start(.3,0,Math.max(.1,total-.3)); voSpeech(file).forEach(x=>cues.push([x[0]+.3,x[1]+.3])); }
   if(base){ const s=c.createBufferSource(); s.buffer=base; const mg=c.createGain(); s.connect(mg); mg.connect(c.destination); const g=mg.gain; g.setValueAtTime(1,0);
     cues.forEach(([a,b])=>{ g.setTargetAtTime(.3,Math.max(0,a-.2),.07); g.setTargetAtTime(1,b+.15,.25); }); s.start(0); }
@@ -3715,14 +3735,26 @@ function fnAutoFill(){ if(S.fnTpl>=0 && (!S.fnScript || S.fnScript===S.fnAuto)){
 function fnParse(){ const out=[]; let set=''; fnFill(S.fnScript||'').split('\n').forEach(r=>{ const s=r.trim().replace(/^\*+|\*+$/g,''); if(!s) return;
     if(/^[\[(]/.test(s)){ set=s.replace(/^[\[(]\s*(bối cảnh\s*:)?\s*/i,'').replace(/[\])]\s*$/,'').trim(); return; }
     const m=s.match(/^(bố|mẹ|con|ba|má)\s*[:：]\s*(.+)$/i); const who=m?({'bố':'bo','ba':'bo','mẹ':'me','má':'me','con':'con'})[m[1].toLowerCase()]:'ke';
-    const text=(m?m[2]:s).trim(); if(text && !/^tên tập\s*:/i.test(s)) out.push({who,text,set}); }); return out.slice(0,12); }
+    let text=(m?m[2]:s).trim(), rx=''; const tg=text.match(/[\[(]\s*(ngạc nhiên|bất ngờ|sốc|giật mình|bối rối|lúng túng|ngơ ngác)\s*[\])]/i);
+    if(tg){ rx=/bối|lúng|ngơ/i.test(tg[1])?'boi':'ngac'; text=text.replace(tg[0],'').replace(/\s{2,}/g,' ').trim(); }
+    if(text && !/^tên tập\s*:/i.test(s)) out.push({who,text,set,rx}); }); return out.slice(0,12); }
+/* phản ứng của câu thoại: 'ngac' (ngạc nhiên, sốc), 'boi' (bối rối, chống chế), 'chot' (câu chốt cuối). Thứ tự: thẻ gõ tay, đạo diễn AI, đoán theo lời */
+const FN_B='(^|[\\s,.…!?"“])', FN_E='(?=$|[\\s,.…!?"”])';
+const FN_RX_NGAC=new RegExp(FN_B+'(hả|hở|ối|ối giời|trời ơi|trời đất|cái gì|thật á|thật hả|sao cơ|ôi|ơ kìa)'+FN_E,'i'), FN_RX_BOI=new RegExp(FN_B+'(ơ|ờ|ừm|ừ thì|hmm|ủa|thì…|thế à)'+FN_E,'i');
+/* tràng cười khán giả: 2 = cười lớn (câu chốt), 1 = cười khúc khích (bối rối, chống chế, câu có "…" đặt từ gây cười cuối); không cười 2 câu liền */
+function fnLaughs(P,nm){ let prev=0; return P.map((l,i)=>{ const rx=fnReact(l,i,P,nm); let v=(rx==='chot'||i===P.length-1)?2:(rx==='boi'||(i>0&&rx!=='ngac'&&/…\s*\S/.test(l.text)))?1:0; if(v===1&&prev) v=0; prev=v; return v; }); }
+const FN_LGAP=[0,.5,.95];
+function fnVoGap(i){ if(S.vstyle!=='fn'||S.fnLaugh===false) return 0; const P=fnParse(), g=fnProd(), a=fnLaughs(P,g?String(g.a.base||g.p.name||'').trim():''); return FN_LGAP[a[i]|0]||0; }
+function fnDirSig(P,nm){ return fnHash(P.map(l=>l.who+':'+l.text+'@'+(l.set||'')).join('\n')+'|'+nm); }
+function fnReact(l,i,P,nm){ if(l.rx) return l.rx; const d=S.fnDir; if(d && d.phan && d.sig===fnDirSig(P,nm) && d.phan[i]!==undefined && d.phan[i]!==null) return d.phan[i]||(i===P.length-1?'chot':'');
+  const t=l.text||''; if(/\?!|!\?/.test(t) || FN_RX_NGAC.test(t)) return 'ngac'; if(FN_RX_BOI.test(t) || (l.who==='bo' && /…/.test(t) && i<P.length-1)) return 'boi'; return i===P.length-1?'chot':''; }
 function fnVoLines(){ if(typeof FN_WHO==='undefined'||!FN_WHO) return []; const P=fnParse(); if(!P.length) return []; const g=fnProd();
   return P.map(l=>(l.who==='ke'?'':FN_WHO[l.who].name+': ')+l.text).concat([g&&g.code?`Chị em gõ mã ${g.code} để đặt hàng.`:`Theo dõi ${S.shopName||"Nancy's Shop"} để xem tập sau nhé.`]); }
 function fnSpk(line){ const m=String(line).match(/^(Bố|Mẹ|Con)\s*:\s*(.+)$/); return m?{who:({'Bố':'bo','Mẹ':'me','Con':'con'})[m[1]],text:m[2]}:null; }
 function fnDur(i,L){ if(S.vo==='ai' && VO.ai && VO.sig===voSig() && VO.ai.segs[i]) return VO.ai.segs[i].d; const sp=fnSpk(L[i]||''); return Math.max(1.4,wordCount(sp?sp.text:(L[i]||''))/3.1+.5); }
 function fnShotKey(l){ const g=fnProd(); return [S.fnLook,l.who,l.text,l.set,g?g.code:''].join('|'); }
 function fnHash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return (h>>>0).toString(36); }
-function fnSig(){ if(typeof FN==='undefined'||!FN) return ''; return [S.fnScript,S.fnLook,S.fnProd,S.fnTitle,S.vo,VO.ai&&VO.sig===voSig()?VO.ai.total:0,FN.ver].join('~'); }
+function fnSig(){ if(typeof FN==='undefined'||!FN) return ''; return [S.fnScript,S.fnLook,S.fnProd,S.fnTitle,S.fnLaugh,S.vo,VO.ai&&VO.sig===voSig()?VO.ai.total:0,FN.ver].join('~'); }
 function fnFirstShot(){ const P=fnParse(); for(const l of P){ const it=FN.shots[fnShotKey(l)]; if(it) return it; } return null; }
 function fnPFrom(P,g){ if(!g) return 1e9; const nm=String(g.a.base||g.p.name||'').trim(), k=nm?norm(nm).split(' ').slice(0,2).join(' '):''; const f=k?P.findIndex(l=>norm(l.text).includes(k)):-1; return f>=0?f:Math.max(0,P.findIndex(l=>l.who==='con')); }
 /* sản phẩm hiện giữa khung (khi chưa có ảnh cảnh AI): bật lên ở câu nhắc tới, ở lại tới hết */
@@ -3737,8 +3769,9 @@ function fnProdCard(ctx,W,H,sc,lt,E){ const pr=sc.pr, im=pr&&pr.it&&pr.it.img; i
   ctx.restore();
   if(pr.pop&&a<1){ ctx.save(); ctx.strokeStyle='rgba(255,210,60,'+(1-a)+')'; ctx.lineWidth=u*.8; for(let i=0;i<8;i++){ const an=i*Math.PI/4, r1=side*(.55+.3*a), r2=r1+side*.18; ctx.beginPath(); ctx.moveTo(cx+Math.cos(an)*r1,cy+Math.sin(an)*r1); ctx.lineTo(cx+Math.cos(an)*r2,cy+Math.sin(an)*r2); ctx.stroke(); } ctx.restore(); } }
 function fnBuild(){ const P=fnParse(), L=fnVoLines(), g=fnProd(), shop=S.shopName||"Nancy's Shop", out=[]; if(!P.length) return out;
-  const pF=fnPFrom(P,g), pit=g&&g.its[0]?g.its[0]:null;
-  P.forEach((l,i)=>out.push({k:'talk',d:+(fnDur(i,L)+.3+(i===0?.5:0)).toFixed(3),who:l.who,t:l.text,i,n:P.length,shot:FN.shots[fnShotKey(l)]||null,pr:pit&&i>=pF?{it:pit,code:g.code,pop:i===pF}:null,tr:i&&FN.shots[fnShotKey(l)]&&FN.shots[fnShotKey(P[i-1])]!==FN.shots[fnShotKey(l)]?['zoom','whip','flash'][i%3]:i&&l.who==='con'&&P[i-1].who!=='con'?'zoom':''}));
+  const pF=fnPFrom(P,g), pit=g&&g.its[0]?g.its[0]:null, gnm=g?String(g.a.base||g.p.name||'').trim():'';
+  const LA=S.fnLaugh===false?P.map(()=>0):fnLaughs(P,gnm);
+  P.forEach((l,i)=>out.push({k:'talk',rx:fnReact(l,i,P,gnm),lau:LA[i],le:fnDur(i,L)+(i===0?.5:0),d:+(fnDur(i,L)+.3+(i===0?.5:0)+FN_LGAP[LA[i]]).toFixed(3),who:l.who,t:l.text,i,n:P.length,shot:FN.shots[fnShotKey(l)]||null,pr:pit&&i>=pF?{it:pit,code:g.code,pop:i===pF}:null,tr:i&&FN.shots[fnShotKey(l)]&&FN.shots[fnShotKey(P[i-1])]!==FN.shots[fnShotKey(l)]?['zoom','whip','flash'][i%3]:i&&l.who==='con'&&P[i-1].who!=='con'?'zoom':''}));
   const dl=fnDur(P.length,L)+.3;
   if(g && g.code){ out.push({k:'cta',d:+(dl+.6).toFixed(3),t:g.code,t2:'Gõ mã '+g.code+' để đặt hàng',it:g.its[0],tr:'flash'}); out.push({k:'outro',d:2.5,t:orderLine([g.code]),t2:shop,tr:'fade'}); }
   else out.push({k:'outro',d:+Math.max(3,dl+.8).toFixed(3),t:'Theo dõi Nancy để xem tập sau',t2:shop,tr:'fade'});
@@ -3778,7 +3811,7 @@ function fnBubble(ctx,W,H,sc,lt,E){ const {u}=E, w=FN_WHO[sc.who]||FN_WHO.ke, t0
   const em=sc.shot?fnEmo(sc):'', ea=ease.back(seg01(lt,t0+.25,t0+.6)); if(em&&ea>0){ ctx.save(); ctx.translate(bw/2-u*2,-bh/2+u*.5); ctx.rotate(.14*Math.sin(lt*5)); ctx.scale(ea,ea); ctx.font=`${u*8}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(em,0,0); ctx.restore(); }
   ctx.restore(); }
 SCENES.talk=function(ctx,W,H,sc,lt,E){ const {o,u}=E, p=clamp01(lt/Math.max(.5,sc.d)), w=FN_WHO[sc.who]||FN_WHO.ke;
-  if(sc.shot){ /* máy quay: đẩy vào người đang nói (câu chẵn) hoặc lùi ra (câu lẻ), thở nhẹ, rung khi gắt */
+  const rk=fnRxCam(ctx,W,H,sc,lt); if(sc.shot){ /* máy quay: đẩy vào người đang nói (câu chẵn) hoặc lùi ra (câu lẻ), thở nhẹ, rung khi gắt */
     const fx=w.side==='l'?.3:w.side==='r'?.7:.5, e=ease.inout(p), push=sc.i%2===0, z=push?1.02+.24*e:1.26-.14*e, k=push?e:1-e*.5;
     const sh=/!/.test(sc.t)&&sc.who!=='con'?Math.max(0,1-lt/.45)*u*.5:0;
     drawCoverAt(ctx,sc.shot,sh*Math.sin(lt*70),sh*Math.cos(lt*55),W,H,z,.5+(fx-.5)*.8*k+.004*Math.sin(lt*1.3),.5+.06*k+.003*Math.sin(lt*1.7));
@@ -3788,7 +3821,39 @@ SCENES.talk=function(ctx,W,H,sc,lt,E){ const {o,u}=E, p=clamp01(lt/Math.max(.5,s
       ctx.font=fontOf(800,u*3.6); const w1=ctx.measureText(t1).width+u*5; ctx.fillStyle=o.tag||'#E5344D'; rrect(ctx,W/2-w1/2,H*.12-u*3,w1,u*6,u*3); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillText(t1,W/2,H*.12+u*.2);
       if(t2){ const f=fitLines(ctx,t2,FONT,800,u*7,W*.84,2); ctx.lineJoin='round'; f.lines.forEach((l,i)=>{ const y=H*.12+u*6+f.size*.6+i*f.size*1.15; ctx.lineWidth=f.size*.18; ctx.strokeStyle='rgba(0,0,0,.75)'; ctx.strokeText(l,W/2,y); ctx.fillStyle='#fff'; ctx.fillText(l,W/2,y); }); }
       ctx.restore(); } }
-  fnBubble(ctx,W,H,sc,lt,E); };
+  if(rk) ctx.restore(); fnRxFx(ctx,W,H,sc,lt,E); fnBubble(ctx,W,H,sc,lt,E); };
+/* hiệu ứng phản ứng: máy quay (gọi trước khi vẽ cảnh, trả true nếu đã save) */
+const fnRx0=sc=>sc.i===0?.4:.05;
+function fnRxCam(ctx,W,H,sc,lt){ const rx=sc.rx; if(!rx) return false; const r0=fnRx0(sc), sd=(FN_WHO[sc.who]||FN_WHO.ke).side, fx=sc.shot?.5:sd==='l'?.3:sd==='r'?.7:.5; let z=1, rot=0, dx=0, dy=0;
+  if(rx==='ngac'){ /* zoom giật vào mặt + rung, rồi nhả dần */ const a=ease.out(seg01(lt,r0,r0+.12)), b=seg01(lt,r0+.7,r0+1.4); z=1+.2*a*(1-.6*b); const sh=Math.max(0,1-(lt-r0)/.4)*(lt>r0?1:0)*W*.006; dx=sh*Math.sin(lt*83); dy=sh*Math.cos(lt*67); }
+  else if(rx==='boi'){ /* nghiêng máy kiểu "ơ…", đẩy chậm */ const a=ease.inout(seg01(lt,r0,r0+.55)); rot=-.045*a*(fx<.5?-1:1); z=1+.07*a; }
+  else if(rx==='chot'){ const tc=sc.le||sc.d-.6, a=seg01(lt,tc,tc+.08), b=seg01(lt,tc+.08,tc+.5); z=1+.06*(a-b*.7); }
+  if(z===1&&!rot&&!dx) return false; ctx.save(); ctx.translate(W*fx+dx,H*.42+dy); ctx.rotate(rot); ctx.scale(z,z); ctx.translate(-W*fx,-H*.42); return true; }
+function fnLauFx(ctx,W,H,sc,lt,E){ if(!sc.lau) return; const {u}=E, k=lt-(sc.le||sc.d-.6)-.05; if(k<0) return; const big=sc.lau>1, n=big?7:4;
+  ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
+  for(let j=0;j<n;j++){ const st=j*.07, a=k-st; if(a<0) continue; const R=q=>rnd(sc.i*13+j*5.1+q), x=W*(.1+.8*R(1)), y=H*(.92-a*(.32+.12*R(2))), o=1-clamp01((a-.55)/.35); if(o<=0) continue;
+    ctx.save(); ctx.globalAlpha=o; ctx.translate(x+Math.sin(a*9+j)*u*1.5,y); ctx.rotate(.25*Math.sin(a*7+j)); ctx.font=`${u*(big?13:10)*(.8+.4*R(3))}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`; ctx.fillText(['😂','🤣','😆'][j%3],0,0); ctx.restore(); }
+  if(big){ const b=ease.back(seg01(k,.05,.3)), o=1-seg01(k,.75,1); if(b>0&&o>0){ ctx.globalAlpha=o; ctx.translate(W/2,H*.62); ctx.rotate(-.06+.04*Math.sin(k*16)); ctx.scale(b,b); ctx.font=fontOf(900,u*10); ctx.lineJoin='round'; ctx.lineWidth=u*1.8; ctx.strokeStyle='#15202C'; ctx.strokeText('HA HA!',0,0); ctx.fillStyle='#FFD23F'; ctx.fillText('HA HA!',0,0); } }
+  ctx.restore(); }
+function fnRxFx(ctx,W,H,sc,lt,E){ fnLauFx(ctx,W,H,sc,lt,E); const rx=sc.rx; if(!rx||rx==='chot') return; const {u}=E, r0=fnRx0(sc), w=FN_WHO[sc.who]||FN_WHO.ke, fx=sc.shot?W*.72:W*(w.side==='l'?.3:w.side==='r'?.7:.5), cy=H*.42, k=lt-r0; if(k<0) return; /* ảnh cảnh AI: không biết người nói đứng đâu nên đặt cạnh bong bóng thoại */
+  ctx.save();
+  if(rx==='ngac'){ /* chớp trắng + tia tập trung kiểu truyện tranh + chữ "!?" bật ra */
+    const fl=.75*(1-clamp01(k/.16)); if(fl>0){ ctx.fillStyle=`rgba(255,255,255,${fl})`; ctx.fillRect(0,0,W,H); }
+    const la=k<.9?Math.min(1,k/.06)*(1-clamp01((k-.5)/.4)):0; if(la>0){ const R=Math.hypot(W,H); ctx.fillStyle=`rgba(255,255,255,${.6*la})`; ctx.strokeStyle=`rgba(21,32,44,${.35*la})`; ctx.lineWidth=Math.max(1,u*.15);
+      for(let j=0;j<48;j++){ const an=j/48*Math.PI*2+rnd(j+sc.i*7)*.12+Math.floor(lt*12)*.02, r1=R*(.33+.12*rnd(j*3.1+sc.i)), wd=.012+.016*rnd(j*1.7);
+        ctx.beginPath(); ctx.moveTo(fx+Math.cos(an)*r1,cy+Math.sin(an)*r1); ctx.lineTo(fx+Math.cos(an-wd)*R,cy+Math.sin(an-wd)*R); ctx.lineTo(fx+Math.cos(an+wd)*R,cy+Math.sin(an+wd)*R); ctx.closePath(); ctx.fill(); ctx.stroke(); } }
+    const ta=ease.back(seg01(k,.04,.3)), to=1-seg01(k,1.1,1.45); if(ta>0&&to>0){ const tx=sc.shot?W*.5:Math.max(W*.2,Math.min(W*.8,fx+(fx<W/2?W*.17:-W*.17))), ty=sc.shot?H*.36:H*.4;
+      ctx.globalAlpha=to; ctx.translate(tx,ty); ctx.rotate(-.12+.05*Math.sin(k*14)); ctx.scale(ta,ta); ctx.font=fontOf(900,u*15); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.lineJoin='round';
+      ctx.lineWidth=u*2.2; ctx.strokeStyle='#15202C'; ctx.strokeText('!?',0,0); ctx.fillStyle='#FFD23F'; ctx.fillText('!?',0,0); } }
+  else { /* bối rối: 3 dấu hỏi bay lên lắc lư + giọt mồ hôi trượt xuống + mép khung tối nhẹ */
+    const va=Math.min(1,k/.3)*.3; if(va>0){ const g=ctx.createRadialGradient(W/2,H*.45,H*.25,W/2,H*.45,H*.75); g.addColorStop(0,'rgba(20,30,60,0)'); g.addColorStop(1,`rgba(20,30,60,${va})`); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
+    ctx.font=fontOf(900,u*12); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.lineJoin='round';
+    for(let j=0;j<3;j++){ const st=.1+j*.22, a=seg01(k,st,st+.25), o=1-seg01(k,st+1.3,st+1.7); if(a<=0||o<=0) continue; const x=fx+(j-1)*W*.1, y=(sc.shot?H*.37:H*.33)-j%2*H*.03-(k-st)*H*.03;
+      ctx.save(); ctx.globalAlpha=o*Math.min(1,a*1.5); ctx.translate(x,y); ctx.rotate(.3*Math.sin(k*4+j*2)); ctx.scale(.5+.5*ease.back(a),.5+.5*ease.back(a)); ctx.lineWidth=u*1.4; ctx.strokeStyle='#15202C'; ctx.strokeText('?',0,0); ctx.fillStyle=['#FFFFFF','#7FD3FF','#FFD23F'][j]; ctx.fillText('?',0,0); ctx.restore(); }
+    const da=seg01(k,.35,.6), dO=1-seg01(k,1.6,1.9); if(da>0&&dO>0){ const x=sc.shot?W*.9:fx+(fx<W/2?1:-1)*W*.1, y=(sc.shot?H*.3:H*.36)+ease.inout(seg01(k,.6,1.6))*H*.04, r=u*2.2;
+      ctx.save(); ctx.globalAlpha=dO*da; ctx.translate(x,y); ctx.fillStyle='#8FD8FF'; ctx.strokeStyle='#1c5f8a'; ctx.lineWidth=u*.45; ctx.beginPath(); ctx.moveTo(0,-r*2.2); ctx.quadraticCurveTo(r*1.3,-r*.2,r,r*.4); ctx.arc(0,r*.4,r,0,Math.PI); ctx.quadraticCurveTo(-r*1.3,-r*.2,0,-r*2.2); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.85)'; ctx.beginPath(); ctx.arc(-r*.35,r*.15,r*.28,0,Math.PI*2); ctx.fill(); ctx.restore(); } }
+  ctx.restore(); }
 /* có ảnh cảnh: câu nhắc sản phẩm hiện nhãn tên + mã ở 1/3 dưới, chữ thẳng, bo tròn */
 function fnShotBadge(ctx,W,H,sc,lt,E){ const pr=sc.pr; if(!pr||!pr.pop||!pr.code) return; const {u}=E, a=ease.back(seg01(lt,.5,.95)), o=1-seg01(lt,sc.d-.35,sc.d); if(a<=0||o<=0) return;
   const g=fnProd(), nm=g?String(g.a.base||g.p.name||'').trim().toUpperCase():''; ctx.save(); ctx.globalAlpha=o; ctx.textAlign='center'; ctx.textBaseline='middle';
@@ -3803,7 +3868,7 @@ function fnShotBadge(ctx,W,H,sc,lt,E){ const pr=sc.pr; if(!pr||!pr.pop||!pr.code
     ctx.fillStyle=`rgba(255,236,160,${al*.85})`; ctx.beginPath(); ctx.moveTo(x,yy-ss); ctx.lineTo(x+ss*.25,yy-ss*.25); ctx.lineTo(x+ss,yy); ctx.lineTo(x+ss*.25,yy+ss*.25); ctx.lineTo(x,yy+ss); ctx.lineTo(x-ss*.25,yy+ss*.25); ctx.lineTo(x-ss,yy); ctx.lineTo(x-ss*.25,yy-ss*.25); ctx.fill(); }
   ctx.restore(); }
 /* biểu cảm cạnh bong bóng theo người nói và câu thoại */
-function fnEmo(sc){ const t=sc.t||'', P=sc.n||1;
+function fnEmo(sc){ const t=sc.t||'', P=sc.n||1; if(sc.rx==='ngac') return sc.who==='con'?'😲':'😱'; if(sc.rx==='boi') return sc.who==='con'?'🤭':'😅';
   if(sc.who==='con') return sc.pr&&sc.pr.pop?'✨':sc.i===P-1?'😋':/cách|ý này|kế hoạch|để con/i.test(t)?'💡':'😄';
   if(sc.who==='me') return /haha|nhé/i.test(t)?'😆':/\?/.test(t)?'🙄':/!/.test(t)?'💢':'😤';
   if(sc.who==='bo') return /ngủ|báo thức|mệt/i.test(t)?'😴':/\?/.test(t)?'🤔':/!/.test(t)?'😎':'😅';
@@ -3826,7 +3891,7 @@ async function fnMakeChar(k){ if(!aiNeed()||FN.busy) return; FN.busy=true; const
     const blob=await gImage(prompt,others,'3:4'); await fnSetChar(k,blob); msg.textContent=`✓ Đã có nhân vật ${FN_WHO[k].name}. Không ưng thì bấm tạo lại hoặc sửa mô tả.`; }
   catch(e){ msg.textContent=aiErrText(e); } FN.busy=false; }
 // ĐẠO DIỄN: trước khi vẽ, AI dựng bảng phân cảnh liên tục (ai ở đâu, đứng/ngồi, cầm gì, máy quay) cho khớp lời thoại; cảnh sau nối tiếp cảnh trước
-async function fnDirect(P,need,nm){ const sig=fnHash(P.map(l=>l.who+':'+l.text+'@'+(l.set||'')).join('\n')+'|'+nm); if(S.fnDir && S.fnDir.sig===sig) return S.fnDir;
+async function fnDirect(P,need,nm){ const sig=fnDirSig(P,nm); if(S.fnDir && S.fnDir.sig===sig) return S.fnDir;
   const ask=`Bạn là đạo diễn phim hoạt hình hài gia đình. Dựng bảng phân cảnh cho từng câu thoại để hình ảnh KHỚP lời thoại và LIÊN TỤC giữa các cảnh.
 Nhân vật: ${need.map(k=>FN_WHO[k].name+' ('+FN_WHO[k].en+')').join(', ')}.${nm?` Sản phẩm: "${nm}", chỉ xuất hiện từ câu đầu tiên nhắc tới nó trở đi.`:''}
 Kịch bản (mỗi dòng một câu, đánh số từ 0):
@@ -3837,10 +3902,11 @@ Luật đạo diễn:
 3. Người nói ở gần máy quay, rõ mặt, động tác phóng đại vừa phải hợp câu thoại; người nghe phản ứng tự nhiên.
 4. Chọn góc máy đa dạng giữa các cảnh: toàn, trung, cận, góc qua vai; không lặp một góc 3 lần liền.
 5. Nếu câu thoại mâu thuẫn với bối cảnh hoặc cảnh trước, ghi vào "loi" và tự dàn cảnh hợp lý nhất.
-Chỉ trả về JSON, không giải thích: {"canh":[{"i":0,"noi":"địa điểm + giờ + ánh sáng","dan":"vị trí, tư thế, đồ cầm, biểu cảm từng nhân vật có mặt","may":"góc máy"}],"loi":["câu i: mâu thuẫn gì"]}`;
+6. Đánh dấu phản ứng gây cười của người nói ở mỗi câu, ghi vào "phan": "ngac" = ngạc nhiên, sốc, bị bắt bài, nghe tin bất ngờ (mắt tròn xoe, há miệng); "boi" = bối rối, lúng túng, chống chế, gãi đầu cười trừ; "chot" = câu chốt gây cười; "" nếu bình thường. Mỗi tập nên có 2–4 câu "ngac" hoặc "boi", không đánh dấu liền 3 câu cùng loại.
+Chỉ trả về JSON, không giải thích: {"canh":[{"i":0,"noi":"địa điểm + giờ + ánh sáng","dan":"vị trí, tư thế, đồ cầm, biểu cảm từng nhân vật có mặt","may":"góc máy","phan":"ngac|boi|chot|"}],"loi":["câu i: mâu thuẫn gì"]}`;
   const t=await gWrite(ask); const m=t.match(/\{[\s\S]*\}/); if(!m) throw aiErr('empty'); const j=JSON.parse(m[0]); const canh=[];
-  (j.canh||[]).forEach(c=>{ const i=+c.i; if(i>=0 && i<P.length) canh[i]=[c.noi,c.dan,c.may].filter(Boolean).join('. '); });
-  S.fnDir={sig,canh,loi:(j.loi||[]).map(String).slice(0,6)}; persist(); return S.fnDir; }
+  const phan=P.map(()=>''); (j.canh||[]).forEach(c=>{ const i=+c.i; if(i>=0 && i<P.length){ canh[i]=[c.noi,c.dan,c.may].filter(Boolean).join('. '); const r=String(c.phan||'').toLowerCase(); phan[i]=/ngac|ngạc/.test(r)?'ngac':/boi|bối/.test(r)?'boi':/chot|chốt/.test(r)?'chot':''; } });
+  S.fnDir={sig,canh,phan,loi:(j.loi||[]).map(String).slice(0,6)}; persist(); return S.fnDir; }
 async function fnMakeShots(){ if(!aiNeed()||FN.busy) return; const P=fnParse(); if(!P.length){ toast('Chưa có lời thoại'); return; }
   const need=[...new Set(P.map(l=>l.who).filter(w=>w!=='ke'))], miss=need.filter(k=>!FN.ch[k]); if(miss.length){ toast('Tạo nhân vật '+miss.map(k=>FN_WHO[k].name).join(', ')+' trước'); $('#fnMsg').textContent='Cần có ảnh nhân vật '+miss.map(k=>FN_WHO[k].name).join(', ')+' trước khi tạo ảnh cảnh.'; return; }
   const todo=P.filter(l=>!FN.shots[fnShotKey(l)]); if(!todo.length){ toast('Các cảnh đã có ảnh. Muốn làm lại thì bấm "Xoá ảnh cảnh"'); return; }
@@ -3851,12 +3917,12 @@ async function fnMakeShots(){ if(!aiNeed()||FN.busy) return; const P=fnParse(); 
   try{ dir=await fnDirect(P,need,nm); }catch(e){ dir=null; }
   try{ for(const l of todo){ const i=P.indexOf(l); msg.textContent=`Đang vẽ cảnh ${done+1}/${todo.length}… (mỗi ảnh khoảng 900đ, giữ trang mở)`;
       const stg=dir&&dir.canh[i]?dir.canh[i]:'', prv=dir&&i>0&&dir.canh[i-1]?dir.canh[i-1]:'';
-      const withP=pimg && i>=pFrom;
+      const withP=pimg && i>=pFrom, rx=fnReact(l,i,P,nm), rxT=rx==='ngac'?`${FN_WHO[l.who]?FN_WHO[l.who].en:'the family'} looks SHOCKED and surprised: eyes wide open, eyebrows raised high, mouth open, body leaning back, comedic double-take. `:rx==='boi'?`${FN_WHO[l.who]?FN_WHO[l.who].en:'the family'} looks CONFUSED and awkward: scratching the back of the head, sheepish grin, one eyebrow up, a small sweat drop, others staring at them. `:'';
       const prompt=`One vertical ${fnAspect()} frame from a short family comedy video. Style: ${fnLookTxt()}. Keep every character EXACTLY like their reference image: same face, hair, body, clothes, colors and art style. Reference images: ${refTxt}.
 Setting: ${l.set||'a cozy modern Vietnamese apartment living room'}.
 ${stg?`Director's staging for THIS shot (follow exactly: positions, poses, props, camera): ${stg}.
 ${prv?`Previous shot for continuity (same place, props and clothes unless the staging says otherwise): ${prv}.
-`:''}`:''}Moment: ${l.who==='ke'?'the family together':FN_WHO[l.who].en+' is saying this line'} (Vietnamese, for acting only, do NOT write it anywhere): "${l.text}". ${l.who==='ke'?'':'Show '+FN_WHO[l.who].en+' mid-speech with a clear, slightly exaggerated comic facial expression and gesture that fits the line; the others react naturally.'} Family members in this video: ${need.map(k=>FN_WHO[k].en).join(', ')}.
+`:''}`:''}${rxT}Moment: ${l.who==='ke'?'the family together':FN_WHO[l.who].en+' is saying this line'} (Vietnamese, for acting only, do NOT write it anywhere): "${l.text}". ${l.who==='ke'?'':'Show '+FN_WHO[l.who].en+' mid-speech with a clear, slightly exaggerated comic facial expression and gesture that fits the line; the others react naturally.'} Family members in this video: ${need.map(k=>FN_WHO[k].en).join(', ')}.
 ${withP?'The product from the last reference image appears naturally in the scene (on a table, shelf or in a hand), clearly visible, same shape, colors and label as the reference, realistic size. ':''}Composition: characters fill the lower three quarters of the frame, 3/4 or full body, faces large and expressive; keep the TOP quarter as soft out-of-focus wall or background with no faces (a speech bubble goes there); cinematic camera angle.
 No text, no letters, no captions, no speech bubbles, no watermark.`;
       const blob=await gImage(prompt,withP?refs.concat([pimg]):refs,fnAspect()); const sk=fnShotKey(l); await idbPut('fnshot:'+fnHash(sk),blob); FN.shots[sk]=await fnItOf(blob); FN.ver++; done++; ensureStory(true); updateVsum(); fnRenderShots(); }
@@ -3917,6 +3983,7 @@ $('#fnScript').oninput=e=>{ S.fnScript=e.target.value; persist(); clearTimeout(f
 $('#fnTitle').oninput=e=>{ S.fnTitle=e.target.value; persist(); clearTimeout(fnSyncUI._t2); fnSyncUI._t2=setTimeout(()=>{ ensureStory(true); updateVsum(); },400); };
 $('#fnTopic').oninput=e=>{ S.fnTopic=e.target.value; persist(); };
 $('#vprod').addEventListener('change',()=>{ if(S.vstyle==='fn' && fnAutoFill()){ fnSyncUI(); ensureStory(true); updateVsum(); } });
+$('#fnLaugh').checked=S.fnLaugh!==false; $('#fnLaugh').onchange=e=>{ S.fnLaugh=e.target.checked; persist(); ensureStory(true); updateVsum(); };
 $('#fnProd').onchange=e=>{ S.fnProd=e.target.checked; persist(); if(fnAutoFill()) fnSyncUI(); ensureStory(true); updateVsum(); fnLoad(); voSync(); };
 $('#btnFnWrite').onclick=fnWrite; $('#btnFnShots').onclick=fnMakeShots;
 $('#btnFnClear').onclick=()=>{ const P=fnParse(); P.forEach(l=>delete FN.shots[fnShotKey(l)]); FN.ver++; ensureStory(true); updateVsum(); fnRenderShots(); toast('Đã bỏ ảnh cảnh, video dùng cảnh ghép nhân vật. Bấm "Tạo ảnh từng cảnh" để vẽ lại.'); };
