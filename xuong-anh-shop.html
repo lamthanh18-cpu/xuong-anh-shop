@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 69</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 70</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -941,8 +941,8 @@ const LOGO_SHOP = 'data:image/webp;base64,UklGRgRBAABXRUJQVlA4WAoAAAAQAAAAKwEAKw
 const DEF = {v:2, fmt:'4x5', fit:'cover', bgColor:'#ffffff', bright:0, prefix:'A', start:1,
   logo:null, logoPos:'tl', logoSize:14, shopName:"Nancy's Shop", headline:'', cta:'',
   showPrice:false, showCode:true, showName:false, border:false, brand:'#0B2442', tag:'#E8131B',
-  vfmt:'9x16', vsec:2.5, eff:'zoom', vtrans:true, vover:true, vintro:'', voutro:'Bình luận mã sản phẩm\nNancy giữ hàng ngay', q:'1080',
-  vstyle:'ban', vstyleSp:'ban', thumbV:0, vmusic:'auto', musicId:'', mlibF:'all', vsfx:true, tcQuote:0, tcText:'', lvTime:'20:00 tối nay', fxSeed:1, ttTitle:'', mhTitle:'', mhSteps:'', mhWhy:'', mhNote:'', mhLib:-1, tsTitle:'', evMode:'short', evBy:'code', evCL:'auto', evPrice:false, evCodes:'', evFit:'blur', evAud:'mix', evColor:true, evPunch:true, evN:'5', evProd:'', evHook:'', thumbText:'', thSlogan:'Khoác lên sự đam mê', thVals:'Chọn kỹ từng mã hàng\nLivestream cho chị em xem hàng tận mắt\nBình luận mã, Nancy giữ hàng ngay',
+  vfmt:'9x16', vsec:2.5, eff:'zoom', vtrans:true, vover:true, vintro:'', voutro:'Đặt mã sản phẩm\nđể Nancy ship hàng nhanh nhé!', q:'1080',
+  vstyle:'ban', vstyleSp:'ban', thumbV:0, vmusic:'auto', musicId:'', mlibF:'all', vsfx:true, tcQuote:0, tcText:'', lvTime:'20:00 tối nay', fxSeed:1, ttTitle:'', mhTitle:'', mhSteps:'', mhWhy:'', mhNote:'', mhLib:-1, tsTitle:'', evMode:'short', evBy:'code', evCL:'auto', evPrice:false, evCodes:'', evFit:'blur', evAud:'mix', evColor:true, evPunch:true, evN:'5', evProd:'', evHook:'', thumbText:'', thSlogan:'Khoác lên sự đam mê', thVals:'Chọn kỹ từng mã hàng\nLivestream cho chị em xem hàng tận mắt\nĐặt mã để Nancy ship hàng nhanh nhé!',
   postPrice:false, lspSize:false, vdur:'28'};
 let S = Object.assign({}, DEF);
 try { const saved = JSON.parse(localStorage.getItem('xas-settings') || '{}'); Object.assign(S, saved); if(S.vmusic==='file') S.vmusic='lib'; if(!['1080','1440','2160'].includes(String(S.q))) S.q='1080'; if(!(+S.vdur>=6 && +S.vdur<=90)) S.vdur='28';
@@ -1429,18 +1429,18 @@ function buildPost(st){ const p=st.p, a=analyse(p), code=p.code, voice=st.voice;
   const [b1,b2]=benefits(p);
   const priceLine = st.price && p.price ? `Giá: ${vnd(p.price)}${p.old>p.price?` (giá hãng ${vnd(p.old)})`:''}` : '';
   let close;
-  if(st.hasSize) close=voice==='chan'?`📌 Chốt mã: ${code} – chị em ưng thì bình luận ${code} + size viết liền (ví dụ ${code}${ex}), Nancy giữ hàng và tư vấn thêm ạ`:`📌 Chốt: bình luận ${code} + size viết liền, ví dụ ${code}${ex}`;
-  else if(voice==='chan') close=`📌 Chốt mã: ${code} – chị em ưng thì bình luận ${code}, Nancy giữ hàng và tư vấn thêm ạ`;
-  else if(voice==='sang') close=`📌 Chốt mã: ${code} – bình luận ${code} để Nancy giữ hàng`;
-  else if(voice==='khan') close=`📌 Chốt mã: ${code} – bình luận ${code} để giữ hàng sớm`;
-  else if(voice==='live') close=`📌 Chốt mã: ${code} – bình luận ${code} trong live để chốt`;
-  else close=`📌 Chốt mã: ${code} – bình luận ${code} để Nancy giữ hàng`;
+  if(st.hasSize) close=`📌 Đặt mã ${code} + size viết liền (ví dụ ${code}${ex}) để Nancy ship hàng nhanh nhé!`;
+  else if(voice==='chan') close=`📌 Đặt mã ${code} để Nancy ship hàng nhanh nhé!`;
+  else if(voice==='sang') close=`📌 Đặt mã ${code} để Nancy ship hàng nhanh nhé!`;
+  else if(voice==='khan') close=`📌 Đặt mã ${code} để Nancy ship hàng nhanh nhé!`;
+  else if(voice==='live') close=`📌 Đặt mã ${code} trong live để Nancy ship hàng nhanh nhé!`;
+  else close=`📌 Đặt mã ${code} để Nancy ship hàng nhanh nhé!`;
   const typeTag = a.type!=='sản phẩm' ? '#'+hashWord(a.type) : '';
   const tags = [...new Set(['#NancyShop', a.brand?'#'+hashWord(a.brand):'', typeTag, '#'+code].filter(Boolean))];
   if(st.plat==='reels') return [hook, line2, close, [tags[0], typeTag||tags[1], '#'+code].filter(Boolean).join(' ')].join('\n');
   if(st.plat==='tiktok') return [hook, close, tags.join(' ')].join('\n');
   if(st.plat==='zalo') return [`Chị ơi, Nancy vừa về ${a.base||'[Tên sản phẩm]'} – mã ${code}.`, '✨ '+b1, '✨ '+b2, priceLine,
-    st.hasSize ? `Chị nhắn Nancy mã + size (ví dụ ${code}${ex}) để giữ hàng nha.` : `Chị cần thì nhắn Nancy mã ${code} để giữ hàng nha.`].filter(Boolean).join('\n');
+    st.hasSize ? `Chị đặt mã + size (ví dụ ${code}${ex}) để Nancy ship hàng nhanh nhé!` : `Chị đặt mã ${code} để Nancy ship hàng nhanh nhé!`].filter(Boolean).join('\n');
   return [hook, line2, '✨ '+b1, '✨ '+b2, priceLine, close, voice==='chan'?'Cảm ơn chị em đã luôn ủng hộ Nancy ạ 🌷':'', tags.join(' ')].filter(Boolean).join('\n'); }
 function checkPost(text){ const issues=[]; const br=text.match(/\[[^\]]*\]/g); if(br) issues.push(`Còn ${br.length} chỗ trong ngoặc vuông cần điền theo nhãn, mác hoặc hộp thật (gõ thẳng vào bài): ${br.map(esc).join(', ')}`);
   const n=' '+norm(text)+' '; const bad=BANNED.filter(w=>n.includes(' '+norm(w)+' ')); if(bad.length) issues.push(`Có cụm từ dễ bị coi là quảng cáo sai hoặc Bộ Y tế đề xuất cấm: "${bad.join('", "')}". Sửa trước khi đăng.`);
@@ -1902,7 +1902,7 @@ const SCENES = {
       f.lines.forEach((l,i)=>{ const b=ease.out(seg01(lt,.3+i*.12,.8+i*.12)); ctx.globalAlpha=b; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillText(l,W*.08,H*.63+i*f.size*1.2+(1-b)*u*4); }); ctx.restore(); } },
   cta(ctx,W,H,sc,lt,E){ const {o,u}=E; if(sc.it && !imgInfo(sc.it).white) blurFill(ctx,sc.it,W,H,1.25,.55); else brandBg(ctx,W,H,o); bokeh(ctx,W,H,lt,12,.12);
     const codes=sc.stamp?[sc.stamp]:String(sc.t||'').split(/\s+/).filter(Boolean); ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=u*2; popWords(ctx,sc.head||(codes.length>1?'BÌNH LUẬN MÃ':'BÌNH LUẬN'),W,H*.33,u*7,lt,o,{hl:false,maxLines:1}); ctx.restore();
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=u*2; popWords(ctx,sc.head||'ĐẶT MÃ',W,H*.33,u*7,lt,o,{hl:false,maxLines:1}); ctx.restore();
     if(codes.length<=1){ const code=(codes[0]||'NGAY').toUpperCase(); codeBadge(ctx,W/2,H*.47,code,u*13,W*.72,o,ease.out(seg01(lt,.25,.75))); }
     else { const n=Math.min(6,codes.length), cols=n>3?2:1, rows=Math.ceil(n/cols), cw=W*(cols>1?.38:.5), chh=u*11, gap=u*2.4; const top=H*.47-(rows*chh+(rows-1)*gap)/2;
       codes.slice(0,n).forEach((c,i)=>{ const a=ease.back(seg01(lt,.2+i*.1,.55+i*.1)); if(a<=0) return; const col=i%cols, row=Math.floor(i/cols); const x=W/2+(cols>1?(col?gap/2+cw/2:-gap/2-cw/2):0), y=top+row*(chh+gap)+chh/2;
@@ -2149,7 +2149,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
       if(G.length<=3) out.push({k:G.length===2?'dolly':'detail',d:D(5),it:g.its[1%g.its.length],dir:'in',f:gi,t:ben[0]||'',tr:'whip'});
       if(gi===0) addClips('leak'); });
     const codes=G.map(g=>g.code).filter(Boolean); const sh=G.length===1?sizeHint(g0):'';
-    const t2 = !codes.length ? 'Nancy tư vấn và giữ hàng cho chị em' : G.length>1 ? (G.some(g=>sizesOf(g.p.size).length)?'Bình luận mã + size viết liền, Nancy giữ hàng ngay':'Bình luận mã, Nancy giữ hàng ngay') : sh ? `Bình luận ${sh} (mã + size viết liền) để Nancy giữ hàng` : `Bình luận ${codes[0]} để Nancy giữ hàng`;
+    const t2 = !codes.length ? 'Nancy tư vấn và giữ hàng cho chị em' : G.length>1 ? (G.some(g=>sizesOf(g.p.size).length)?'Đặt mã + size viết liền để Nancy ship hàng nhanh nhé!':'Đặt mã để Nancy ship hàng nhanh nhé!') : sh ? `Đặt mã ${sh} (mã + size viết liền) để Nancy ship hàng nhanh nhé!` : `Đặt mã ${codes[0]} để Nancy ship hàng nhanh nhé!`;
     out.push({k:'cta',d:D(8),t:codes.join(' '),t2,it:g0.its[0],tr:'flash'});
     out.push({k:'outro',d:D(6),t:orderLine(codes),t2:shop,tr:'leak'}); }
   else if(st==='qb'){ const g=chosenGroups()[0]; if(!g){ story=[]; return; } const ben=realBenefits(g.p); const its=g.its, pick=j=>its[j%its.length];
@@ -2161,7 +2161,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     addPip(g,'fade',ben[2]||'');
     addClips('fade');
     out.push({k:'hero',d:D(6),it:pick(0),cam:'out',enter:'spin',t:g.a.base||g.p.name||'',t2:g.code,tr:'leak'});
-    if(g.code) out.push({k:'cta',d:D(6),t:g.code,t2:sizeHint(g)?`Bình luận ${sizeHint(g)} (mã + size viết liền) để Nancy giữ hàng`:`Bình luận ${g.code} để Nancy giữ hàng`,it:pick(0),tr:'flash'});
+    if(g.code) out.push({k:'cta',d:D(6),t:g.code,t2:sizeHint(g)?`Đặt mã ${sizeHint(g)} (mã + size viết liền) để Nancy ship hàng nhanh nhé!`:`Đặt mã ${g.code} để Nancy ship hàng nhanh nhé!`,it:pick(0),tr:'flash'});
     out.push({k:'outro',d:D(5),t:orderLine([g.code].filter(Boolean)),t2:shop,tr:'fade'}); }
   else if(st==='tt'){ const G=chosenGroups().slice(0,3); if(!G.length){ story=[]; return; } const all=G.flatMap(g=>g.its); const pk=j=>all[j%all.length];
     out.push({k:'cover',d:D(8),it:pk(0),t:(S.ttTitle||'').trim()||'Mẫu mới',t2:shop,tr:''});
@@ -2176,7 +2176,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     if(all.length>=3 && nv<2) out.push({k:'flash',d:D(4),its:all.slice(0,6),beat:b,t:shop,tr:''});
     const gz=G.find(g=>sizesOf(g.p.size).length); if(gz) out.push({k:'sizes',d:D(6),it:gz.its[gz.its.length>1?1:0],sizes:sizesOf(gz.p.size),t2:`Bình luận mã + size viết liền, ví dụ ${sizeHint(gz)}`,tr:''});
     const codes=G.map(g=>g.code).filter(Boolean);
-    out.push({k:'cta',d:D(7),t:codes.join(' '),t2:codes.length?(gz?'Bình luận mã + size viết liền, Nancy giữ hàng ngay':'Bình luận mã, Nancy giữ hàng ngay'):'Nancy tư vấn và giữ hàng cho chị em',it:pk(0),tr:''});
+    out.push({k:'cta',d:D(7),t:codes.join(' '),t2:codes.length?(gz?'Đặt mã + size viết liền để Nancy ship hàng nhanh nhé!':'Đặt mã để Nancy ship hàng nhanh nhé!'):'Nancy tư vấn và giữ hàng cho chị em',it:pk(0),tr:''});
     out.push({k:'outro',d:D(5),t:orderLine(codes,!!gz),t2:shop,tr:''}); }
   else if(st==='lv'){ const G=chosenGroups().slice(0,4); const tm=(S.lvTime||'').trim()||'tối nay'; const nCodes=groupsOf().filter(g=>g.code).length;
     const hm=(tm.match(/\d{1,2}\s*[:hg]\s*\d{0,2}/i)||[''])[0].replace(/\s+/g,'').toUpperCase();
@@ -2186,7 +2186,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     if(G.length>1) out.push({k:'grid',d:D(5),its:G.map(g=>g.its[0]),t:'Xem tận mắt trên live',tr:''});
     if(G[0]) addPip(G[0],'','Xem hàng thật trên live');
     out.push({k:'cta',d:D(7),head:'HẸN CHỊ EM LÚC',stamp:hm||tm.toUpperCase(),t:'',t2:'Bấm theo dõi, bật thông báo để không lỡ live',it:G[0]?G[0].its[0]:null,tr:''});
-    out.push({k:'outro',d:D(5),t:'Vào live bình luận mã, Nancy giữ hàng ngay',t2:shop,tr:''}); }
+    out.push({k:'outro',d:D(5),t:'Vào live đặt mã, Nancy ship hàng nhanh nhé!',t2:shop,tr:''}); }
   else if(st==='th'){ const G=groupsOf(); const all=G.flatMap(g=>g.its); const vals=(S.thVals||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3);
     out.push({k:'logo',d:D(6),t:shop,t2:'',tr:''});
     out.push({k:'title',d:D(5),t:S.thSlogan||shop,t2:shop,tr:'leak'});
@@ -2194,7 +2194,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     addClips('fade');
     if(all.length){ out.push({k:'orbit',d:D(7),it:G[0].its[0],dir:1,t:'Hàng mới về liên tục',tr:'twirl'}); addSplit(G[0],'iris'); }
     if(all.length>1) out.push({k:'grid',d:D(6),its:G.map(g=>g.its[0]).concat(all).filter((v,i,a)=>a.indexOf(v)===i).slice(0,4),t:'Chọn kỹ từng mã cho chị em',tr:'zoom'});
-    out.push({k:'outro',d:D(6),t:`Theo dõi ${shop}`,t2:'Bình luận mã để Nancy giữ hàng',tr:'leak'}); }
+    out.push({k:'outro',d:D(6),t:`Theo dõi ${shop}`,t2:'Đặt mã để Nancy ship hàng nhanh nhé!',tr:'leak'}); }
   else if(st==='tc'){ const prods=groupsOf().flatMap(g=>g.its), all=prods.filter(it=>!imgInfo(it).white); const lines=quoteLines();
     // nền: xoay vòng ảnh/clip bối cảnh và ảnh chụp sản phẩm, xen cảnh máy quay chậm giữa các câu
     const pool=clips.map(c=>({clip:c})).concat(all.map(it=>({it}))); let pi=0; const nextBg=()=>pool.length?pool[pi++%pool.length]:{};
@@ -2226,7 +2226,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     if(af){ out.push({k:'after',d:D(5),it:af,t:'',tr:''}); out.push({k:'compare',d:D(8),it:af,it2:bf,t:'',tr:''}); }
     addClips('flash');
     out.push({k:'hero',d:D(5),it:prod,cam:'out',t:name,t2:g.code,tr:''});
-    if(g.code) out.push({k:'cta',d:D(5),t:g.code,t2:sizeHint(g)?`Bình luận ${sizeHint(g)} để Nancy giữ hàng`:`Bình luận ${g.code} để Nancy giữ hàng`,it:prod,tr:''});
+    if(g.code) out.push({k:'cta',d:D(5),t:g.code,t2:sizeHint(g)?`Đặt mã ${sizeHint(g)} để Nancy ship hàng nhanh nhé!`:`Đặt mã ${g.code} để Nancy ship hàng nhanh nhé!`,it:prod,tr:''});
     out.push({k:'outro',d:D(4),t:orderLine([g.code].filter(Boolean)),t2:shop,tr:''}); }
   stretchStory(out,b); varyFx(out,st==='qb'?'qb':modOf(st),S.fxSeed||1);
   fitStory(out,b); if(st==='mh') mhAlign(out);
@@ -3153,18 +3153,18 @@ function evPostHooks(d){ const lc=s=>/^\p{Lu}\p{Ll}/u.test(s)?s[0].toLowerCase()
   const H=[ b&&p&&`🔥 ${N} chỉ ${p}: ${lc(b)}!`,
     b&&`👀 Nhìn cận cảnh mới thấy: ${lc(b)}. ${uc(N)} mã ${c} đây chị em ơi!`,
     p&&`💥 ${p} cho ${N}${szT?`, ${szT}`:''}. Xem hết clip 1 phút là biết vì sao đáng chốt!`,
-    szT&&`📏 ${N} ${szT}${p?`, giá ${p}`:''}. Chọn size xong gõ mã liền size là Nancy giữ hàng!`,
+    szT&&`📏 ${N} ${szT}${p?`, giá ${p}`:''}. Chọn size xong đặt mã liền size để Nancy ship hàng nhanh nhé!`,
     `🤔 ${uc(N)} có gì đặc biệt? Xem hết clip là biết, mã ${c}${p?` – ${p}`:''}`,
     b&&`✨ ${b}. Đó là lý do chị em nên xem kỹ ${N} mã ${c}!`,
-    d.n&&`🛍️ Chị em đang cần ${N}? Xem ngay clip này rồi gõ mã ${c1} để Nancy giữ hàng!`,
+    d.n&&`🛍️ Chị em đang cần ${N}? Xem ngay clip này rồi đặt mã ${c1} để Nancy ship hàng nhanh nhé!`,
     `📌 Lưu ngay mã ${c}: ${N}${p?` – ${p}`:''}${b?`, ${lc(b)}`:''}`,
     `👀 Chị em đã thấy ${N} kiểu này chưa? Mã ${c}${p?` giá ${p}`:''}`,
     b2&&`✅ ${b} ✅ ${b2} 👉 ${uc(N)}${p?` chỉ ${p}`:''}!`,
     b&&p&&`⚡ ${b} mà chỉ ${p}? Xem clip là thấy tận mắt!`,
-    b&&`👉 ${N} mã ${c}: ${lc(b)}. Chị em gõ ${c1} là Nancy giữ hàng liền!`,
+    b&&`👉 ${N} mã ${c}: ${lc(b)}. Chị em đặt mã ${c1} để Nancy ship hàng nhanh nhé!`,
     d.cols.length>1&&`🎨 ${d.cols.length} màu${p?` đồng giá ${p}`:''}: ${d.cols.join(' · ')}. Thích màu nào gõ đúng mã màu đó!` ];
   return H.filter(Boolean).map(uc); }
-function evPostCap(d,k){ const H=evPostHooks(d); return [H[((k||0)%H.length+H.length)%H.length], `📌 Chốt mã: ${d.c}${d.p?` · Giá ${kfmt(d.p)}`:''}`, ...d.L.map(s=>'✅ '+s), d.cols.length?'🎨 Màu: '+d.cols.join(' · '):'', d.sz.length?`📏 Còn size ${d.sz.join(', ')}`:'', '💬 Chị em xem rõ hàng thật trong clip rồi gõ mã ngay để Nancy giữ hàng!', '#NancyShop'].filter(Boolean).join('\n'); }
+function evPostCap(d,k){ const H=evPostHooks(d); return [H[((k||0)%H.length+H.length)%H.length], `📌 Chốt mã: ${d.c}${d.p?` · Giá ${kfmt(d.p)}`:''}`, ...d.L.map(s=>'✅ '+s), d.cols.length?'🎨 Màu: '+d.cols.join(' · '):'', d.sz.length?`📏 Còn size ${d.sz.join(', ')}`:'', '💬 Chị em xem rõ hàng thật trong clip rồi đặt mã ngay để Nancy ship hàng nhanh nhé!', '#NancyShop'].filter(Boolean).join('\n'); }
 function evCaption(info,k,g){ if(!info.p) return info.code?`🔥 ${info.name||'Mẫu mới về'} – mã ${info.code}\n${g?evLines(g).map(s=>'✅ '+s).join('\n')+'\n':''}📌 Chốt mã: ${info.code}, chị em gõ mã ${info.code} để đặt hàng.\n#NancyShop`:`🔥 Hàng mới mỗi ngày tại ${S.shopName||"Nancy's Shop"}\n#NancyShop`; const hooks=hookList(info.p,info.voice,info.cat);
   return buildPost({p:info.p,cat:info.cat,voice:info.voice,plat:'reels',hooks,hookIdx:k%Math.max(1,hooks.length),price:false,hasSize:!!sizesOf(info.p.size).length||info.cat==='giay'}); }
 const EV_PAGES=["Nancy's Shop (nancyshop168)",'Phạm Thị Huyền Vlog','Phạm Huyền Nancy'];
@@ -3301,9 +3301,9 @@ async function evWrite(dir,x){ const fh=await dir.getFileHandle(x.name,{create:t
 const FPK='xas-fbtok', FPV='v21.0', FPF='xas-fbfoot', FPS='xas-fbsel'; let fpOff=new Set(), fpPages=[], fpExtra=[], fpDone={}, fpCap={}, fpPlan=[], fpSeed=0, fpRemote=[]; const FPD='xas-fbdone';
 try{ JSON.parse(localStorage.getItem(FPD)||'[]').forEach(([k,d])=>{ d.at=new Date(d.at); fpDone[k]=d; }); }catch(e){} /* nhớ bài đã hẹn giờ kể cả khi tải lại trang, để huỷ được */
 function fpDoneSave(){ try{ localStorage.setItem(FPD,JSON.stringify(Object.entries(fpDone).filter(([k,d])=>+d.at>Date.now()-864e5).map(([k,d])=>[k,Object.assign({},d,{at:+d.at})]))); }catch(e){} }
-const FP_FOOT='🛒 ĐẶT HÀNG: bình luận {dat} dưới bài này.\n➕ Mua nhiều: {vd}+2, {vd}+3.\n❌ Huỷ: gõ dấu trừ đúng số đã đặt: {vd}-1, {vd}-2, {vd}-3.\n💖 Chúc khách yêu đặt đơn thành công, Nancy cảm ơn chị em đã ủng hộ!\n#NancyShop #HangMoiMoiNgay #SanDeal\n@followers';
+const FP_FOOT='🛒 ĐẶT HÀNG: bình luận {dat} dưới bài này để Nancy ship hàng nhanh nhé!\n➕ Mua nhiều: {vd}+2, {vd}+3.\n❌ Huỷ: gõ dấu trừ đúng số đã đặt: {vd}-1, {vd}-2, {vd}-3.\n💖 Chúc khách yêu đặt đơn thành công, Nancy cảm ơn chị em đã ủng hộ!\n#NancyShop #HangMoiMoiNgay #SanDeal\n@followers';
 const FP_WISH='💖 Chúc khách yêu đặt đơn thành công, Nancy cảm ơn chị em đã ủng hộ!';
-function fpFootFix(t){ if(!t||/A01M/.test(t)) return FP_FOOT; if(/chúc/i.test(t)) return t; const L=t.split('\n'); let i=L.findIndex(x=>/^\s*[#@]/.test(x)); if(i<0) i=L.length; L.splice(i,0,FP_WISH); return L.join('\n'); }
+function fpFootFix(t){ if(!t||/A01M/.test(t)) return FP_FOOT; t=t.replace('bình luận {dat} dưới bài này.\n','bình luận {dat} dưới bài này để Nancy ship hàng nhanh nhé!\n'); if(/chúc/i.test(t)) return t; const L=t.split('\n'); let i=L.findIndex(x=>/^\s*[#@]/.test(x)); if(i<0) i=L.length; L.splice(i,0,FP_WISH); return L.join('\n'); }
 // câu mở đầu khác nhau cho từng trang: gợi tò mò, chỉ nói điều có thật, không nhắc "live"
 const FP_HOOKS=['🔥 {n} – mã {c}','🤔 {n} có gì đặc biệt? Xem hết clip là biết','👀 Chị em đã thấy {n} kiểu này chưa?','⚡ Xem nhanh {n} trong 1 phút','✨ Vì sao chị em nên có {n}?','🛍️ Chị em đang tìm {n} thì xem ngay','💬 Bình luận mã {c} để đặt {n}','🎯 Gợi ý hôm nay: {n}','📣 {n} – mã {c}, xem kỹ trước khi chốt','🔍 Cận cảnh {n}, nhìn kỹ từng chi tiết','💥 {n}: xem tận mắt rồi hãy chốt','📌 Lưu lại mã {c}: {n}'];
 const fpTok=()=>{ try{ return localStorage.getItem(FPK)||''; }catch(e){ return ''; } };
@@ -3688,7 +3688,7 @@ const POST_AI={list:[]};
 function postAIAsk(){ const p=PS.p, a=analyse(p), code=String(p.code||'').trim().toUpperCase(), sz=sizesOf(p.size), ex=sz.includes(PS.cat==='giay'?'37':'M')?(PS.cat==='giay'?'37':'M'):(sz[0]||(PS.cat==='giay'?'37':'M'));
   const facts=[`Mã: ${code}`,`Tên: ${a.base||p.name||''}`,a.brand?`Thương hiệu: ${a.brand}`:'',a.type&&a.type!=='sản phẩm'?`Loại: ${a.type}`:'',`Ngành hàng: ${CATS[PS.cat]||PS.cat}`,p.desc?`Mô tả/Công dụng (nguồn duy nhất về chất liệu, thông số, công dụng): ${String(p.desc).slice(0,900)}`:'Mô tả: (không có)',
     PS.hasSize&&sz.length?`Size còn: ${sz.join(', ')}`:'',PS.price&&p.price?`Giá bán: ${vnd(p.price)}${p.old>p.price?` (giá hãng ${vnd(p.old)})`:''}`:'(Không ghi giá trong bài)',p.qty?`Số lượng đợt này: ${p.qty}`:''].filter(Boolean).join('\n');
-  const order=PS.hasSize?`📌 Chốt mã: ${code}, bình luận ${code} + size viết liền (ví dụ ${code}${ex}) để Nancy giữ hàng`:`📌 Chốt mã: ${code}, bình luận ${code} để Nancy giữ hàng`;
+  const order=PS.hasSize?`📌 Đặt mã ${code} + size viết liền (ví dụ ${code}${ex}) để Nancy ship hàng nhanh nhé!`:`📌 Đặt mã ${code} để Nancy ship hàng nhanh nhé!`;
   const tone=VOICES[PS.voice]||'Thân thiết', plat={fb:'bài Facebook fanpage ngắn kiểu Nancy (5–8 dòng, 40–90 chữ, bài ngắn trên fanpage Nancy được nhiều bình luận nhất)',reels:'caption Reels (3–5 dòng ngắn)',tiktok:'caption TikTok (2–4 dòng ngắn)',zalo:'tin nhắn Zalo gửi khách quen (4–6 dòng, xưng Nancy, gọi chị)'}[PS.plat]||'bài Facebook';
   return `Bạn là người viết bài bán hàng giỏi nhất của Nancy's Shop (fanpage Facebook bán thời trang và hàng tiêu dùng nhập khẩu, khách chủ yếu là chị em 28–55 tuổi). Viết 3 phiên bản ${plat} cho sản phẩm dưới đây, giọng "${tone}".
 
@@ -3699,7 +3699,7 @@ CÁCH VIẾT CỦA FANPAGE NANCY (học theo các bài đã đăng):
 - Dòng 1 là câu mở in HOA, 1–2 emoji (🔥 😍 ✨ 💎), gây tò mò hoặc chạm nỗi đau, ngắn gọn. Ví dụ phong cách: "HÀNG HIỆU NHẬT – LÀ PHẲNG CỰC ĐÃ, GIÁ CÀNG ĐÁNG MÊ! 🔥", "BẾP NƯỚNG ĐỨC – ĐƯA TIỆC NHÀ LÊN TẦM 5 SAO! ⭐".
 - Dòng 2: tên sản phẩm + thương hiệu + thông số chính (nếu có trong dữ liệu), có cờ xuất xứ nếu biết.
 - 2–3 dòng lợi ích, mỗi dòng 1 emoji đầu dòng (💎 ✨ ✅), nói LỢI ÍCH dùng thật trước, tính năng sau, có con số nếu dữ liệu có.
-- Dòng chốt đơn, giữ ĐÚNG câu này: ${order}
+- Dòng chốt đơn, giữ ĐÚNG NGUYÊN VĂN câu này: ${order}
 - Dòng cuối 3–5 hashtag: #NancyShop${a.brand?' #'+hashWord(a.brand):''}${a.type&&a.type!=='sản phẩm'?' #'+hashWord(a.type):''} #${code}
 - Câu ngắn, xuống dòng nhiều, 2 dòng đầu phải đủ hấp dẫn để khách bấm "Xem thêm".
 - Nếu dữ liệu ghi rõ chính hãng, nội địa Nhật/Hàn/Đức thì nhấn vào đó ("Nói không với hàng OM", "HÀNG HIỆU NHẬT"), vì khách Nancy mua vì tin hàng thật. Không có thì không nói.
@@ -3718,7 +3718,9 @@ LUẬT BẮT BUỘC:
 
 Trả về DUY NHẤT JSON: [{"cong_thuc":"Nỗi đau → giải pháp","bai":"..."},{"cong_thuc":"AIDA","bai":"..."},{"cong_thuc":"Kể chuyện","bai":"..."}]`; }
 function postAIParse(t){ const m=String(t).replace(/```json|```/g,'').match(/\[[\s\S]*\]/); if(!m) return []; try{ return JSON.parse(m[0]).filter(x=>x&&x.bai).map(x=>({f:String(x.cong_thuc||'Bản AI'),t:String(x.bai).replace(/\r/g,'').replace(/\n{3,}/g,'\n\n').trim()})); }catch(e){ return []; } }
-function postAIFix(t){ const code=String(PS.p.code||'').trim().toUpperCase(); if(!new RegExp('\\b'+code.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(t)) t=t.replace(/\n(#[^\n]*)$/,'\n📌 Chốt mã: '+code+', bình luận '+code+' để Nancy giữ hàng\n$1'); return t; }
+function postAIFix(t){ const code=String(PS.p.code||'').trim().toUpperCase(), sz=sizesOf(PS.p.size), d=PS.cat==='giay'?'37':'M', ex=sz.includes(d)?d:(sz[0]||d);
+  const order=PS.hasSize?`📌 Đặt mã ${code} + size viết liền (ví dụ ${code}${ex}) để Nancy ship hàng nhanh nhé!`:`📌 Đặt mã ${code} để Nancy ship hàng nhanh nhé!`; /* dòng chốt luôn đúng nguyên văn Ông Chủ chọn */
+  const L=String(t).split('\n').filter(x=>!/^\s*📌/.test(x) && !/(chốt mã|giữ hàng|ship hàng nhanh)/i.test(x)); let k=L.findIndex(x=>/^\s*#/.test(x)); if(k<0) k=L.length; L.splice(k,0,order); return L.join('\n'); }
 $('#postAIGo').onclick=async()=>{ if(!aiNeed()) return; const btn=$('#postAIGo'); btn.disabled=true; $('#postAIMsg').textContent='AI đang viết 3 bài, khoảng 10–20 giây…';
   try{ const code=String(PS.p.code||'').trim().toUpperCase(), it=items.find(i=>!i.sample && !i.ai && String(i.code||'').trim().toUpperCase()===code); const ask=postAIAsk(); let j;
     const input=[{type:'text',text:ask}]; if(it){ try{ input.push({type:'image',mime_type:'image/jpeg',data:await imgB64((it.orig&&it.orig.img)||it.img,1024)}); }catch(e){} }
@@ -3746,6 +3748,7 @@ const VO_TONES={cam:['Thuyết phục, truyền cảm','Speak Vietnamese with a 
   nhe:['Chân thành, nhẹ nhàng','Speak Vietnamese with a natural Northern accent, warm, sincere and humble, like a kind shop owner talking to regular customers; calm pace, no shouting'],
   vui:['Vui vẻ, tươi','Speak Vietnamese with a natural Northern accent, cheerful, bright and friendly, medium pace'],
   live:['Hào hứng kiểu live','Speak Vietnamese with a natural Northern accent, energetic and enthusiastic but polite, like a friendly livestream seller']};
+if(S.voutro==='Bình luận mã sản phẩm\nNancy giữ hàng ngay') S.voutro='Đặt mã sản phẩm\nđể Nancy ship hàng nhanh nhé!';
 if(S.voToneV!==2){ S.voTone='cam'; S.voToneV=2; }
 if(!S.v61){ S.v61=1; S.subOn=true; if(S.vo==='none' && gKey()) S.vo='ai'; if(!String(S.voText||'').trim()) S.voAuto=true; }
 const VO_ROLE=['This is the opening hook: deliver it with intrigue and a little tension, slightly slower, a short pause before the last words.','This is the middle: warm, vivid and persuasive, emotion gently rising.','This is the call to action: confident, decisive and inviting, clear on the product code.','This is the closing line: inspiring and heartfelt, a soft smile in the voice.'];
