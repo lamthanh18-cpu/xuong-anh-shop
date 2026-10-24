@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 65</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 66</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -4595,10 +4595,13 @@ const MV_DRAW={
     if(o.lb){ const ly=kind==='spray'?.12:kind==='jug'?.1:.16, lw=kind==='squeeze'||kind==='spray'?.3:kind==='jug'?.48:.36; rrect(c,-lw/2*s,(ly-.11)*s,lw*s,.22*s,s*.03); mvFS(c,'#fff',null); mvText(c,o.lb,0,ly*s,(lw-.04)*s,s*.085,o.lt||lc); }
     c.fillStyle='rgba(255,255,255,.45)'; c.beginPath(); c.ellipse(-.1*s,.1*s,.02*s,.22*s,0,0,Math.PI*2); c.fill(); },
   basin(c,s,o){ const t=o.t||0; mvShadow(c,s,.5); const col='#4A90D9';
-    c.beginPath(); c.moveTo(-.46*s,-.12*s); c.lineTo(-.32*s,.42*s); c.quadraticCurveTo(0,.5*s,.32*s,.42*s); c.lineTo(.46*s,-.12*s); c.closePath(); mvFS(c,mvGrad(c,-s*.45,0,s*.45,0,'#6AAEF0','#2F6FB8'),null);
-    c.beginPath(); c.ellipse(0,-.12*s,.46*s,.11*s,0,0,Math.PI*2); mvFS(c,'#2C66A8',null);
-    if(o.item){ c.save(); c.beginPath(); c.ellipse(0,-.12*s,.43*s,.1*s,0,0,Math.PI*2); c.rect(-.5*s,-.9*s,s,.78*s); c.clip(); c.translate(0,(o.sink||0)*.12*s-.1*s); o.item(c,s*.62); c.restore(); }
-    c.beginPath(); c.ellipse(0,-.1*s,.42*s,.09*s,0,0,Math.PI*2); c.fillStyle=o.foam?'rgba(235,245,255,.92)':'rgba(170,220,255,.75)'; c.fill();
+    const bowl=()=>{ c.beginPath(); c.moveTo(-.46*s,-.12*s); c.lineTo(-.32*s,.42*s); c.quadraticCurveTo(0,.5*s,.32*s,.42*s); c.lineTo(.46*s,-.12*s); c.ellipse(0,-.12*s,.46*s,.11*s,0,0,Math.PI,true); c.closePath(); };
+    if(o.item){ /* chậu nhựa trong: thấy cả cái áo chìm hẳn dưới nước (ngâm cả áo, không chỉ cổ) */
+      bowl(); mvFS(c,'rgba(225,240,252,.95)',null); c.save(); bowl(); c.clip(); const sk=o.sink==null?1:o.sink; c.translate(0,(.2-(1-sk)*.35)*s); c.rotate(-.06); o.item(c,s*.6); c.restore();
+      c.save(); bowl(); c.clip(); const wg=c.createLinearGradient(0,-.12*s,0,.45*s); wg.addColorStop(0,'rgba(120,190,245,.28)'); wg.addColorStop(1,'rgba(60,130,210,.45)'); c.fillStyle=wg; c.fillRect(-.5*s,-.1*s+(1-sk)*.3*s,s,.6*s); c.restore();
+      bowl(); c.lineWidth=s*.018; c.strokeStyle='#4A90D9'; c.stroke(); c.save(); c.globalAlpha=.35; c.fillStyle='#fff'; c.beginPath(); c.ellipse(-.3*s,.12*s,.03*s,.22*s,-.2,0,Math.PI*2); c.fill(); c.restore(); }
+    else { bowl(); mvFS(c,mvGrad(c,-s*.45,0,s*.45,0,'#6AAEF0','#2F6FB8'),null); c.beginPath(); c.ellipse(0,-.12*s,.46*s,.11*s,0,0,Math.PI*2); mvFS(c,'#2C66A8',null); }
+    c.beginPath(); c.ellipse(0,-.1*s,.42*s,.09*s,0,0,Math.PI*2); c.fillStyle=o.foam?'rgba(235,245,255,.92)':o.item?'rgba(170,220,255,.45)':'rgba(170,220,255,.75)'; c.fill();
     if(o.cloud){ c.save(); c.globalAlpha=o.cloud; c.beginPath(); c.ellipse(0,-.1*s,.42*s,.09*s,0,0,Math.PI*2); c.fillStyle='rgba(255,255,255,.8)'; c.fill(); c.restore(); }
     if(o.foam){ for(let i=0;i<14;i++){ const a=i/14*Math.PI*2+t*.4; c.beginPath(); c.arc(Math.cos(a)*.34*s,-.1*s+Math.sin(a)*.06*s,s*(.03+.02*rnd(i)),0,Math.PI*2); c.fillStyle='rgba(255,255,255,.95)'; c.fill(); } }
     for(let i=0;i<6;i++){ const ph=(t*.7+rnd(i*5))%1; c.beginPath(); c.arc((rnd(i*3)-.5)*.6*s,-.1*s-ph*.04*s,s*.012*(1-ph)+s*.004,0,Math.PI*2); c.strokeStyle='rgba(255,255,255,.8)'; c.lineWidth=s*.006; c.stroke(); }
@@ -4686,18 +4689,26 @@ function mvStep(c,box,sc,lt,E){ const {u}=E, P=sc.mv, sub=P.sub, st=P.st, cx=box
   const basinItem=sub&&MV_DRAW[sub.k]&&/shirt|board|veg|shoe/.test(sub.k)?(cc,ss)=>mvSubDraw(cc,sub,ss,{dirt:dirtNow,t:lt,wet:true}):null;
   if(st.act==='pour'){ const into=(st.water||!sub)&&!(sub&&sub.k==='pot'); const tx=cx, ty=into?cy+S*.15:cy+S*.18;
     if(into) place(tx,ty,S*.56,s=>MV_DRAW.basin(c,s,{t:lt,warm:st.warm,cloud:clamp01((lt-1.3)/1.5)*.6,foam:tl.some(x=>/ngiat|nrb|xp/.test(x.k))&&lt>1.6}),0); else place(tx,ty,S*.6,s=>mvSubDraw(c,sub,s,{dirt:dirtNow,t:lt,salt:lt>1.4,powder:lt>1.4}),0);
-    const t0=tl[0]; if(t0){ const r=-ease.inout(seg01(lt,.6,1.2))*1.9, px=cx-S*.16, py=cy-S*.24; c.save(); c.translate(px,py); c.rotate(r); const b=pop(1); c.scale(b,b); mvToolDraw(c,t0,S*.4); c.restore();
-      if(lt>1.1){ const mx=px+Math.cos(r-Math.PI/2)*S*.18, my=py+Math.sin(r-Math.PI/2)*S*.18; c.save(); for(let i=0;i<44;i++){ const ph=((lt*1.6)+rnd(i*7))%1, yy=my+ph*(ty-S*.12-my), xx=mx+(rnd(i*3)-.5)*S*.06*ph; c.globalAlpha=1-ph*.6; c.fillStyle=t0.o.d==='pack'||t0.k==='salt'?'#fff':t0.o.col||'#cde'; c.beginPath(); c.arc(xx,yy,S*(t0.o.d==='pack'||t0.k==='salt'?.011:.014),0,Math.PI*2); c.fill(); c.strokeStyle='rgba(0,0,0,.1)'; c.lineWidth=1; c.stroke(); } c.restore(); }
+    const t0=tl[0]; if(t0){ const powder=t0.o.d==='pack'||t0.k==='salt', lvY=into?ty-S*.07:ty-S*.08;
+      if(powder){ /* gói/hũ ĐỨNG THẲNG cho rõ chữ, thìa xúc bột đưa sang, nghiêng đổ đúng vào chậu */
+        const px=cx-S*.3, py=cy-S*.1; place(px,py,S*.36,s=>mvToolDraw(c,t0,s),1);
+        const e=ease.inout(seg01(lt,.8,1.7)), tilt=ease.inout(seg01(lt,1.7,2.1)), x0=px+S*.04, y0=py-S*.22, x1=tx-S*.02, y1=lvY-S*.22, sx=x0+(x1-x0)*e, sy=y0+(y1-y0)*e-Math.sin(e*Math.PI)*S*.12;
+        if(lt>.7){ c.save(); c.globalAlpha=clamp01((lt-.7)/.2); c.translate(sx,sy); c.rotate(-.35+tilt*1.25); c.fillStyle='#B0BEC5'; c.strokeStyle='#78909C'; c.lineWidth=S*.004; rrect(c,S*.03,-S*.012,S*.24,S*.024,S*.012); c.fill(); c.stroke(); c.beginPath(); c.ellipse(0,0,S*.055,S*.035,0,0,Math.PI*2); c.fill(); c.stroke();
+          if(tilt<.6){ c.fillStyle='#fff'; c.beginPath(); c.ellipse(0,-S*.012,S*.05,S*.03,0,0,Math.PI*2); c.fill(); } c.restore(); }
+        if(tilt>.25){ c.save(); for(let i=0;i<40;i++){ const ph=((lt*1.4)+rnd(i*7))%1, yy=sy+S*.01+ph*(lvY-sy-S*.01), xx=sx-S*.03+(rnd(i*3)-.5)*S*.05*(.3+ph); c.globalAlpha=(1-ph*.5)*clamp01((tilt-.25)*3); c.fillStyle='#fff'; c.beginPath(); c.arc(xx,yy,S*.01,0,Math.PI*2); c.fill(); c.strokeStyle='rgba(0,0,0,.12)'; c.lineWidth=1; c.stroke(); } c.restore(); } }
+      else { /* chai/can: nghiêng vừa phải, rót đúng vào chậu */
+        const r=-ease.inout(seg01(lt,.6,1.2))*1.0, ss=S*.4, px=tx+S*.22, py=lvY-S*.3; c.save(); c.translate(px,py); c.rotate(r); const b=pop(1); c.scale(b,b); mvToolDraw(c,t0,ss); c.restore();
+        if(lt>1.15){ const L=.42*ss, mx=px+L*Math.sin(r)*-1*-1, my=py-L*Math.cos(r); const col=t0.o.col||'#cde'; c.save(); c.strokeStyle=col; c.globalAlpha=.85; c.lineWidth=S*.014; c.lineCap='round'; c.beginPath(); c.moveTo(mx,my); c.quadraticCurveTo(mx-S*.03,my+S*.05,mx-S*.035,lvY); c.stroke(); for(let i=0;i<6;i++){ const ph=(lt*2+i/6)%1; c.beginPath(); c.arc(mx-S*.035+(rnd(i)-.5)*S*.06*ph,lvY-ph*S*.03,S*.008,0,Math.PI*2); c.fillStyle=col; c.fill(); } c.restore(); } }
       mvTag(c,cx-S*.25,box.y+S*.08,(a.spoon?a.spoon+' ':'')+t0.lb.toLowerCase().replace(/^./,m=>m.toUpperCase()),u,'#1565C0'); }
     if(into && (a.lit||a.temp||st.warm)) mvTag(c,cx+S*.2,cy+S*.43,[a.lit,st.warm?'nước ấm':'nước',a.temp].filter(Boolean).join(' · '),u,'#0E7A6B');
     if(a.temp){ const b=pop(2); if(b>0){ c.save(); c.translate(cx+S*.34,cy-S*.08); c.scale(b,b); rrect(c,-S*.05,-S*.2,S*.1,S*.36,S*.05); mvFS(c,'#fff','#90A4AE',S*.008); c.beginPath(); c.arc(0,S*.17,S*.07,0,Math.PI*2); mvFS(c,'#E5344D',null); rrect(c,-S*.02,-S*.14,S*.04,S*.3,S*.02); c.fillStyle='#E5344D'; c.fill(); c.restore(); } }
     return; }
   const sb=sub&&st.bag?Object.assign({},sub,{bag:true}):sub;
   if((st.act==='soak'||st.act==='wait'||st.act==='show')&&sb&&sb.k==='shower'){ place(cx-S*.05,cy+S*.1,S*.8,s=>mvSubDraw(c,sb,s,{dirt:dirtNow,t:lt}),0); if(st.act!=='show'){ place(cx+S*.33,cy-S*.26,S*.3,s=>MV_DRAW.timer(c,s,{p:seg01(lt,.6,d-.3)}),1); if(a.time) mvTag(c,cx+S*.33,cy-S*.06,a.time,u,'#E5344D'); } else mvTag(c,cx,box.y+S*.07,'Túi giấm bọc kín đầu vòi',u,'#0E7A6B'); return; }
-  if(st.act==='soak'){ place(cx-S*.08,cy+S*.14,S*.78,s=>MV_DRAW.basin(c,s,{t:lt,warm:st.warm,item:basinItem,sink:.6*ease.inout(seg01(lt,.4,1.6)),cloud:.2}),0);
+  if(st.act==='soak'){ place(cx-S*.08,cy+S*.14,S*.78,s=>MV_DRAW.basin(c,s,{t:lt,warm:st.warm,item:basinItem,sink:ease.inout(seg01(lt,.3,1.4))}),0);
     place(cx+S*.33,cy-S*.26,S*.3,s=>MV_DRAW.timer(c,s,{p:seg01(lt,.6,d-.3),lb:''}),1); if(a.time) mvTag(c,cx+S*.33,cy-S*.06,a.time,u,'#E5344D'); return; }
   if(st.act==='scrub'&&sub){ const hot=mvHot(sub), ss=S*1.55; c.save(); c.beginPath(); c.rect(box.x,box.y,box.w,box.h); c.clip(); c.translate(cx-hot[0]*ss,cy+S*.02-hot[1]*ss); mvSubDraw(c,sub,ss,{dirt:dirtNow,t:lt,wet:true}); c.restore();
-    const bx=cx+S*.05+Math.sin(lt*9)*S*.1, by=cy-S*.1+Math.cos(lt*9)*S*.02; c.save(); c.translate(bx+S*.12,by-S*.04); mvToolDraw(c,tl.find(x=>x.k==='brush')||{o:{d:'brush'}},S*.5,{rot:-.5+Math.sin(lt*9)*.08}); c.restore();
+    const bx=cx+Math.sin(lt*9)*S*.07, by=cy+S*.01+Math.cos(lt*9)*S*.012; c.save(); c.translate(bx,by); c.scale(-1,1); c.rotate(.45+Math.sin(lt*9)*.05); c.translate(-.29*S*.5,-.15*S*.5); mvToolDraw(c,tl.find(x=>x.k==='brush')||{o:{d:'brush'}},S*.5,{rot:1e-4}); c.restore(); /* đầu lông chà đúng chỗ bẩn, cán chếch lên */
     for(let i=0;i<10;i++){ const ph=(lt*.8+rnd(i))%1; c.beginPath(); c.arc(cx+(rnd(i*3)-.5)*S*.4,cy+(rnd(i*5)-.5)*S*.2-ph*S*.1,S*(.012+.02*rnd(i*7)),0,Math.PI*2); c.fillStyle='rgba(255,255,255,'+(.9-ph*.6)+')'; c.fill(); c.strokeStyle='rgba(120,170,220,.5)'; c.lineWidth=1.5; c.stroke(); }
     const o2=tl.find(x=>x.k!=='brush'); if(o2) place(box.x+S*.14,box.y+box.h-S*.2,S*.3,s=>mvToolDraw(c,o2,s),1);
     mvTag(c,cx,box.y+S*.07,dirtNow<.5?'Vết ố bong dần':'Chà nhẹ chỗ ố',u,dirtNow<.5?'#0E7A6B':'#E5344D'); return; }
