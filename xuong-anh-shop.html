@@ -184,7 +184,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 83</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 84</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -3276,7 +3276,7 @@ window.__xas = { dev:()=>({story, TR_VI, ENT_VI, TR_LEN}), thumb:(v,scale=1)=>{ 
   story:()=>{ ensureStory(); return story.map(s=>({k:s.k,d:s.d,t:s.t||'',t2:s.t2||'',tr:s.tr||'',enter:s.enter||'',cam:s.cam||''})); },
   frame:(t,scale=1)=>{ const vf=VFMTS[S.vfmt], W=Math.round(vf.w*scale), H=Math.round(vf.h*scale), c=document.createElement('canvas'); c.width=W; c.height=H; const F=frameFn(); F.draw(c.getContext('2d'),W,H,Math.min(t,F.total-.001)); return c.toDataURL('image/jpeg',.85); },
   audio:async()=>{ const F=frameFn(); const b=await renderAudio(S.vstyle,F.st,F.total); if(!b) return null; const d=b.getChannelData(0); let pk=0, rms=0; for(let i=0;i<d.length;i++){ const v=Math.abs(d[i]); if(v>pk) pk=v; rms+=d[i]*d[i]; } return {sec:b.duration, peak:pk, rms:Math.sqrt(rms/d.length)}; } };
-syncVideoUI(); mlibLoad().then(()=>{ if(mlib.length && S.vmusic==='auto' && !S.musV75){ S.vmusic='lib'; } S.musV75=1; persist(); /* có kho nhạc Suno thì mọi mục video mặc định lấy nhạc từ kho */ syncVideoUI(); if(S.vmusic==='lib'){ ensureStory(true); updateVsum(); } });
+mlibLoad().then(()=>{ if(mlib.length && S.vmusic==='auto' && !S.musV75){ S.vmusic='lib'; } S.musV75=1; persist(); /* có kho nhạc Suno thì mọi mục video mặc định lấy nhạc từ kho */ syncVideoUI(); if(S.vmusic==='lib'){ ensureStory(true); updateVsum(); } });
 
 /* ===== 4. EDIT VIDEO: sửa video gửi vào, cắt livestream thành clip (chạy hoàn toàn trên máy) ===== */
 let evSrc=[], evSegs=[], evOuts=[], evBusy=false, evUid=0, evActx=null, evSW=false; // evSW: máy kẹt bộ mã card đồ hoạ thì chuyển sang mã hoá phần mềm
@@ -5227,6 +5227,7 @@ $('#mhLib').addEventListener('change',e=>{ const i=+e.target.value; if(i>=0) mhP
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-mhpick]'); if(!b) return; const i=+b.dataset.mhpick; $('#mhLib').value=String(i); mhPick(i); });
 $('#mhDirect').onclick=mhDirect; $('#mhProd').checked=S.mhProd!==false; $('#mhProd').onchange=e=>{ S.mhProd=e.target.checked; persist(); ensureStory(true); updateVsum(); }; $('#vprod').addEventListener('change',mhSuggest);
 ['mhWhy','mhNote'].forEach(id=>$('#'+id).value=S[id]||''); mhLibRender(); mhLoad();
+syncVideoUI(); /* chạy cuối cùng: mở lại app khi đang ở Mẹo hay / Gia đình vui / Truyền cảm hứng cần mọi danh sách đã tạo xong */
 })();
 </script>
 </body></html>
