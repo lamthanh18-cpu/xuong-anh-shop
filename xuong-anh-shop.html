@@ -184,7 +184,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 82</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 83</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -854,7 +854,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
   </div>
 </div>
 
-<div class="modal" id="aiModal" hidden>
+<div class="modal" id="aiModal" hidden style="z-index:70">
   <div class="sheet" role="dialog" aria-labelledby="aiTitle">
     <h3 id="aiTitle">⚙️ AI Google (Gemini, Veo)</h3>
     <p class="hint" id="aiWhere"></p>
@@ -909,7 +909,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
       <li id="veoStep3">Tải về máy, quay lại đây bấm <b>+ Thêm ảnh/clip bối cảnh</b>.</li>
     </ol>
     <div class="row">
-      <div class="field grow"><label for="veoCode">Clip cho mã</label><select id="veoCode"></select></div>
+      <div class="field grow"><label for="veoCode" id="veoCodeLbl">Clip cho mã</label><select id="veoCode"></select></div>
       <div class="field grow"><label for="veoKind">Động tác / loại cảnh</label><select id="veoKind"></select></div>
     </div>
     <div class="row">
@@ -2391,7 +2391,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     if(plan.sub) out.push({k:'mvba',vt:'ba',d:D(5),t:title,mv:{sub:plan.sub,n:steps.length},ita:baA,itb:baB,tr:''}); /* mở đầu bằng nỗi đau: TRƯỚC (khoanh đỏ) / SAU */
     else out.push({k:'hook',vt:'ba',d:D(4),t:/[?!]$/.test(title)?title:/^m[eẹ]o/i.test(title)?title+'?':'Mẹo hay: '+title+'?',it:first||null,ics:first?null:[...new Set(steps.map(mhIcon))].slice(0,4),tr:''}); /* chưa có ảnh bước thì nền thương hiệu, không dùng ảnh SP không liên quan */
     if(prep.length>=2) out.push({k:'tip',vt:'prep',d:D(4.5),lb:'🧺 CẦN CHUẨN BỊ',t:'',tt:title,mv:{sub:plan.sub,prep},tr:'slide'});
-    const media=clips.slice(), TRS=['slide','zoom','whip','push']; steps.forEach((t,i)=>{ const m=sh[i]?null:(media[i]||null); if(m) used.add(m.id); const tr=i?TRS[i%TRS.length]:'zoom'; const st=plan.steps[i], drawable=plan.sub||st.tools.length||st.water;
+    const media=clips.filter(c=>!c.mhk), TRS=['slide','zoom','whip','push']; steps.forEach((t,i)=>{ const pin=clips.find(c=>c.mhk&&c.mhk===mhKey(title,t)); const m=pin||(sh[i]?null:(media[i]||null)); if(m) used.add(m.id); const tr=i?TRS[i%TRS.length]:'zoom'; const st=plan.steps[i], drawable=plan.sub||st.tools.length||st.water;
       if(sh[i]||m) out.push({k:'step',vt:'s'+(i+1),d:D(6),n:i+1,of:steps.length,t,clip:m,it:sh[i]||null,tr}); else out.push({k:'tip',vt:'s'+(i+1),d:D(6),n:i+1,of:steps.length,t,tt:title,ic:mhIcon(t),num:drawable?null:mhNum(t),mv:drawable?{sub:plan.sub,st}:null,tr}); });
     const why=(S.mhWhy||'').trim(), note=(S.mhNote||'').trim();
     if(why) out.push({k:'tip',vt:'why',d:D(7),lb:'💡 VÌ SAO HIỆU QUẢ?',t:why,tt:title,mv:plan.sub?{sub:plan.sub,why:true,st:{d0:1,d1:0,tools:[],amt:{}}}:null,tr:'zoom'});
@@ -2863,6 +2863,15 @@ const VEO_CAM = {spin:'locked-off tripod shot at full-body framing, 35mm lens, e
 const VEO_FILE = {spin:'xoay',walk:'catwalk',back:'quay-lung',sit:'ngoi',phone:'dien-thoai',hair:'ven-toc',orbitm:'lia-vong',tilt:'chat-vai',use:'tay-dung',life:'khong-gian',orbit:'xoay-sp',macro:'can-canh',reveal:'hien-ra',ctximg:'boi-canh'};
 const VEO_REAL = 'Realism: genuine live-action footage as if shot on a full-frame cinema camera, not animation and not CGI. Real skin texture with natural pores, natural hair strands, true-to-life colors without a beauty filter, accurate fabric weight, folds and drape, physically correct motion and gravity, natural motion blur, 24 fps.';
 const VEO_AVOID = 'Avoid: CGI or 3D render look, cartoon, plastic or waxy skin, airbrushed face, over-sharpening, oversaturated or HDR colors, glowing edges, morphing or melting shapes, warping or changing print patterns, flickering, extra or missing fingers, deformed hands or face, the face changing between frames, clothing or product changing, added text, captions, watermarks or logos, slow motion, sudden cuts.';
+const VEO_MH = {mhimg:'Ảnh: tay đang làm đúng bước này (Gemini, ~900đ)', mhclip:'Clip 8 giây: tay đang làm bước này (Veo)'};
+const veoMH=()=>S.vstyle==='mh' && !veoTT;
+function veoMhKeys(clip){ const st=mhSteps(); return [...(clip?[]:[['#truoc','Ảnh mở đầu TRƯỚC (cái khổ)'],['#sau','Ảnh mở đầu SAU (kết quả)']]), ...st.map((t,i)=>[t,`Bước ${i+1}: ${t.slice(0,40)}`])]; }
+function veoMhCodes(){ const clip=$('#veoKind').value==='mhclip', cur=$('#veoCode').value, K=veoMhKeys(clip); $('#veoCode').innerHTML=K.length?K.map(([k,l])=>`<option value="${esc(k)}">${esc(l)}</option>`).join(''):'<option value="">Chưa có các bước</option>'; if(K.some(([k])=>k===cur)) $('#veoCode').value=cur; }
+function veoMhBuild(kind,key){ const title=(S.mhTitle||'').trim(); const pl=VEO_PLACE[$('#veoPlace').value]||VEO_PLACE.keep, li=VEO_LIGHT[$('#veoLight').value]||VEO_LIGHT.day; const home=pl===VEO_PLACE.keep?'a bright, clean, ordinary Vietnamese home':pl[1];
+  const j=mhJobs(title,mhSteps()).find(x=>x.k===key); let p=j?j.p:`Realistic vertical 9:16 photo for the home tip "${title}".`; p=p.replace('bright clean ordinary Vietnamese home',home).replace('soft natural window light',li[1]);
+  const g=(chosenGroups()||[])[0], nm=g?String(g.a.base||g.p.name||'').trim():''; if(S.mhProd!==false&&nm&&g.its[0]&&!/^#/.test(key)) p+=` If this step uses it, the product from the reference image ("${nm}") appears with the same shape, colors and label, realistic size.`;
+  if(kind!=='mhclip') return p;
+  const st=mhSteps(), i=st.indexOf(key); return [`Vertical 9:16 video, 8 seconds, one continuous shot, for the home tip "${title}".`,`Action: close-up of a Vietnamese woman's hands doing step ${i+1} of ${st.length}: "${key}" (Vietnamese), slowly and clearly from start to finish, the tools and materials visible and believable. Only hands appear; the face is never visible.`,`Setting: ${home}.`,`Camera: close-up, 50mm lens, gentle handheld.`,`Light: ${li[1]}.`,VEO_REAL,`Never show unsafe practice (no mixing chemicals, gloves for harsh cleaners).`,`Audio: real ambient sound only (water, tools). No music, no voiceover, no subtitles.`,VEO_AVOID].join('\n'); }
 function veoGroup(){ const G=chosenGroups(); const c=$('#veoCode')&&$('#veoCode').value; return G.find(g=>g.code===c)||G[0]||null; }
 function veoBuild(kind){ const g=veoGroup(); const name=g?(g.a.base||g.p.name||'').trim():''; const fmt={'9x16':'Vertical 9:16','4x5':'Vertical 4:5','1x1':'Square 1:1'}[S.vfmt]; const cat=g?g.p.cat:'khac';
   const pl=VEO_PLACE[$('#veoPlace').value]||VEO_PLACE.keep, li=VEO_LIGHT[$('#veoLight').value]||VEO_LIGHT.day; const place=pl===VEO_PLACE.keep && !veoTT?(VEO_LIFE[cat]||VEO_LIFE.khac):'in '+pl[1];
@@ -2877,16 +2886,20 @@ function veoBuild(kind){ const g=veoGroup(); const name=g?(g.a.base||g.p.name||'
 let veoTT=false;
 const VEO_KEY='xas-veo-saved'; const veoSavedGet=()=>{ try{ return JSON.parse(localStorage.getItem(VEO_KEY)||'[]'); }catch(e){ return []; } }; const veoSavedSet=a=>{ try{ localStorage.setItem(VEO_KEY,JSON.stringify(a)); }catch(e){ toast('Máy này không lưu được câu lệnh'); } };
 function veoSavedRender(){ const a=veoSavedGet(); $('#veoSavedRow').hidden=!a.length; $('#veoSaved').innerHTML=`<option value="">📁 Câu lệnh đã lưu (${a.length})</option>`+a.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join(''); }
-function veoKinds(){ const K=veoTT?VEO_TT:VEO_KINDS; $('#veoKind').innerHTML=Object.entries(K).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+function veoKinds(){ const K=veoTT?VEO_TT:veoMH()?VEO_MH:VEO_KINDS; $('#veoKind').innerHTML=Object.entries(K).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
   const G=chosenGroups(); $('#veoCode').innerHTML=G.length?G.map(g=>`<option value="${esc(g.code||'')}">${esc(g.code||'Không mã')}${g.p.name?' · '+esc((g.a.base||g.p.name).slice(0,28)):''}</option>`).join(''):'<option value="">Chưa có ảnh</option>';
+  $('#veoCodeLbl').textContent=veoMH()?'Ảnh/clip cho bước':'Clip cho mã'; if(veoMH()) veoMhCodes();
   $('#veoPlace').innerHTML=Object.entries(VEO_PLACE).filter(([k])=>veoTT?k!=='kitchen':k!=='boutique').map(([k,v])=>`<option value="${k}">${k==='keep'&&!veoTT?'Tự chọn theo ngành hàng':v[0]}</option>`).join('');
   $('#veoLight').innerHTML=Object.entries(VEO_LIGHT).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join('');
-  $('#veoTitle').textContent=veoTT?'Cho người mẫu chuyển động (AI)':'Câu lệnh AI tạo bối cảnh';
-  $('#veoStep2').innerHTML=veoTT?'Tải lên 1 ảnh người mẫu rõ nét, thấy trọn bộ đồ, rồi dán câu lệnh bên dưới.':'Tải lên 1 ảnh sản phẩm thật, rõ nét, rồi dán câu lệnh bên dưới.';
+  $('#veoTitle').textContent=veoTT?'Cho người mẫu chuyển động (AI)':veoMH()?'Câu lệnh AI tạo ảnh/clip cho từng bước mẹo':'Câu lệnh AI tạo bối cảnh';
+  $('#veoStep2').innerHTML=veoMH()?'Chọn bước cần ảnh/clip, dán câu lệnh bên dưới (không cần ảnh sản phẩm).':veoTT?'Tải lên 1 ảnh người mẫu rõ nét, thấy trọn bộ đồ, rồi dán câu lệnh bên dưới.':'Tải lên 1 ảnh sản phẩm thật, rõ nét, rồi dán câu lệnh bên dưới.';
   $('#veoStep3').innerHTML='Tải về, đặt đúng tên file như gợi ý dưới câu lệnh, quay lại bấm <b>+ Thêm ảnh/clip bối cảnh</b>.';
   $('#veoHint').textContent=veoTT?'Chỉ dùng ảnh người mẫu của shop, người mẫu đã đồng ý cho dùng hình. Clip có người do AI tạo: khi đăng phải chọn "Nội dung do AI tạo".':'Clip tay dùng sản phẩm chỉ quay tay, không lộ mặt. Khi đăng, nếu Facebook hỏi, chọn "Nội dung do AI tạo".';
   veoSavedRender(); }
-const veoFill=()=>{ const k=$('#veoKind').value; $('#veoText').value=veoBuild(k); const g=veoGroup();
+const veoFill=e=>{ const k=$('#veoKind').value; if(veoMH()){ if(e&&e.target&&e.target.id==='veoKind') veoMhCodes(); const key=$('#veoCode').value, st=mhSteps(); $('#veoText').value=veoMhBuild(k,key);
+    $('#veoStep1').innerHTML=`Mở Gemini (gemini.google.com hoặc ứng dụng Gemini), chọn tạo <b>${k==='mhclip'?'Video':'Ảnh'}</b>.`;
+    $('#veoFile').innerHTML=`Bấm ⚡ thì ${k==='mhclip'?'clip':'ảnh'} tự vào đúng <b>${/^#/.test(key)?(key==='#truoc'?'cảnh TRƯỚC':'cảnh SAU'):'bước '+(st.indexOf(key)+1)}</b> của video (thay ảnh cũ nếu có). Làm tay qua Gemini thì tải về rồi bấm <b>+ Thêm ảnh/clip bối cảnh</b> theo thứ tự bước.`; return; }
+  $('#veoText').value=veoBuild(k); const g=veoGroup();
   $('#veoStep1').innerHTML=`Mở Gemini (gemini.google.com hoặc ứng dụng Gemini), chọn tạo <b>${k==='ctximg'?'Ảnh':'Video'}</b>. Có Google Flow thì chọn Veo bản Quality, khổ dọc.`;
   $('#veoFile').innerHTML=`Tên file khi tải về: <b>${esc((g&&g.code)||'clip')}-${VEO_FILE[k]||'clip'}.${k==='ctximg'?'jpg':'mp4'}</b>${veoTT?' (app tự xếp clip ngay sau ảnh LOOK của mã này)':''}`; };
 const veoOpen=tt=>{ veoTT=tt; veoKinds(); veoFill(); $('#veoModal').hidden=false; };
@@ -3238,7 +3251,7 @@ function renderThumbs(){ const box=$('#thumbs'); if(!box) return; const vf=VFMTS
   const d=thumbData(); if(!$('#thumbText').value) $('#thumbText').placeholder=d.text; box.querySelectorAll('canvas').forEach(c=>{ if(c.width!==w||c.height!==h){ c.width=w; c.height=h; } drawThumbV(c.getContext('2d'),w,h,+c.dataset.tv,d); c.setAttribute('aria-pressed',+c.dataset.tv===+S.thumbV); }); }
 $('#thumbs').addEventListener('click',e=>{ const c=e.target.closest('canvas'); if(!c) return; S.thumbV=+c.dataset.tv; persist(); renderThumbs(); });
 bind('thumbText','thumbText','input',()=>renderThumbs());
-$('#btnThumb').onclick=async()=>{ await fontsReady(); const vf=VFMTS[S.vfmt]; const W=vf.w*1.5, H=vf.h*1.5; const c=document.createElement('canvas'); c.width=W; c.height=H; drawThumbV(c.getContext('2d'),W,H,+S.thumbV,thumbData());
+$('#btnThumb').onclick=async()=>{ toast('Đang lưu ảnh bìa…'); await fontsReady(); const vf=VFMTS[S.vfmt]; const W=vf.w*1.5, H=vf.h*1.5; const c=document.createElement('canvas'); c.width=W; c.height=H; drawThumbV(c.getContext('2d'),W,H,+S.thumbV,thumbData());
   const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.92)); const d=new Date(); await saveFile(`anh-bia-${pad2(d.getDate())}${pad2(d.getMonth()+1)}-${pad2(d.getHours())}${pad2(d.getMinutes())}.jpg`,b,'image'); };
 chipGroup('#vmusicChips','vmusic','vmusic',syncVideoUI);
 bind('vsfx','vsfx','change',null); bind('tcText','tcText','input',()=>updateVsum()); bind('thSlogan','thSlogan','input',()=>updateVsum()); bind('lvTime','lvTime','input',()=>updateVsum()); bind('ttTitle','ttTitle','input',()=>updateVsum()); bind('mhTitle','mhTitle','input',()=>updateVsum()); bind('mhSteps','mhSteps','input',()=>updateVsum()); bind('mhWhy','mhWhy','input',()=>updateVsum()); bind('mhNote','mhNote','input',()=>updateVsum()); bind('tsTitle','tsTitle','input',()=>updateVsum()); bind('thVals','thVals','input',()=>updateVsum());
@@ -3919,9 +3932,9 @@ async function gTranscribe(buf){ const wav=wavOf(buf,16000); const data=await b6
   const t=gText(j); const m=t.match(/\[[\s\S]*\]/); if(m){ try{ const a=JSON.parse(m[0]).filter(x=>x&&x.text).map(x=>({s:+x.start||0,e:+x.end||0,text:String(x.text).trim()})); if(a.length) return a; }catch(e){} }
   if(t) return t.split(/\n+|(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean).map(text=>({text})); throw aiErr('empty'); }
 // clip từ ảnh (Veo): chờ Google dựng xong, tải về
-async function gVeo(prompt,img,onMsg){ const data=await imgB64(img,1280); const m=gModel('veo'); const asp='9:16';
-  let op; try{ op=await gFetch(`models/${m}:predictLongRunning`,{instances:[{prompt,image:{inlineData:{mimeType:'image/jpeg',data}}}],parameters:{aspectRatio:asp,durationSeconds:'8',resolution:'720p'}}); }
-  catch(e){ if(e.code!=='api') throw e; op=await gFetch(`models/${m}:predictLongRunning`,{instances:[{prompt,image:{bytesBase64Encoded:data,mimeType:'image/jpeg'}}],parameters:{aspectRatio:asp,durationSeconds:8}}); }
+async function gVeo(prompt,img,onMsg){ const data=img?await imgB64(img,1280):null; const m=gModel('veo'); const asp='9:16';
+  let op; try{ op=await gFetch(`models/${m}:predictLongRunning`,{instances:[data?{prompt,image:{inlineData:{mimeType:'image/jpeg',data}}}:{prompt}],parameters:{aspectRatio:asp,durationSeconds:'8',resolution:'720p'}}); }
+  catch(e){ if(e.code!=='api') throw e; op=await gFetch(`models/${m}:predictLongRunning`,{instances:[data?{prompt,image:{bytesBase64Encoded:data,mimeType:'image/jpeg'}}:{prompt}],parameters:{aspectRatio:asp,durationSeconds:8}}); }
   const t0=Date.now(); while(!op.done){ if(Date.now()-t0>9*60e3) throw aiErr('timeout'); onMsg&&onMsg(`Google đang dựng clip… ${Math.round((Date.now()-t0)/1000)} giây (thường 1–6 phút, giữ trang mở)`); await new Promise(r=>setTimeout(r,10000)); op=await gFetch(op.name); }
   if(op.error) throw aiErr('api',op.error.message); const inl=gFind(op.response||op,o=>typeof o.bytesBase64Encoded==='string'); if(inl) return blobOf(inl.bytesBase64Encoded,inl.mimeType||'video/mp4');
   const v=gFind(op.response||op,o=>typeof o.uri==='string' && /^https?:/.test(o.uri)); if(!v) throw aiErr(gBlocked(op)?'safety':'empty');
@@ -4036,12 +4049,22 @@ $('#postAIGo').onclick=async()=>{ if(!aiNeed()) return; const btn=$('#postAIGo')
 $('#postAIPick').addEventListener('click',e=>{ const c=e.target.closest('[data-aip]'); if(!c) return; const x=POST_AI.list[+c.dataset.aip]; if(!x) return; $('#postAIPick').querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===c)); $('#postText').value=x.t; checkView(); });
 
 /* --- câu lệnh Veo: tạo ngay bằng AI Google --- */
-$('#veoGo').onclick=async()=>{ if(!aiNeed()) return; const g=veoGroup(); const it=g&&g.its[0]; if(!it){ toast('Thêm ảnh sản phẩm trước'); return; } const k=$('#veoKind').value; const btn=$('#veoGo'); const msg=$('#veoAiMsg');
+$('#veoGo').onclick=async()=>{ const msg0=$('#veoAiMsg'); if(IN_CLAUDE||!gKey()){ msg0.textContent=IN_CLAUDE?'Đây là bản trong claude.ai, không tạo AI được. Mở bản máy tính (file trên Desktop) rồi bấm lại, hoặc bấm Chép câu lệnh dán vào Gemini.':'Chưa có khóa AI Google: dán khóa vào khung vừa mở, bấm Lưu, rồi bấm lại nút này.'; aiNeed(); return; }
+  if(veoMH()) return veoMhGo();
+  const g=veoGroup(); const it=g&&g.its[0]; if(!it){ msg0.textContent='Chưa có ảnh sản phẩm: vào tab 1. Ảnh thêm ảnh sản phẩm, hoặc bấm Chép câu lệnh dán vào Gemini.'; toast('Thêm ảnh sản phẩm trước'); return; } const k=$('#veoKind').value; const btn=$('#veoGo'); const msg=$('#veoAiMsg');
   const name=`${g.code||'clip'}-${VEO_FILE[k]||'clip'}`; btn.disabled=true; const src=(it.orig&&it.orig.img)||it.img;
   try{ if(k==='ctximg'){ msg.textContent='Đang tạo ảnh bối cảnh…'; const b=await gImage($('#veoText').value,[src],S.vfmt==='9x16'?'9:16':S.vfmt==='1x1'?'1:1':'4:5'); await addClips([new File([b],name+'.jpg',{type:b.type||'image/png'})]); msg.textContent='✓ Đã thêm ảnh bối cảnh vào danh sách. Duyệt lại trước khi dùng.'; }
     else { msg.textContent='Đang gửi ảnh và câu lệnh cho Veo…'; const b=await gVeo($('#veoText').value,src,t=>msg.textContent=t); await addClips([new File([b],name+'.mp4',{type:'video/mp4'})]); msg.textContent='✓ Đã thêm clip vào danh sách. Duyệt 6 điểm bên dưới trước khi dùng.'; }
     renderClips(); }
   catch(e){ msg.textContent=aiErrText(e); } btn.disabled=false; };
+
+async function veoMhGo(){ const btn=$('#veoGo'), msg=$('#veoAiMsg'), k=$('#veoKind').value, key=$('#veoCode').value, title=(S.mhTitle||'').trim(), st=mhSteps();
+  if(!title||!key){ msg.textContent='Chọn mẹo trong Thư viện mẹo hay (hoặc gõ tên mẹo và các bước) trước.'; return; }
+  const g=(chosenGroups()||[])[0], pimg=S.mhProd!==false&&g&&g.its[0]&&!/^#/.test(key)?g.its[0].img:null, nb=/^#/.test(key)?(key==='#truoc'?'cảnh TRƯỚC':'cảnh SAU'):'bước '+(st.indexOf(key)+1), mk=mhKey(title,key);
+  btn.disabled=true; try{ if(k==='mhclip'){ msg.textContent=`Đang gửi câu lệnh ${nb} cho Veo…`; const b=await gVeo($('#veoText').value,pimg,t=>msg.textContent=t);
+      clips=clips.filter(c=>{ if(c.mhk===mk){ URL.revokeObjectURL(c.url); return false; } return true; }); const n0=clips.length; await addClips([new File([b],`meo-${nb.replace(/\s+/g,'-')}.mp4`,{type:'video/mp4'})]); if(clips.length>n0) clips[clips.length-1].mhk=mk; renderClips(); ensureStory(true); updateVsum(); msg.textContent=`✓ Đã gắn clip vào ${nb}. Bấm ▶ Xem thử, duyệt 6 điểm bên dưới.`; }
+    else { msg.textContent=`Đang vẽ ảnh ${nb}… (~900đ)`; const b=await gImage($('#veoText').value,pimg?[pimg]:[],'9:16'); await idbPut(mk,b); MH.shots[mk]=await fnItOf(b); MH.ver++; ensureStory(true); updateVsum(); msg.textContent=`✓ Đã thay ảnh ${nb}. Bấm ▶ Xem thử. Chưa ưng thì sửa câu lệnh rồi bấm lại.`; } }
+  catch(e){ msg.textContent=aiErrText(e); } btn.disabled=false; }
 
 /* ================= giọng đọc + phụ đề ================= */
 if(!S.vo) S.vo='none'; if(!S.voVoice) S.voVoice='Sulafat'; if(!S.voTone) S.voTone='nhe'; if(S.subOn==null) S.subOn=false; if(!S.subStyle) S.subStyle='white'; if(!S.subPos) S.subPos='low'; if(S.voText==null) S.voText='';
@@ -5144,14 +5167,16 @@ function mhSuggest(){ const el=$('#mhSug'); if(!el) return; const g=(chosenGroup
   const hit=MH_LIB.map((m,i)=>({i,m})).filter(x=>x.m.k.split('|').some(w=>{ const n=norm(w); return n && (' '+nm+' ').includes(' '+n+' '); })).slice(0,4);
   el.innerHTML=hit.length?'Hợp với sản phẩm đang chọn: '+hit.map(x=>`<button class="chip" type="button" data-mhpick="${x.i}">${esc(x.m.n)}</button>`).join(' '):'Chưa có mẹo khớp tên sản phẩm này, chọn trong danh sách.'; }
 async function mhLoad(){ let ch=0; const t=(S.mhTitle||'').trim(); for(const st of ['#truoc','#sau',...mhSteps()]){ const k=mhKey(t,st); if(MH.shots[k]) continue; const b=await idbGet(k); if(b){ const it=await fnItOf(b).catch(()=>null); if(it){ MH.shots[k]=it; ch++; } } } if(ch){ MH.ver++; if(S.vstyle==='mh'){ ensureStory(true); updateVsum(); } } }
-async function mhDirect(){ if(!aiNeed()||MH.busy) return; const title=(S.mhTitle||'').trim(), steps=mhSteps(), msg=$('#mhMsg'); if(!title||!steps.length){ toast('Chọn mẹo trong thư viện hoặc gõ tên mẹo và các bước trước'); return; }
-  const plan=mvPlan(title,steps), sub=plan.sub, pain=sub&&MV_PAIN[sub.pain]?MV_PAIN[sub.pain]:'', tools=mvPrepTools(plan).filter(x=>x.k!=='water').map(x=>x.lb);
+function mhJobs(title,steps){ const plan=mvPlan(title,steps), sub=plan.sub, pain=sub&&MV_PAIN[sub.pain]?MV_PAIN[sub.pain]:'', tools=mvPrepTools(plan).filter(x=>x.k!=='water').map(x=>x.lb);
   const look=`Realistic vertical 9:16 photo, bright clean ordinary Vietnamese home, soft natural window light, 50mm, sharp focus, true-to-life colors, looks like a real phone photo, not CGI. Same home, same hands, same sleeve color and lighting across the whole series.`;
   const pack=tools.length?` Any product used must be shown as a real retail package with a large, clearly readable label (for example a bag labeled "BAKING SODA", a bottle labeled "GIẤM"), so viewers instantly know what it is.`:'';
   const jobs=[]; if(sub){ jobs.push({k:'#truoc',p:`${look} BEFORE photo for the home tip "${title}": close-up of the problem exactly as housewives see it — ${pain||'the dirty / smelly / damaged item'} — the flaw must be obvious at a glance (e.g. clearly yellowed stained shirt collar). No hands needed. Only text allowed: none.`});
     jobs.push({k:'#sau',p:`${look} AFTER photo for the home tip "${title}": the very same item from the BEFORE photo, same angle, now clean and fixed, fresh and bright, satisfying result. No text.`}); }
-  steps.forEach((st,i)=>jobs.push({k:st,p:`${look} Step ${i+1} of ${steps.length} of the home tip "${title}": "${st}" (Vietnamese). Show a Vietnamese woman's hands doing exactly this action, the tools and materials the step names visible and believable (amounts, containers).${pack} The item being treated must be clearly visible with its problem${i<steps.length-1?' still partly visible':' now gone'}. Never show unsafe practice (no mixing chemicals, gloves for harsh cleaners, no water on burning oil). No captions or subtitles; only product label text.`}));
-  const todo=jobs.filter(j=>!MH.shots[mhKey(title,j.k)]); if(!todo.length){ msg.textContent='Các ảnh đã có. Đổi bước hoặc tên mẹo để vẽ lại.'; return; }
+  steps.forEach((st,i)=>jobs.push({k:st,p:`${look} Step ${i+1} of ${steps.length} of the home tip "${title}": "${st}" (Vietnamese). Show a Vietnamese woman's hands doing exactly this action, the tools and materials the step names visible and believable (amounts, containers).${pack} The item being treated must be clearly visible with its problem${i<steps.length-1?' still partly visible':' now gone'}. Never show unsafe practice (no mixing chemicals, gloves for harsh cleaners, no water on burning oil). No captions or subtitles; only product label text.`})); return jobs; }
+async function mhDirect(){ if(MH.busy) return; const title=(S.mhTitle||'').trim(), steps=mhSteps(), msg=$('#mhMsg'); if(!title||!steps.length){ msg.textContent='Chọn mẹo trong Thư viện mẹo hay hoặc gõ tên mẹo và các bước trước.'; toast('Chọn mẹo trong thư viện hoặc gõ tên mẹo và các bước trước'); return; }
+  if(IN_CLAUDE||!gKey()){ msg.textContent=IN_CLAUDE?'Đây là bản trong claude.ai, không vẽ ảnh AI được. Mở bản máy tính rồi bấm lại.':'Chưa có khóa AI Google: dán khóa vào khung vừa mở, bấm Lưu, rồi bấm lại.'; aiNeed(); return; }
+  const jobs=mhJobs(title,steps);
+  const todo=jobs.filter(j=>!MH.shots[mhKey(title,j.k)]); if(!todo.length){ msg.textContent='Các ảnh đã có. Muốn vẽ lại 1 ảnh: bấm "Câu lệnh AI tạo bối cảnh", chọn bước, bấm ⚡.'; return; }
   MH.busy=true; const g=(chosenGroups()||[])[0], pimg=S.mhProd!==false&&g&&g.its[0]?g.its[0].img:null, nm=g?String(g.a.base||g.p.name||'').trim():''; let done=0;
   try{ for(const j of todo){ msg.textContent=`Đạo diễn đang vẽ ảnh ${done+1}/${todo.length} (${j.k==='#truoc'?'TRƯỚC: nỗi đau':j.k==='#sau'?'SAU: kết quả':'bước làm'})… mỗi ảnh khoảng 900đ, giữ trang mở`;
       const prompt=j.p+(pimg&&nm&&!/^#/.test(j.k)?` If this step uses it, the product from the reference image ("${nm}") appears with the same shape, colors and label, realistic size.`:'');
