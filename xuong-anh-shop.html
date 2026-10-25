@@ -38,6 +38,7 @@ h1{font-size:20px;font-weight:800;margin:0;letter-spacing:-.01em}
 .tabs button span{display:block;font-size:11px;font-weight:500;opacity:.8}
 .tabs button[aria-selected="true"]{color:var(--ink);background:var(--surface);border-bottom-color:var(--accent)}
 .pane{padding:16px;display:grid;gap:16px}
+.tcmode #vstyleChips,.tcmode #vstyleHint,.tcmode #vdurField,.tcmode #thField,.tcmode #tcClipField,.tcmode #story,.tcmode #btnStory,.tcmode #btnFx,.tcmode #storyCheck,.tcmode #storyHead,.tcmode #thumbField,.tcmode #musField,.tcmode #voField,.tcmode #tcText{display:none!important}
 .field{display:grid;gap:6px;min-width:0}
 .field>label,.lbl{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .hint{font-size:12px;color:var(--muted);margin:0}
@@ -179,7 +180,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 80</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 81</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -408,9 +409,12 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label for="tcQuote">Câu nói</label>
             <select id="tcQuote"></select>
             <textarea id="tcText" rows="2" placeholder="Hoặc tự gõ câu của shop, xuống dòng để tách cảnh"></textarea>
-            <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px"><button class="btn" type="button" id="tcBgPick">🌄 Chọn thư mục cảnh đẹp làm nền</button><span class="sm" id="tcBgInfo"></span></div>
-            <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" type="button" id="tcBgRoll">🎲 Đổi video nền / đoạn khác</button><span class="sm" id="tcBgNow"></span></div>
-            <p class="hint">Video chỉ có: 1 clip cảnh đẹp chạy liền (lấy 1 đoạn ngẫu nhiên, clip ngắn thì tự lặp) + câu nói hiện lên + AI đọc + nhạc nền. Không ảnh sản phẩm, không khung, không logo. Clip miễn phí bản quyền tải ở Pixabay, Pexels, để chung 1 thư mục (nên trên Google Drive).</p>
+            <label>Video nền</label>
+            <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="tcFilePick" data-tcbg="file">🎬 Chọn 1 video nền</button><button class="btn" type="button" id="tcBgPick" data-tcbg="dir">📂 Chọn thư mục (app lấy ngẫu nhiên)</button></div>
+            <span class="sm" id="tcBgInfo"></span>
+            <p class="sm" id="tcBgNow" style="margin:0"></p>
+            <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" type="button" id="tcBgRoll">🎲 Đổi đoạn khác</button></div>
+            <p class="hint">Video chỉ có: video nền cảnh đẹp chạy liền + câu nói hiện lên + AI đọc + nhạc nền. Clip miễn phí bản quyền tải ở Pixabay, Pexels.</p>
             <label>Chữ hiện trên video</label>
             <div class="chips" id="tcTxtChips"><button class="chip" type="button" data-tct="cau">Cả câu nổi lên</button><button class="chip" type="button" data-tct="chu">Từng chữ sáng dần theo giọng đọc</button></div>
             <label for="tcVs">Kiểu giọng đọc</label>
@@ -420,6 +424,8 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <div class="row" style="gap:8px;align-items:center;margin-top:6px"><button class="btn" type="button" id="tcVoTry">🔊 Nghe thử giọng này</button><span class="sm" id="tcVoTryMsg">~50đ/lần nghe</span></div>
             <label for="tcMus">Nhạc nền</label>
             <select id="tcMus"></select>
+            <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="tcMusDir">📁 Thêm thư mục nhạc (Suno)</button><button class="btn" type="button" id="tcMusFile">＋ Thêm bài nhạc</button></div>
+            <p class="sm" style="margin:0">Câu kết video: "Nancy's Shop cảm ơn bạn đã xem."</p>
             <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px"><button class="btn" type="button" id="tcOutPick">📁 Thư mục lưu video Truyền cảm hứng</button><span class="sm" id="tcOutInfo"></span></div>
             <div class="field" id="tcBatchBox" style="border:1px dashed var(--line,#cbd5e1);border-radius:12px;padding:10px;margin-top:8px">
               <button class="btn primary" type="button" data-lotopen="tc">📚 Làm cả loạt 10–20 video câu nói hay (đăng nhiều fanpage)</button>
@@ -529,7 +535,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label for="thVals">3 điều shop muốn khách nhớ (mỗi dòng một ý, chỉ ghi điều có thật)</label>
             <textarea id="thVals" rows="3"></textarea>
           </div>
-          <div class="field">
+          <div class="field" id="tcClipField">
             <span class="lbl">Ảnh và clip bối cảnh</span>
             <div class="row">
               <button class="btn" type="button" id="btnClip">+ Thêm ảnh/clip bối cảnh</button>
@@ -540,7 +546,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <p class="hint" id="clipHint">Sản phẩm đặt trong bếp, trong nhà, hoặc cảnh tay đang dùng. App tự làm cảnh chia đôi (sản phẩm rõ + bối cảnh) và khung lồng. Clip tối đa 6 giây, tắt tiếng gốc.</p>
           </div>
           <div class="field">
-            <span class="lbl">Kịch bản <span id="storyLen"></span></span>
+            <span class="lbl" id="storyHead">Kịch bản <span id="storyLen"></span></span>
             <div id="story" class="story"></div>
             <div class="row">
               <button class="btn" type="button" id="btnStory">Lên kịch bản lại</button>
@@ -583,7 +589,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <textarea id="voutro"></textarea>
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="musField">
           <span class="lbl">Nhạc nền</span>
           <div class="chips" id="vmusicChips">
             <button class="chip" type="button" data-vmusic="auto">Nhạc tự soạn <small>không lo bản quyền</small></button>
@@ -2366,7 +2372,7 @@ function buildStory(){ const st=S.vstyle, b=beatOf(st), D=n=>+(n*b).toFixed(3), 
     if(all.length>1) out.push({k:'grid',d:D(6),its:G.map(g=>g.its[0]).concat(all).filter((v,i,a)=>a.indexOf(v)===i).slice(0,4),t:'Chọn kỹ từng mã cho chị em',tr:'zoom'});
     out.push({k:'outro',d:D(6),t:`Theo dõi ${shop}`,t2:'Đặt mã để Nancy ship hàng nhanh nhé!',tr:'leak'}); }
   else if(st==='tc'){ /* Truyền cảm hứng (bản 77): CHỈ 1 video nền chạy liền, câu nói hiện theo giọng AI đọc + nhạc nền; không ảnh SP, không khung, không logo */
-    const bg=clips.length?clips[0]:(tcBg[0]||null), cues=tcCues(), d=Math.max(6,+((cues.length?cues[cues.length-1].e:4)+1.8).toFixed(3)), vd=bg&&bg.v?(isFinite(bg.v.duration)&&bg.v.duration>0?bg.v.duration:bg.dur||0):0;
+    const bg=tcBg[0]||null, cues=tcCues(), d=Math.max(6,+((cues.length?cues[cues.length-1].e:4)+1.8).toFixed(3)), vd=bg&&bg.v?(isFinite(bg.v.duration)&&bg.v.duration>0?bg.v.duration:bg.dur||0):0;
     story=[{k:'zen',d,clip:bg,loop:1,off:vd>d+1?+(.5+(vd-d-1)*tcBgFr).toFixed(2):0,cues,tr:''}]; S.vdur=String(Math.max(6,Math.min(90,Math.round(d)))); try{ vdurSync(); }catch(e){} return; } /* độ dài video = đúng giọng đọc */
   else if(st==='mh'){ const G=chosenGroups().slice(0,1); const g=S.mhProd===false?null:G[0]; const its=g?g.its:[]; const title=(S.mhTitle||'').trim()||'Mẹo hay việc nhà';
     let steps=mhSteps(); if(!steps.length) steps=['Chuẩn bị đồ cần dùng','Làm theo hướng dẫn trên bao bì sản phẩm','Lau lại cho sạch, cất gọn'];
@@ -2705,7 +2711,19 @@ function frameFn(){ if(S.vstyle==='tu'){ const segs=segments(); const o=optsImg(
 let tcBg=[], tcBgKey='', tcBgH=null, tcBgFiles=[], tcBgQ=[], tcBgFr=Math.random();
 async function tcBgDir(ask){ if(!evDirOK()) return null; if(!tcBgH && !ask) tcBgH=await evIdb('get',null,'tcbg'); if(!tcBgH && !ask) return null;
   if(tcBgH && !ask){ try{ if((await tcBgH.queryPermission({mode:'read'}))==='granted' || (await tcBgH.requestPermission({mode:'read'}))==='granted') return tcBgH; }catch(e){} return null; }
-  try{ tcBgH=await showDirectoryPicker({id:'xas-tcbg',mode:'read',startIn:'videos'}); evIdb('put',tcBgH,'tcbg'); return tcBgH; }catch(e){ return null; } }
+  try{ tcBgH=await showDirectoryPicker({id:'xas-tcbg',mode:'read',startIn:'videos'}); evIdb('put',tcBgH,'tcbg'); return tcBgH; }catch(e){ if(e&&e.name!=='AbortError') toast('Không mở được hộp chọn thư mục ('+(e.name||'lỗi')+'). Bấm lại lần nữa.'); return null; } }
+// 1 video nền do nhân viên chọn (nhớ file khi mở lại app nếu Chrome cho phép)
+let tcFileH=null, tcFileClip=null;
+async function tcFilePick(){ let f=null, h=null;
+  if(window.showOpenFilePicker && !window.claude){ try{ [h]=await showOpenFilePicker({id:'xas-tcfile',startIn:'videos',types:[{description:'Video',accept:{'video/*':['.mp4','.mov','.webm','.m4v']}}],multiple:false}); f=await h.getFile(); }catch(e){ if(e&&e.name==='AbortError') return null; h=null; } }
+  if(!f) f=await new Promise(res=>{ const i=document.createElement('input'); i.type='file'; i.accept='video/*,.mp4,.mov,.webm,.m4v'; i.onchange=()=>res(i.files[0]||null); i.click(); });
+  if(!f) return null; tcFileH=h; if(h) evIdb('put',h,'tcfile'); tcFileClip=null; S.tcBgMode='file'; persist(); tcBgKey=''; await tcFilePrep(null,f); return f.name; }
+async function tcFilePrep(msg,f){ if(!tcFileClip || f){ if(!f && !tcFileH) tcFileH=await evIdb('get',null,'tcfile');
+    if(!f && tcFileH){ try{ if((await tcFileH.queryPermission({mode:'read'}))==='granted' || (await tcFileH.requestPermission({mode:'read'}))==='granted') f=await tcFileH.getFile(); }catch(e){} }
+    if(f){ if(msg) msg('Đang mở video nền…'); tcFileClip=await clipOf(f); } }
+  tcBg=tcFileClip?[tcFileClip]:[]; tcBgFr=Math.random(); if(tcBg[0]&&tcBg[0].v&&tcBg[0].v.readyState<1) await new Promise(r=>{ tcBg[0].v.addEventListener('loadedmetadata',r,{once:true}); setTimeout(r,4000); }); tcBgShow(); ensureStory(true); }
+function tcBgShow(){ const el=$('#tcBgNow'); if(!el) return; const c=tcBg[0]; document.querySelectorAll('[data-tcbg]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tcbg===(S.tcBgMode==='file'?'file':'dir'))));
+  el.textContent=S.tcBgMode==='file'?(c?`🎬 Video nền: ${c.name}`:'🎬 Chưa chọn video: bấm "Chọn 1 video nền"'):(c?`🎲 Đang dùng: ${c.name} (lấy ngẫu nhiên từ thư mục)`:(tcBgH?'Thư mục đã chọn, bấm Xem thử hoặc Tạo video là app lấy ngẫu nhiên':'Chưa có video nền: chọn 1 video, hoặc chọn thư mục để app lấy ngẫu nhiên')); }
 // thư mục xuất RIÊNG cho video Truyền cảm hứng (không lẫn với clip live, video bán hàng)
 let tcOutH=null; async function tcOutDir(ask){ if(!evDirOK()) return null;
   if(ask){ /* mở hộp chọn thư mục NGAY khi bấm (không chờ gì trước), Chrome mới cho mở */ let h=null; try{ h=await showDirectoryPicker({id:'xas-tcout',mode:'readwrite',startIn:'videos'}); }catch(e){ if(e&&e.name!=='AbortError') toast('Không mở được hộp chọn thư mục ('+(e.name||'lỗi')+'). Bấm lại nút 📁 lần nữa.'); return null; }
@@ -2715,12 +2733,12 @@ let tcOutH=null; async function tcOutDir(ask){ if(!evDirOK()) return null;
 function tcOutShow(){ const el=$('#tcOutInfo'); if(el) el.textContent=evDirOK()?(tcOutH?`📁 Đang lưu vào: ${tcOutH.name}`:'Chưa chọn: video lưu chung vào thư mục clip. Bấm nút để chọn thư mục riêng.'):'Chỉ dùng ở bản máy tính (Chrome)'; }
 async function tcBgLoad(ask){ const d=await tcBgDir(ask); tcBgFiles=[]; tcBgQ=[]; if(d){ try{ for await(const [n,h] of d.entries()) if(h.kind==='file' && /\.(mp4|mov|webm|m4v|jpe?g|png|webp)$/i.test(n)) tcBgFiles.push(h); }catch(e){ console.warn('tcbg dir',e); } }
   const el=$('#tcBgInfo'); if(el) el.textContent=d?`📂 ${d.name}: ${tcBgFiles.length} cảnh${tcBgFiles.length?' · mỗi video lấy 1 clip, 1 đoạn ngẫu nhiên':' (chưa có clip .mp4 hay ảnh .jpg)'}`:(evDirOK()?'Chưa chọn thư mục cảnh đẹp':'Thư mục cảnh đẹp chỉ dùng ở bản máy tính (Chrome)'); return tcBgFiles.length; }
-async function tcBgPrep(msg){ if(S.vstyle!=='tc' || clips.length){ if(S.vstyle==='tc') ensureStory(true); return; } const po=poOn(), i=po?(S.poIdx|0):(S.tcText||'').trim()?-1:S.tcQuote, key=(po?'p':'q')+i;
+async function tcBgPrep(msg){ if(S.vstyle!=='tc') return; if(S.tcBgMode==='file'){ await tcFilePrep(msg); return; } const po=poOn(), i=po?(S.poIdx|0):(S.tcText||'').trim()?-1:S.tcQuote, key=(po?'p':'q')+i;
   if(tcBgKey===key && tcBg.length) return; tcBg=[]; tcBgKey=key; tcBgFr=Math.random(); /* mỗi video 1 clip nền khác, lấy 1 đoạn ngẫu nhiên trong clip */
   if(!tcBgFiles.length && evDirOK()) await tcBgLoad(false);
   for(let n=0;n<4 && tcBgFiles.length && !tcBg.length;n++){ if(!tcBgQ.length) tcBgQ=tcBgFiles.slice().sort(()=>Math.random()-.5); if(msg) msg('Đang mở video nền…'); try{ const c=await clipOf(await tcBgQ.pop().getFile()); if(c) tcBg.push(c); }catch(e){} }
   if(tcBg[0]&&tcBg[0].v&&tcBg[0].v.readyState<1) await new Promise(r=>{ tcBg[0].v.addEventListener('loadedmetadata',r,{once:true}); setTimeout(r,4000); });
-  ensureStory(true); }
+  tcBgShow(); ensureStory(true); }
 async function mhVoPrep(){ if(!(S.vstyle==='mh'||S.vstyle==='tc') || IN_CLAUDE || !gKey()) return; if(S.vo==='none'){ S.vo='ai'; persist(); try{ voSync(); }catch(e){} } if(S.vo!=='ai') return;
   voAutoFill(true); let v=null; try{ v=await voMakeAI(false); }catch(e){ toast(aiErrText(e)); return; } if(!v) return;
   const L=voLines(); let t=.5; v.segs.forEach((s,i)=>{ t+=s.d+.3+fnVoGap(i); }); const need=Math.min(120,Math.ceil(t+1.5)); if(need>vdur()||(S.vstyle==='tc'&&need!==vdur())) vdurSet(need); else ensureStory(true); } /* thơ: video dài đúng bằng giọng đọc */
@@ -2737,8 +2755,8 @@ $('#btnRender').onclick=async()=>{
   if(rendering) return; let autoDir=null; if(S.vstyle==='tc' && evDirOK()){ try{ autoDir=await tcOutDir(false); }catch(e){} } /* Truyền cảm hứng: thư mục riêng trước */ if(!autoDir && evDirOK()){ try{ autoDir=await evDir(false); }catch(e){} } if(MHB.dir) autoDir=MHB.dir; /* làm cả loạt mẹo: lưu vào thư mục con của loạt */ const mime=pickMime(); const cv0=document.createElement('canvas');
   if(mime===null || !cv0.captureStream){ toast('Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome hoặc Safari bản mới.'); return; }
   if(prevRun) prevRun.stop(); const actx=new (window.AudioContext||window.webkitAudioContext)(); try{ actx.resume(); }catch(e){}
-  if((S.vstyle==='mh'||S.vstyle==='tc') && S.vo!=='file' && gKey() && !IN_CLAUDE){ rendering=true; $('#renderBox').hidden=false; $('#renderMsg').textContent=poOn()?'Đang tạo giọng đọc thơ (AI Google)…':S.vstyle==='tc'?'Đang tạo giọng đọc truyền cảm hứng (AI Google)…':'Đang tạo giọng thuyết minh (AI Google)…'; await mhVoPrep(); rendering=false; }
-  if(S.vstyle==='tc' && !clips.length){ rendering=true; $('#renderBox').hidden=false; await tcBgPrep(m=>$('#renderMsg').textContent=m); rendering=false; }
+  if((S.vstyle==='mh'||S.vstyle==='tc') && S.vo!=='file' && gKey() && !IN_CLAUDE){ rendering=true; $('#renderBox').hidden=false; $('#renderMsg').textContent=poOn()?'Đang tạo giọng đọc thơ (AI Google)…':S.vstyle==='tc'?'Đang tạo giọng đọc truyền cảm hứng (AI Google)…':'Đang tạo giọng thuyết minh (AI Google)…'; try{ await mhVoPrep(); }catch(e){ console.warn('vo',e); toast('Chưa tạo được giọng đọc: '+aiErrText(e)); } finally{ rendering=false; } }
+  if(S.vstyle==='tc'){ rendering=true; $('#renderBox').hidden=false; try{ await tcBgPrep(m=>$('#renderMsg').textContent=m); }catch(e){ console.warn('tcbg',e); } finally{ rendering=false; } }
   const F=frameFn(); if(!F.total){ toast(S.vstyle==='tu'?'Thêm ảnh ở bước 1 để tạo video.':'Chưa có cảnh nào trong kịch bản'); actx.close(); return; }
   rendering=true; const btn=$('#btnRender'); btn.disabled=true; btn.textContent='Đang tạo video…'; $('#renderBox').hidden=false; $('#videoOut').hidden=true; $('#renderMsg').textContent='Đang soạn nhạc và chuẩn bị cảnh…';
   await fontsReady(); await waitClips();
@@ -3139,7 +3157,7 @@ $('#mlibSug').addEventListener('click',e=>{ const b=e.target.closest('[data-sg]'
 /* --- điều khiển kiểu video --- */
 $('#tcQuote').innerHTML=QUOTES.map((q,i)=>TC_LIB[i].h?'':`<option value="${i}">${esc(q.replace('\n',' '))}</option>`).join(''); /* câu quá đơn giản (h:1) ẩn đi, giữ số thứ tự cũ */
 if(TC_LIB[S.tcQuote]&&TC_LIB[S.tcQuote].h) S.tcQuote=TC_LIB.findIndex(x=>!x.h);
-function syncVideoUI(){ try{ tcMusFill(); }catch(e){} const st=S.vstyle, tu=st==='tu'; const md=modOf(st); $('#vmodSeg').querySelectorAll('[data-vmod]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.vmod===md)); $('#vstyleChips').hidden=md!=='sp'; $('#dirBox').hidden=tu; $('#tuBox').hidden=!tu; $('#vstyleHint').textContent=VSTYLES[st].hint.replace(/^28 giây/,vdur()+' giây'); $('#vdurField').hidden=tu||st==='fn';
+function syncVideoUI(){ try{ tcMusFill(); }catch(e){} document.querySelector('[data-pane="video"]').classList.toggle('tcmode',S.vstyle==='tc'); /* Truyền cảm hứng: chỉ hiện phần chính */ const st=S.vstyle, tu=st==='tu'; const md=modOf(st); $('#vmodSeg').querySelectorAll('[data-vmod]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.vmod===md)); $('#vstyleChips').hidden=md!=='sp'; $('#dirBox').hidden=tu; $('#tuBox').hidden=!tu; $('#vstyleHint').textContent=VSTYLES[st].hint.replace(/^28 giây/,vdur()+' giây'); $('#vdurField').hidden=tu||st==='fn';
   $('#vprodField').hidden=!(st==='ban'||st==='qb'||st==='lv'||st==='tt'||st==='mh'||st==='ts'||st==='fn'); $('#lvField').hidden=st!=='lv'; $('#ttField').hidden=st!=='tt'; $('#mhField').hidden=st!=='mh'; $('#tsField').hidden=st!=='ts'; $('#tcField').hidden=st!=='tc'; $('#thField').hidden=!(st==='th'||st==='tc');
   $('#thField').querySelectorAll('label[for="thVals"],#thVals').forEach(el=>el.hidden=st!=='th');
   $('#mlibBox').hidden=S.vmusic!=='lib'; $('#vsfx').closest('label').hidden=tu; if(S.vmusic==='lib') mlibRender();
@@ -3225,7 +3243,7 @@ function fillProdSelect(){ const G=groupsOf().filter(g=>g.code); const sel=$('#v
   const html=opts.join(''); if(sel.innerHTML!==html) sel.innerHTML=html; sel.value=G.some(g=>g.code===S.vprod)?S.vprod:'all'; }
 function updateVsum(){ if(S.vstyle==='tu'){ updateVsumTu(); return; } fillProdSelect(); ensureStory();
   const total=storyTotal(); const n=items.filter(i=>!i.sample).length;
-  $('#vsum').innerHTML = story.length ? `<b>${total.toFixed(1).replace('.',',')} giây</b> · ${story.length} cảnh · ${VFMTS[S.vfmt].name}<br><span class="hint">${VSTYLES[S.vstyle].name}${n?'':' · đang dùng ảnh mẫu, thêm ảnh thật ở bước 1'}${clips.length?` · ${clips.length} clip`:''}</span>` : 'Thêm ảnh ở bước 1 để tạo video.';
+  $('#vsum').innerHTML = story.length ? `<b>${total.toFixed(1).replace('.',',')} giây</b> · ${story.length} cảnh · ${VFMTS[S.vfmt].name}<br><span class="hint">${VSTYLES[S.vstyle].name}${n||S.vstyle==='tc'?'':' · đang dùng ảnh mẫu, thêm ảnh thật ở bước 1'}${clips.length?` · ${clips.length} clip`:''}</span>` : 'Thêm ảnh ở bước 1 để tạo video.';
   $('#btnRender').disabled=!story.length; $('#btnPreview').disabled=!story.length; renderThumbs(); }
 window.__xas = { dev:()=>({story, TR_VI, ENT_VI, TR_LEN}), thumb:(v,scale=1)=>{ const vf=VFMTS[S.vfmt], W=Math.round(vf.w*scale), H=Math.round(vf.h*scale), c=document.createElement('canvas'); c.width=W; c.height=H; drawThumbV(c.getContext('2d'),W,H,v,thumbData()); return c.toDataURL('image/jpeg',.9); },
   story:()=>{ ensureStory(); return story.map(s=>({k:s.k,d:s.d,t:s.t||'',t2:s.t2||'',tr:s.tr||'',enter:s.enter||'',cam:s.cam||''})); },
@@ -3526,8 +3544,12 @@ $('#btnEvBuild').onclick=async()=>{ if(evBusy) return; if(S.evMode==='live') for
     document.title=t0; $('#evMsg').textContent=byC?`Xong. Đã tự xuất ${use.filter(g=>g.done&&!g.need).length} video cho ${use.filter(g=>g.done&&!g.need).reduce((s,g)=>s+Math.max(1,evCodesOf(g).length),0)} mã, ${use.filter(g=>g.done==='saved').length} video đã lưu vào thư mục ${autoDir?(autoDir.label||autoDir.name):'(chưa chọn thư mục, bấm Lưu)'}.${ND.length?` ⚠ ${ND.length} mã cần anh/chị xử lý: ${ND.map(x=>x.g.code||'Clip '+(x.i+1)).join(', ')}. Xem lý do ngay bên dưới, sửa xong bấm "Xuất ${ND.length} clip".`:' Không có mã nào cần sửa.'}`:autoDir?`Xong. ${jobs.length-(bad.skip||0)} ${live?'clip':'video'} đã tự lưu vào thư mục ${autoDir.label||autoDir.name}.${bad.skip?` ${bad.skip} clip bị bỏ qua, xem danh sách ⚠ bên dưới.`:''}`:live?'Xong. Xem lại từng clip, lưu video và sao chép bài đăng.':'Xong. Xem lại rồi bấm Lưu video.'; }
   catch(err){ toast(err.message==='nosupport'?'Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome hoặc Safari bản mới.':'Có lỗi khi quay video, thử lại'); console.error(err); }
   document.title=t0; EVC_COV=null; evBusy=false; btn.disabled=false; evRenderSegs(); };
-$('#tcBgPick').onclick=async()=>{ const n=await tcBgLoad(true); tcBgKey=''; toast(n?`Đã chọn thư mục cảnh đẹp: ${n} cảnh`:'Thư mục chưa có clip .mp4 hay ảnh .jpg'); };
-$('#tcBgRoll').onclick=async()=>{ tcBgKey=''; await tcBgPrep(); updateVsum(); const c=tcBg[0]; $('#tcBgNow').textContent=c?`Đang dùng: ${c.name||'clip'}`:(clips.length?'Đang dùng clip bối cảnh đã thêm (đổi đoạn khác)':'Chưa có video nền: chọn thư mục cảnh đẹp'); };
+$('#tcBgPick').onclick=async()=>{ if(!evDirOK()){ toast(window.claude?'Chọn thư mục chỉ dùng ở bản máy tính (file xuong-anh-shop.html mở bằng Chrome). Dùng nút 🎬 Chọn 1 video nền.':'Trình duyệt này không chọn được thư mục. Dùng nút 🎬 Chọn 1 video nền.'); return; }
+  const n=await tcBgLoad(true); if(!tcBgH){ return; } S.tcBgMode='dir'; persist(); tcBgKey=''; toast(n?`Đã chọn thư mục: ${n} video, mỗi video app lấy ngẫu nhiên 1 clip`:'Thư mục chưa có video .mp4 nào'); if(n){ await tcBgPrep(); updateVsum(); } else tcBgShow(); };
+$('#tcFilePick').onclick=async()=>{ const n=await tcFilePick(); if(n){ toast('Đã chọn video nền: '+n); updateVsum(); } };
+$('#tcMusDir').onclick=()=>$('#mlibDir').click(); $('#tcMusFile').onclick=()=>$('#mlibFile').click();
+setTimeout(tcBgShow,0);
+$('#tcBgRoll').onclick=async()=>{ tcBgKey=''; await tcBgPrep(); updateVsum(); toast(tcBg[0]?(S.tcBgMode==='file'?'Đã đổi sang đoạn khác của video':'Đã đổi video nền khác'):'Chưa có video nền: chọn 1 video hoặc 1 thư mục trước'); };
 $('#tcOutPick').onclick=async()=>{ if(!evDirOK()){ toast(window.claude?'Chọn thư mục chỉ dùng ở bản máy tính: file xuong-anh-shop.html mở bằng Chrome':'Trình duyệt này không chọn được thư mục, dùng Chrome hoặc Edge trên máy tính'); return; } const d=await tcOutDir(true); if(d) toast(`Đã chọn. Video Truyền cảm hứng sẽ lưu vào "${d.name}"`); tcOutShow(); };
 setTimeout(()=>{ if(evDirOK()) evIdb('get',null,'tcout').then(h=>{ if(h) tcOutH=h; tcOutShow(); }); else tcOutShow(); },0);
 function tcTxtSync(){ $('#tcTxtChips').querySelectorAll('[data-tct]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tct===(S.tcTxt==='chu'?'chu':'cau')))); }
@@ -4063,9 +4085,14 @@ $('#btnVoSug').onclick=()=>{ const L=voSuggest(); S.voText=L.join('\n'); S.voAut
 $('#btnVoFit').onclick=()=>{ const v=S.vo==='ai'&&VO.ai&&VO.sig===voSig()?VO.ai.total:voEst(); vdurSet(Math.min(90,Math.ceil(v+2))); voSync(); };
 $('#btnVoFile').onclick=()=>$('#voFile').click();
 $('#voFile').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return; try{ const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext; VO.file=await new OAC(2,44100,44100).decodeAudioData(await f.arrayBuffer()); VO.fileName=f.name; voSync(); toast('Đã thêm file ghi âm'); }catch(err){ toast('Không đọc được file ghi âm, dùng .mp3 hoặc .m4a'); } };
+/* giọng Truyền cảm hứng: kiểm tra độ dài tiếng trả về (Google đôi khi trả lời bằng lời khác, đọc lan man) → đọc lại với lời dặn ngắn */
+async function ttsSafe(text,voice,style){ const n=String(text).split(/\s+/).length, ok=b=>b&&b.duration>=Math.min(.6,n*.15)&&b.duration<=Math.max(6,n*1.1)+1; let err=null;
+  try{ const b=await gTTS(text,voice,style+'. Read the text exactly as written, do not add or drop any word.'); if(ok(b)) return b; }catch(e){ err=e; if(['nokey','badkey','aqkey','quota','blocked','net','denied'].includes(e.code)) throw e; }
+  try{ const b=await gTTS(text,voice,'Read this Vietnamese text aloud, slowly, warmly and with feeling. Say only these exact words'); if(ok(b)) return b; }catch(e){ if(!err) err=e; }
+  throw err||aiErr('empty'); }
 async function voMakeAI(force){ const L=voLines(); if(!L.length){ toast('Gõ lời đọc trước'); return null; } if(!force && VO.ai && VO.sig===voSig()) return VO.ai; if(!gKey()) throw aiErr('nokey');
   const style=VO_TONES[S.voTone][1], bufs=new Array(L.length); let done=0; $('#voHint').textContent=`Đang tạo giọng đọc 0/${L.length} câu…`;
-  const work=async i=>{ const sp=S.vstyle==='fn'?fnSpk(L[i]):null; bufs[i]=sp?await gTTS(sp.text,S['fnV_'+sp.who]||FN_WHO[sp.who].def,FN_WHO[sp.who].st+'. Read the text exactly as written, do not add or drop any word.'):S.vstyle==='tc'?await gTTS(L[i],poVoice(),tcVsPrompt()+'. Read the text exactly as written, do not add or drop any word.'):await gTTS(L[i],S.voVoice,style+'. '+VO_ROLE[voRole(i,L.length)]+' Read the text exactly as written, do not add or drop any word.'); done++; $('#voHint').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; };
+  const work=async i=>{ const sp=S.vstyle==='fn'?fnSpk(L[i]):null; bufs[i]=sp?await gTTS(sp.text,S['fnV_'+sp.who]||FN_WHO[sp.who].def,FN_WHO[sp.who].st+'. Read the text exactly as written, do not add or drop any word.'):S.vstyle==='tc'?await ttsSafe(L[i],poVoice(),tcVsPrompt()):await gTTS(L[i],S.voVoice,style+'. '+VO_ROLE[voRole(i,L.length)]+' Read the text exactly as written, do not add or drop any word.'); done++; if(!$('#renderBox').hidden && S.vstyle==='tc') $('#renderMsg').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; $('#voHint').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; };
   for(let i=0;i<L.length;i+=2) await Promise.all([work(i),i+1<L.length?work(i+1):null]);
   const trim=b=>{ const d=b.getChannelData(0), thr=.01; let a=0, z=d.length-1; while(a<z && Math.abs(d[a])<thr) a++; while(z>a && Math.abs(d[z])<thr) z--; return {a:Math.max(0,a-b.sampleRate*.03)/b.sampleRate, e:Math.min(d.length,z+b.sampleRate*.08)/b.sampleRate}; };
   const segs=bufs.map((b,i)=>{ const t=trim(b); return {text:L[i],buf:b,off:t.a,d:Math.max(.2,t.e-t.a)}; }); const total=segs.reduce((a,s)=>a+s.d,0)+(segs.length-1)*.3+.5;
