@@ -143,6 +143,10 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
 .evout{border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:8px}
 .evout textarea{width:100%;min-height:96px;font:13px var(--font)}
 .fxsel{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.fxsel select{font-size:12px;padding:4px 6px;max-width:100%;flex:1 1 140px}
+.vgrp{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:2px solid var(--accent);margin-bottom:10px}
+.vgrp button{border:1px solid var(--line);border-bottom:0;background:var(--bg);color:var(--ink);border-radius:10px 10px 0 0;padding:10px 4px;font:800 13.5px var(--font);cursor:pointer;line-height:1.25}
+.vgrp button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+@media (max-width:520px){.vgrp{grid-template-columns:repeat(2,1fr);gap:4px;border-bottom:0}.vgrp button{border-radius:10px;border-bottom:1px solid var(--line)}}
 .seg button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:10px 6px;font:700 13px var(--font);cursor:pointer;display:grid;gap:2px;justify-items:center;text-align:center;line-height:1.25}
 .seg button b{font-size:20px;font-weight:400}
 .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
@@ -180,7 +184,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 81</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 82</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -366,7 +370,13 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
       <!-- BƯỚC 3 -->
       <section class="pane" data-pane="video" hidden>
         <div class="field">
-          <span class="lbl">Loại video</span>
+          <div class="vgrp" id="vgrpSeg" role="tablist" aria-label="Nhóm video">
+            <button type="button" role="tab" data-vgrp="ban">🛍️ Video bán hàng</button>
+            <button type="button" role="tab" data-vgrp="mh">🧽 Mẹo hay</button>
+            <button type="button" role="tab" data-vgrp="tc">✨ Truyền cảm hứng</button>
+            <button type="button" role="tab" data-vgrp="fn">😂 Gia đình vui</button>
+          </div>
+          <span class="lbl" id="vmodLbl">Kiểu video bán hàng</span>
           <div class="seg" id="vmodSeg" role="tablist">
             <button type="button" data-vmod="sp"><b>🛍️</b>Bán hàng &amp; quảng cáo sản phẩm</button>
             <button type="button" data-vmod="th"><b>🏷️</b>Quảng bá thương hiệu</button>
@@ -2785,7 +2795,7 @@ $('#btnRender').onclick=async()=>{
   $('#videoInfo').textContent=`${W}×${H} · ${total.toFixed(1).replace('.',',')} giây · ${(blob.size/1048576).toFixed(1).replace('.',',')} MB · .${ext}${hiddenWarn?' · Có lúc bạn rời màn hình, nếu video bị giật hãy tạo lại.':''}`;
   $('#renderMsg').textContent=(await vAutoSave(autoDir))||'Xong. Xem lại rồi bấm Lưu video.'; btn.disabled=false; btn.textContent='Tạo lại video'; rendering=false;
 };
-function vName(){ if(MHB.name) return MHB.name+'.'+lastVideo.ext; const d=new Date(); const kind={mh:'meo-hay',ts:'truoc-sau',tt:'thoi-trang',lv:'bao-live',ban:'ban-hang',qb:'quang-ba',th:'thuong-hieu',tc:'truyen-cam-hung',tu:'video'}[S.vstyle]||'video';
+function vName(){ if(MHB.name) return MHB.name+'.'+lastVideo.ext; const d=new Date(); const kind={fn:'gia-dinh-vui',mh:'meo-hay',ts:'truoc-sau',tt:'thoi-trang',lv:'bao-live',ban:'ban-hang',qb:'quang-ba',th:'thuong-hieu',tc:'truyen-cam-hung',tu:'video'}[S.vstyle]||'video';
   return `${kind}-${pad2(d.getDate())}${pad2(d.getMonth()+1)}-${pad2(d.getHours())}${pad2(d.getMinutes())}.${lastVideo.ext}`; }
 // tạo xong tự lưu thẳng vào thư mục đã chọn (bản máy tính), không cần bấm Lưu
 async function vAutoSave(dir){ if(!dir||!lastVideo) return ''; try{ const nm=vName(); await evWrite(dir,{name:nm,blob:lastVideo.blob}); return `Xong. Đã tự lưu ${nm} vào thư mục ${dir.name}.`; }catch(e){ console.warn('autosave',e); return ''; } }
@@ -3157,7 +3167,8 @@ $('#mlibSug').addEventListener('click',e=>{ const b=e.target.closest('[data-sg]'
 /* --- điều khiển kiểu video --- */
 $('#tcQuote').innerHTML=QUOTES.map((q,i)=>TC_LIB[i].h?'':`<option value="${i}">${esc(q.replace('\n',' '))}</option>`).join(''); /* câu quá đơn giản (h:1) ẩn đi, giữ số thứ tự cũ */
 if(TC_LIB[S.tcQuote]&&TC_LIB[S.tcQuote].h) S.tcQuote=TC_LIB.findIndex(x=>!x.h);
-function syncVideoUI(){ try{ tcMusFill(); }catch(e){} document.querySelector('[data-pane="video"]').classList.toggle('tcmode',S.vstyle==='tc'); /* Truyền cảm hứng: chỉ hiện phần chính */ const st=S.vstyle, tu=st==='tu'; const md=modOf(st); $('#vmodSeg').querySelectorAll('[data-vmod]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.vmod===md)); $('#vstyleChips').hidden=md!=='sp'; $('#dirBox').hidden=tu; $('#tuBox').hidden=!tu; $('#vstyleHint').textContent=VSTYLES[st].hint.replace(/^28 giây/,vdur()+' giây'); $('#vdurField').hidden=tu||st==='fn';
+function syncVideoUI(){ try{ tcMusFill(); }catch(e){} document.querySelector('[data-pane="video"]').classList.toggle('tcmode',S.vstyle==='tc'); /* Truyền cảm hứng: chỉ hiện phần chính */ const st=S.vstyle, tu=st==='tu'; const md=modOf(st); $('#vmodSeg').querySelectorAll('[data-vmod]').forEach(x=>{ x.setAttribute('aria-pressed',x.dataset.vmod===md); x.hidden=!['sp','th','tt','lv','ts'].includes(x.dataset.vmod); });
+  const grp=['sp','th','tt','lv','ts'].includes(md)?'ban':md; $('#vgrpSeg').querySelectorAll('[data-vgrp]').forEach(x=>x.setAttribute('aria-selected',String(x.dataset.vgrp===grp))); $('#vmodSeg').hidden=$('#vmodLbl').hidden=grp!=='ban'; if(grp==='ban'){ S.vmodBan=md; } $('#vstyleChips').hidden=md!=='sp'; $('#dirBox').hidden=tu; $('#tuBox').hidden=!tu; $('#vstyleHint').textContent=VSTYLES[st].hint.replace(/^28 giây/,vdur()+' giây'); $('#vdurField').hidden=tu||st==='fn';
   $('#vprodField').hidden=!(st==='ban'||st==='qb'||st==='lv'||st==='tt'||st==='mh'||st==='ts'||st==='fn'); $('#lvField').hidden=st!=='lv'; $('#ttField').hidden=st!=='tt'; $('#mhField').hidden=st!=='mh'; $('#tsField').hidden=st!=='ts'; $('#tcField').hidden=st!=='tc'; $('#thField').hidden=!(st==='th'||st==='tc');
   $('#thField').querySelectorAll('label[for="thVals"],#thVals').forEach(el=>el.hidden=st!=='th');
   $('#mlibBox').hidden=S.vmusic!=='lib'; $('#vsfx').closest('label').hidden=tu; if(S.vmusic==='lib') mlibRender();
@@ -3165,6 +3176,9 @@ function syncVideoUI(){ try{ tcMusFill(); }catch(e){} document.querySelector('[d
     : S.vmusic==='lib' ? mlibSummary(st) : 'Video không có nhạc. Có thể thêm nhạc trong thư viện Facebook khi đăng.';
   updateVsum(); }
 chipGroup('#vstyleChips','vstyle','vstyle',()=>{ S.vstyleSp=S.vstyle; persist(); ensureStory(true); syncVideoUI(); });
+/* tab 3 chia 4 nhóm: Video bán hàng (5 kiểu), Mẹo hay, Truyền cảm hứng, Gia đình vui; mỗi nhóm chỉ hiện phần của nó */
+const VGRP_BAN=['sp','th','tt','lv','ts']; const vgrpOf=md=>VGRP_BAN.includes(md)?'ban':md;
+$('#vgrpSeg').addEventListener('click',e=>{ const b=e.target.closest('[data-vgrp]'); if(!b) return; const g=b.dataset.vgrp, m=g==='ban'?(VGRP_BAN.includes(S.vmodBan)?S.vmodBan:'sp'):g; const t=document.querySelector(`#vmodSeg [data-vmod="${m}"]`); if(t) t.click(); });
 const modOf = st => ['th','tc','lv','tt','mh','ts','fn'].includes(st)?st:'sp';
 $('#vmodSeg').addEventListener('click',e=>{ const bt=e.target.closest('[data-vmod]'); if(!bt) return; const m=bt.dataset.vmod; S.vstyle = m==='sp' ? (S.vstyleSp||'ban') : m; persist();
   $('#vstyleChips').querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.vstyle===S.vstyle)); ensureStory(true); syncVideoUI(); if(typeof voAutoFill==='function'){ voAutoFill(); voSync(); } });
@@ -3888,7 +3902,9 @@ async function gImage(prompt,imgs,aspect){ const content=[{type:'text',text:prom
     j=await gFetch(`models/${gModel('img')}:generateContent`,{contents:[{role:'user',parts}],generationConfig:{responseModalities:['IMAGE','TEXT'],imageConfig:{aspectRatio:aspect||'4:5'}}}); }
   const m=gMedia(j,'image'); if(!m) throw aiErr(gBlocked(j)?'safety':'empty'); return blobOf(m.data,m.mime||'image/png'); }
 // đọc chữ thành giọng nói (Gemini TTS)
-async function gTTS(text,voice,style){ let j; try{ j=await gFetch('interactions',{model:gModel('tts'),input:[{type:'user_input',content:[{type:'text',text,annotations:[{type:'speech_metadata',style}]}]}],response_format:{type:'audio'},generation_config:{speech_config:[{voice}]}}); }
+/* Google đôi khi trả lời bằng chữ (vd "I can do that…") thay vì đọc: tự đọc lại 1 lần với lời dặn ngắn, mọi mục video đều được */
+async function gTTS(text,voice,style){ try{ return await gTTS1(text,voice,style); }catch(e){ if(e && (e.code==='empty' || (e.code==='api' && /text|tts|audio/i.test(e.detail||'')))) return await gTTS1(text,voice,'Read this Vietnamese text aloud, naturally and clearly. Say only these exact words'); throw e; } }
+async function gTTS1(text,voice,style){ let j; try{ j=await gFetch('interactions',{model:gModel('tts'),input:[{type:'user_input',content:[{type:'text',text,annotations:[{type:'speech_metadata',style}]}]}],response_format:{type:'audio'},generation_config:{speech_config:[{voice}]}}); }
   catch(e){ if(e.code!=='nomodel' && e.code!=='api') throw e;
     j=await gFetch(`models/${gModel('tts')}:generateContent`,{contents:[{role:'user',parts:[{text:`${style}: ${text}`}]}],generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:voice}}}}}); }
   const m=gMedia(j,'audio'); if(!m) throw aiErr(gBlocked(j)?'safety':'empty'); const s=atob(m.data), u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i);
@@ -4444,7 +4460,7 @@ function fnSyncUI(){ const on=S.vstyle==='fn'; $('#fnField').hidden=!on; if(!on)
   h.textContent=S.vo==='ai'?'Lời thoại lấy từ kịch bản Gia đình vui: bố, mẹ, con mỗi người một giọng (chọn ở ô nhân vật). Bấm "Tạo giọng đọc" hoặc cứ bấm Tạo video, app tự tạo.':'Chọn "Giọng AI Google" để bố, mẹ, con có tiếng nói riêng. Không chọn thì video chỉ có bong bóng thoại và nhạc.';
   fnRenderChars(); fnRenderShots(); fnLoad(); }
 function fnRenderShots(){ const box=$('#fnShotList'); if(!box) return; const P=fnParse(); box.innerHTML=P.map((l,i)=>{ const has=!!FN.shots[fnShotKey(l)]; return `<div class="clip"><span>${has?'🖼️':'⬜'} ${esc((FN_WHO[l.who].name?FN_WHO[l.who].name+': ':'')+l.text)}</span>${has?`<button class="btn" type="button" data-fnredo="${i}">🎲 Vẽ lại</button>`:''}</div>`; }).join(''); }
-const syncVideoUI0=syncVideoUI; syncVideoUI=function(){ syncVideoUI0(); fnSyncUI(); };
+const syncVideoUI0=syncVideoUI; syncVideoUI=function(){ fnSyncUI(); syncVideoUI0(); }; /* điền kịch bản Gia đình vui TRƯỚC khi tính kịch bản, để nút Tạo video không bị khoá lần đầu */
 $('#fnLookChips').addEventListener('click',e=>{ const b=e.target.closest('[data-fnlook]'); if(!b) return; S.fnLook=b.dataset.fnlook; persist(); FN.ver++; fnSyncUI(); ensureStory(true); updateVsum(); });
 $('#fnTpl').onchange=e=>{ const i=+e.target.value; S.fnTpl=i; if(i>=0){ S.fnTitle=FN_TPL[i].name; S.fnScript=''; fnAutoFill(); } persist(); fnSyncUI(); ensureStory(true); updateVsum(); };
 $('#fnScript').oninput=e=>{ S.fnScript=e.target.value; persist(); clearTimeout(fnSyncUI._t); fnSyncUI._t=setTimeout(()=>{ ensureStory(); updateVsum(); fnRenderShots(); fnLoad(); voSync(); },500); };
