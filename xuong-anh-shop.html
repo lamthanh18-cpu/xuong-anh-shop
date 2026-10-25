@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 79</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 80</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -2707,10 +2707,12 @@ async function tcBgDir(ask){ if(!evDirOK()) return null; if(!tcBgH && !ask) tcBg
   if(tcBgH && !ask){ try{ if((await tcBgH.queryPermission({mode:'read'}))==='granted' || (await tcBgH.requestPermission({mode:'read'}))==='granted') return tcBgH; }catch(e){} return null; }
   try{ tcBgH=await showDirectoryPicker({id:'xas-tcbg',mode:'read',startIn:'videos'}); evIdb('put',tcBgH,'tcbg'); return tcBgH; }catch(e){ return null; } }
 // thư mục xuất RIÊNG cho video Truyền cảm hứng (không lẫn với clip live, video bán hàng)
-let tcOutH=null; async function tcOutDir(ask){ if(!evDirOK()) return null; if(!tcOutH) tcOutH=await evIdb('get',null,'tcout');
-  if(tcOutH && !ask){ try{ if((await tcOutH.queryPermission({mode:'readwrite'}))==='granted' || (await tcOutH.requestPermission({mode:'readwrite'}))==='granted') return tcOutH; }catch(e){} return null; } if(!ask) return null;
-  try{ tcOutH=await showDirectoryPicker({id:'xas-tcout',mode:'readwrite',startIn:tcOutH||'videos'}); evIdb('put',tcOutH,'tcout'); tcOutShow(); return tcOutH; }catch(e){ return null; } }
-function tcOutShow(){ const el=$('#tcOutInfo'); if(el) el.textContent=evDirOK()?(tcOutH?`📁 Lưu vào: ${tcOutH.name}`:'Chưa chọn (lần Xuất đầu app sẽ hỏi)'):'Chỉ dùng ở bản máy tính (Chrome)'; }
+let tcOutH=null; async function tcOutDir(ask){ if(!evDirOK()) return null;
+  if(ask){ /* mở hộp chọn thư mục NGAY khi bấm (không chờ gì trước), Chrome mới cho mở */ let h=null; try{ h=await showDirectoryPicker({id:'xas-tcout',mode:'readwrite',startIn:'videos'}); }catch(e){ if(e&&e.name!=='AbortError') toast('Không mở được hộp chọn thư mục ('+(e.name||'lỗi')+'). Bấm lại nút 📁 lần nữa.'); return null; }
+    tcOutH=h; evIdb('put',h,'tcout'); tcOutShow(); return h; }
+  if(!tcOutH) tcOutH=await evIdb('get',null,'tcout'); if(!tcOutH) return null;
+  try{ if((await tcOutH.queryPermission({mode:'readwrite'}))==='granted' || (await tcOutH.requestPermission({mode:'readwrite'}))==='granted') return tcOutH; }catch(e){} return null; }
+function tcOutShow(){ const el=$('#tcOutInfo'); if(el) el.textContent=evDirOK()?(tcOutH?`📁 Đang lưu vào: ${tcOutH.name}`:'Chưa chọn: video lưu chung vào thư mục clip. Bấm nút để chọn thư mục riêng.'):'Chỉ dùng ở bản máy tính (Chrome)'; }
 async function tcBgLoad(ask){ const d=await tcBgDir(ask); tcBgFiles=[]; tcBgQ=[]; if(d){ try{ for await(const [n,h] of d.entries()) if(h.kind==='file' && /\.(mp4|mov|webm|m4v|jpe?g|png|webp)$/i.test(n)) tcBgFiles.push(h); }catch(e){ console.warn('tcbg dir',e); } }
   const el=$('#tcBgInfo'); if(el) el.textContent=d?`📂 ${d.name}: ${tcBgFiles.length} cảnh${tcBgFiles.length?' · mỗi video lấy 1 clip, 1 đoạn ngẫu nhiên':' (chưa có clip .mp4 hay ảnh .jpg)'}`:(evDirOK()?'Chưa chọn thư mục cảnh đẹp':'Thư mục cảnh đẹp chỉ dùng ở bản máy tính (Chrome)'); return tcBgFiles.length; }
 async function tcBgPrep(msg){ if(S.vstyle!=='tc' || clips.length){ if(S.vstyle==='tc') ensureStory(true); return; } const po=poOn(), i=po?(S.poIdx|0):(S.tcText||'').trim()?-1:S.tcQuote, key=(po?'p':'q')+i;
@@ -2732,7 +2734,7 @@ $('#btnPreview').onclick=async()=>{ if(prevRun){ prevRun.stop(); return; } const
   btn.textContent='■ Dừng'; const tick=()=>{ if(!alive) return; const t=Math.max(0,actx.currentTime-a0); clipSync(F.st,t); F.draw(ctx,W,H,Math.min(t,F.total-.001),E); if(t>=F.total){ prevRun&&prevRun.stop(); return; } requestAnimationFrame(tick); };
   requestAnimationFrame(tick); };
 $('#btnRender').onclick=async()=>{
-  if(rendering) return; let autoDir=null; if(evDirOK()){ try{ autoDir=await evDir(false); }catch(e){} } if(S.vstyle==='tc' && evDirOK()){ let o=null; try{ o=await tcOutDir(!MHB.dir && !tcOutH && !S.tcOutAsked); }catch(e){} S.tcOutAsked=1; persist(); if(o) autoDir=o; } if(MHB.dir) autoDir=MHB.dir; /* làm cả loạt mẹo: lưu vào thư mục con của loạt */ const mime=pickMime(); const cv0=document.createElement('canvas');
+  if(rendering) return; let autoDir=null; if(S.vstyle==='tc' && evDirOK()){ try{ autoDir=await tcOutDir(false); }catch(e){} } /* Truyền cảm hứng: thư mục riêng trước */ if(!autoDir && evDirOK()){ try{ autoDir=await evDir(false); }catch(e){} } if(MHB.dir) autoDir=MHB.dir; /* làm cả loạt mẹo: lưu vào thư mục con của loạt */ const mime=pickMime(); const cv0=document.createElement('canvas');
   if(mime===null || !cv0.captureStream){ toast('Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome hoặc Safari bản mới.'); return; }
   if(prevRun) prevRun.stop(); const actx=new (window.AudioContext||window.webkitAudioContext)(); try{ actx.resume(); }catch(e){}
   if((S.vstyle==='mh'||S.vstyle==='tc') && S.vo!=='file' && gKey() && !IN_CLAUDE){ rendering=true; $('#renderBox').hidden=false; $('#renderMsg').textContent=poOn()?'Đang tạo giọng đọc thơ (AI Google)…':S.vstyle==='tc'?'Đang tạo giọng đọc truyền cảm hứng (AI Google)…':'Đang tạo giọng thuyết minh (AI Google)…'; await mhVoPrep(); rendering=false; }
@@ -3526,7 +3528,7 @@ $('#btnEvBuild').onclick=async()=>{ if(evBusy) return; if(S.evMode==='live') for
   document.title=t0; EVC_COV=null; evBusy=false; btn.disabled=false; evRenderSegs(); };
 $('#tcBgPick').onclick=async()=>{ const n=await tcBgLoad(true); tcBgKey=''; toast(n?`Đã chọn thư mục cảnh đẹp: ${n} cảnh`:'Thư mục chưa có clip .mp4 hay ảnh .jpg'); };
 $('#tcBgRoll').onclick=async()=>{ tcBgKey=''; await tcBgPrep(); updateVsum(); const c=tcBg[0]; $('#tcBgNow').textContent=c?`Đang dùng: ${c.name||'clip'}`:(clips.length?'Đang dùng clip bối cảnh đã thêm (đổi đoạn khác)':'Chưa có video nền: chọn thư mục cảnh đẹp'); };
-$('#tcOutPick').onclick=async()=>{ const d=await tcOutDir(true); if(d) toast(`Video Truyền cảm hứng sẽ lưu vào "${d.name}"`); tcOutShow(); };
+$('#tcOutPick').onclick=async()=>{ if(!evDirOK()){ toast(window.claude?'Chọn thư mục chỉ dùng ở bản máy tính: file xuong-anh-shop.html mở bằng Chrome':'Trình duyệt này không chọn được thư mục, dùng Chrome hoặc Edge trên máy tính'); return; } const d=await tcOutDir(true); if(d) toast(`Đã chọn. Video Truyền cảm hứng sẽ lưu vào "${d.name}"`); tcOutShow(); };
 setTimeout(()=>{ if(evDirOK()) evIdb('get',null,'tcout').then(h=>{ if(h) tcOutH=h; tcOutShow(); }); else tcOutShow(); },0);
 function tcTxtSync(){ $('#tcTxtChips').querySelectorAll('[data-tct]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tct===(S.tcTxt==='chu'?'chu':'cau')))); }
 $('#tcTxtChips').addEventListener('click',e=>{ const b=e.target.closest('[data-tct]'); if(!b) return; S.tcTxt=b.dataset.tct; persist(); tcTxtSync(); ensureStory(true); }); tcTxtSync();
@@ -5140,7 +5142,7 @@ document.addEventListener('click',e=>{ const b=e.target.closest('[data-lotn]'); 
   const st=e.target.closest('[data-lotstop]'); if(st){ MHB.stop=true; $('#'+st.dataset.lotstop+'BMsg').textContent='Sẽ dừng sau video đang làm…'; return; }
   const g=e.target.closest('[data-lotgo]'); if(g) lotGo(g.dataset.lotgo); });
 async function lotGo(p){ const L=LOTS[p], lib=L.lib(), sel=lotSel[p], msg=$('#'+p+'BMsg'); if(MHB.run||!sel.size) return; if(!aiNeed()) return; if(!evDirOK()){ toast('Làm cả loạt cần bản máy tính (Chrome) để tự lưu vào thư mục'); return; }
-  let dir=null; try{ dir=(L.style==='tc')?(await tcOutDir(false)||await tcOutDir(true)):await evDir(true); }catch(e){} if(!dir){ toast('Chọn thư mục lưu video trước'); return; } /* Truyền cảm hứng: lưu vào thư mục riêng */
+  let dir=null; try{ dir=(L.style==='tc')?(await tcOutDir(false)||await evDir(false)||await evDir(true)):await evDir(true); }catch(e){} if(!dir){ toast('Chọn thư mục lưu video trước'); return; } /* Truyền cảm hứng: lưu vào thư mục riêng */
   const d=new Date(), sub=`${L.dir} ${pad2(d.getDate())}-${pad2(d.getMonth()+1)}-${d.getFullYear()} ${pad2(d.getHours())}h${pad2(d.getMinutes())}`; try{ dir=await dir.getDirectoryHandle(sub,{create:true}); }catch(e){} MHB.dir=dir;
   if(!mlibReady) await mlibLoad(); const md=sugMoods(L.style), mm=mlib.filter(t=>md.includes(t.mood)), mq=(mm.length>=3?mm:mlib).slice().sort(()=>Math.random()-.5), vm0=S.vmusic, mid0=S.musicId; /* nhạc nền: kho Suno trong Thư viện nhạc shop, mỗi video 1 bài khác */
   const list=[...sel], t0=document.title, ok=[], bad=[]; MHB.run=true; MHB.stop=false; $('#'+p+'BGo').disabled=true; $('#'+p+'BStop').hidden=false; if(S.vstyle!==L.style){ const b=document.querySelector(`[data-vmod="${L.style}"]`); if(b) b.click(); }
