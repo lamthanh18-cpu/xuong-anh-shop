@@ -184,7 +184,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 84</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 85</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -426,7 +426,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" type="button" id="tcBgRoll">🎲 Đổi đoạn khác</button></div>
             <p class="hint">Video chỉ có: video nền cảnh đẹp chạy liền + câu nói hiện lên + AI đọc + nhạc nền. Clip miễn phí bản quyền tải ở Pixabay, Pexels.</p>
             <label>Chữ hiện trên video</label>
-            <div class="chips" id="tcTxtChips"><button class="chip" type="button" data-tct="cau">Cả câu nổi lên</button><button class="chip" type="button" data-tct="chu">Từng chữ sáng dần theo giọng đọc</button></div>
+            <div class="chips" id="tcTxtChips"><button class="chip" type="button" data-tct="cau">Cả câu hiện, chữ sáng theo lời đọc</button><button class="chip" type="button" data-tct="chu">Từng chữ bay vào theo lời đọc</button></div>
             <label for="tcVs">Kiểu giọng đọc</label>
             <select id="tcVs"></select>
             <label for="poVoice">Giọng</label>
@@ -2089,11 +2089,11 @@ const SCENES = {
       f.lines.forEach((l,i)=>ctx.fillText(l,W/2,H*.64+i*f.size*1.3+(1-a)*u*3)); ctx.restore(); } },
   zen(ctx,W,H,sc,lt,E){ const {o,u}=E; const m=sc.clip;
     if(m) drawMedia(ctx,m,0,0,W,H,m.type==='img'?1.02+.06*clamp01(lt/sc.d):1); else { const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#1d2733'); g.addColorStop(1,'#0b1016'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); bokeh(ctx,W,H,lt,14,.14); }
-    const C=sc.cues||[]; let k=-1; for(let i=0;i<C.length;i++) if(lt>=C[i].s-.35) k=i; if(k<0) return; const c=C[k], nx=C[k+1], end=nx?nx.s-.4:sc.d-.5, out=1-ease.inout(seg01(lt,end-.4,end));
+    const C=sc.cues||[]; let k=-1; for(let i=0;i<C.length;i++) if(lt>=C[i].s-.35) k=i; if(k<0) return; const c=C[k], nx=C[k+1], end=nx?nx.s-.4:sc.d+1, exP=ease.inout(seg01(lt,end-.45,end)), out=1-exP;
     const a=ease.out(seg01(lt,c.s-.35,c.s+.45))*out; if(a<=0) return;
     ctx.save(); const rg=ctx.createRadialGradient(W/2,H*.5,0,W/2,H*.5,W*.75); rg.addColorStop(0,`rgba(0,0,0,${.34*a})`); rg.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=rg; ctx.fillRect(0,0,W,H); ctx.restore(); /* nền tối nhẹ sau chữ cho dễ đọc, không che video */
     if(c.k==='au' && k>0){ const pv=C[k-1], r=zenText(ctx,W,H,pv,1e9,E,out,H*.46); const b=ease.out(seg01(lt,c.s-.3,c.s+.5))*out; zenLine(ctx,W,c.t,FONT,700,u*4.4,W*.84,H*.46+r/2+u*6,b,u); return; }
-    zenText(ctx,W,H,c,lt,E,a,H*.5); }, /* chữ: cả câu nổi lên, hoặc từng chữ sáng dần theo giọng đọc */
+    zenText(ctx,W,H,c,lt,E,a,H*.5,exP); }, /* chữ: cả câu nổi lên, hoặc từng chữ sáng dần theo giọng đọc */
   quote(ctx,W,H,sc,lt,E){ const {o,u}=E; const p=lt/sc.d;
     if(sc.clip) drawMedia(ctx,sc.clip,0,0,W,H,1.04+.08*p); else if(sc.it) drawCoverAt(ctx,sc.it,0,0,W,H,1.08+.1*p,.45+.1*p,.5); else { ctx.fillStyle=mix(o.brand,'#000000',.6); ctx.fillRect(0,0,W,H); bokeh(ctx,W,H,lt,18,.2); }
     ctx.fillStyle='rgba(24,14,8,.5)'; ctx.fillRect(0,0,W,H); leak(ctx,W,H,lt,.18);
@@ -2457,15 +2457,28 @@ function tcCues(){ let L=[]; try{ L=voLines(); }catch(e){} const po=poOn(), m=po
     else if(po){ const pp=poPairs(m).find(p=>p.replace(/\n/,' ')===x); if(pp){ o.k='po'; o.t=pp; } }
     return o; }); }
 function zenLine(ctx,W,t,font,wt,sz,maxW,y,a,u){ if(a<=0) return; ctx.save(); ctx.globalAlpha=a; ctx.fillStyle='#fff'; ctx.shadowColor='rgba(0,0,0,.65)'; ctx.shadowBlur=u*2; ctx.textAlign='center'; ctx.textBaseline='middle'; const f=fitLines(ctx,t,font,wt,sz,maxW,2); f.lines.forEach((l,i)=>ctx.fillText(l,W/2,y+i*f.size*1.3)); ctx.restore(); }
-function zenText(ctx,W,H,c,lt,E,a,cy){ const u=E.u, k=c.k; const wt=k==='ti'?'700':'italic 500', maxW=W*(k==='po'?.92:.86);
+/* thời điểm từng chữ được đọc: chia theo độ dài chữ (chữ dài, chữ có dấu câu đọc lâu hơn) */
+function zenTimes(t,s0,e0){ const ws=String(t).split(/\s+/).filter(Boolean), w=ws.map(x=>Math.max(1.6,x.replace(/[.,!?…:;"“”—-]/g,'').length+(/[,.!?…;:]$/.test(x)?2.2:0))), tot=w.reduce((a,b)=>a+b,0)||1, span=Math.max(.6,e0-s0)*.94; let acc=0; return w.map(x=>{ const s=s0+span*acc/tot; acc+=x; return {s,d:span*x/tot}; }); }
+function zenText(ctx,W,H,c,lt,E,a,cy,ex){ const u=E.u, k=c.k; ex=ex||0; const wt=k==='ti'?'700':k==='end'?'600':'italic 500', maxW=W*(k==='po'?.92:.86);
   let sz=k==='po'?poSize(ctx,c.t,W,u):k==='ti'?u*8.4:k==='end'?u*5.6:u*7.6, lines; for(let g=0;g<14;g++){ ctx.font=fontOf(wt,sz,SERIF); lines=wrap(ctx,c.t,maxW); if(lines.length<=(k==='po'?2:5)||sz<u*4.6) break; sz*=.92; }
-  const lh=sz*1.32, h=lines.length*lh, word=S.tcTxt==='chu' && lt<1e8 && k!=='ti', N=String(c.t).split(/\s+/).filter(Boolean).length, span=Math.max(.6,c.e-c.s);
-  const rise=(1-ease.out(seg01(lt,c.s-.35,c.s+.45)))*u*4; ctx.save(); ctx.font=fontOf(wt,sz,SERIF); ctx.fillStyle='#fff'; ctx.shadowColor='rgba(0,0,0,.65)'; ctx.shadowBlur=u*2.4; ctx.textBaseline='middle';
-  let wi=0; lines.forEach((l,li)=>{ const y=cy-h/2+lh*(li+.5)+(word?0:rise);
-    if(!word){ ctx.globalAlpha=a; ctx.textAlign='center'; ctx.fillText(l,W/2,y); return; }
-    const ws=l.split(' '), sp=ctx.measureText(' ').width; let x=W/2-ctx.measureText(l).width/2; ctx.textAlign='left';
-    ws.forEach(w=>{ const tw=c.s+span*wi/Math.max(1,N), b=ease.out(seg01(lt,tw-.08,tw+.32)); ctx.globalAlpha=a*Math.max(0,b); if(b>0) ctx.fillText(w,x,y+(1-b)*u*1.6); x+=ctx.measureText(w).width+sp; wi++; }); });
-  ctx.restore(); if(k==='ti' && c.sub) zenLine(ctx,W,c.sub,FONT,600,u*4.4,W*.84,cy+h/2+u*5,a*ease.out(seg01(lt,c.s+.3,c.s+1)),u); return h; }
+  const lh=sz*1.32, h=lines.length*lh, still=lt>=1e8, mode=k==='end'?'end':k==='ti'?'ti':S.tcTxt==='chu'?'chu':'cau', T=zenTimes(c.t,c.s,c.e);
+  const inA=ease.out(seg01(lt,c.s-.35,c.s+.45)), rise=still?0:(1-inA)*u*4-ex*u*5, zoom=still?1:1+.035*clamp01((lt-c.s)/Math.max(1,c.e-c.s+1.2));
+  ctx.save(); ctx.translate(W/2,cy); ctx.scale(zoom,zoom); ctx.translate(-W/2,-cy); ctx.font=fontOf(wt,sz,SERIF); ctx.textBaseline='middle';
+  if(ex>0 && !still) ctx.filter=`blur(${(ex*u*1.4).toFixed(1)}px)`; /* câu cũ trôi lên, mờ dần khi sang câu mới */
+  let wi=0; lines.forEach((l,li)=>{ const y=cy-h/2+lh*(li+.5)+rise, ws=l.split(' ').filter(Boolean), sp=ctx.measureText(' ').width; let x=W/2-ctx.measureText(l).width/2;
+    ws.forEach(w=>{ const ww=ctx.measureText(w).width, tm=T[wi]||{s:c.s,d:.3}, j=wi; wi++; const cx=x+ww/2; x+=ww+sp;
+      const now=still?0:Math.sin(Math.PI*clamp01((lt-tm.s+.08)/(tm.d+.25))); let al=a, sc=1, dy=0, gl=now;
+      if(mode==='chu'){ const b=still?1:ease.out(seg01(lt,tm.s-.12,tm.s+.3)); if(b<=0) return; al=a*b; sc=1.22-.22*ease.back(b); dy=(1-b)*u*2.6; } /* từng chữ bay vào đúng lúc được đọc */
+      else if(mode==='cau'){ al=a*(still?1:.42+.58*ease.out(seg01(lt,tm.s-.05,tm.s+.25))); sc=1+.07*now; dy=-now*u*.6; } /* cả câu hiện mờ, chữ sáng dần theo lời đọc */
+      else if(mode==='end'){ const b=ease.out(seg01(lt,c.s+j*.12-.1,c.s+j*.12+.55)); if(b<=0) return; al=a*b; sc=.9+.1*b; dy=(1-b)*u*2; gl=.35*b; }
+      else { const b=ease.out(seg01(lt,c.s-.3+j*.1,c.s+.3+j*.1)); if(b<=0) return; al=a*b; sc=1.1-.1*b; gl=0; }
+      ctx.save(); ctx.globalAlpha=Math.max(0,Math.min(1,al)); ctx.translate(cx,y+dy); ctx.scale(sc,sc); ctx.textAlign='center';
+      ctx.shadowColor='rgba(0,0,0,.7)'; ctx.shadowBlur=u*2.4; ctx.fillStyle='#fff'; ctx.fillText(w,0,0);
+      if(gl>.02){ ctx.globalAlpha*=gl; ctx.shadowColor='rgba(255,196,90,.95)'; ctx.shadowBlur=u*4.5; ctx.fillStyle='#FFE6A8'; ctx.fillText(w,0,0); } /* chữ đang được đọc sáng ánh vàng */
+      ctx.restore(); }); });
+  ctx.restore();
+  if(k==='end'){ const b=ease.out(seg01(lt,c.s+.4,c.s+1.4))*a; if(b>0){ ctx.save(); ctx.globalAlpha=b*.8; ctx.strokeStyle='#FFE6A8'; ctx.lineWidth=u*.35; const L=W*.18*b; ctx.beginPath(); ctx.moveTo(W/2-L,cy+h/2+u*4); ctx.lineTo(W/2+L,cy+h/2+u*4); ctx.stroke(); ctx.restore(); } }
+  if(k==='ti' && c.sub) zenLine(ctx,W,c.sub,FONT,600,u*4.4,W*.84,cy+h/2+u*5,a*ease.out(seg01(lt,c.s+.3,c.s+1)),u); return h; }
 const TC_VS={tho:['Ngâm thơ trên đài (đọc thơ)','',null],cam:['Truyền cảm hứng sâu lắng','Sulafat',"Read like an inspiring Vietnamese speaker sharing a life lesson with one close listener: heartfelt, warm and quietly powerful, natural Northern accent, a little slower than normal speech. Let emotion rise gently on the key words, pause briefly at every comma and before the last words of each sentence, end each sentence softly with conviction. Never shout, never sound like an advertisement"],
   dem:['Kể chuyện đêm khuya (trầm, ấm)','Charon',"Read like a beloved late-night radio storyteller: a deep, warm, unhurried voice, intimate as if speaking to one listener in the quiet of the night, natural Northern Vietnamese accent, about 20% slower than normal speech. Long gentle pauses at commas and full stops, the last word of each sentence softens and lingers, a faint smile in the voice. No dramatic acting"],
   yen:['An yên, thiền (nhẹ, chậm)','Vindemiatrix',"Read like a calm meditation guide: soft, slow and peaceful, about 25% slower than normal speech, natural Northern Vietnamese accent. Leave breathing space between phrases, keep the voice even and soothing, every tone clear, as if helping the listener breathe out and let go"]};
@@ -4114,7 +4127,7 @@ function voSync(){ const m=S.vo; $('#voAiRow').hidden=m!=='ai'; $('#voFileRow').
   if(S.subOn && !n) h.push('Gõ lời đọc để có phụ đề (mỗi dòng một câu).');
   $('#voHint').textContent=h.join(' '); const tooLong=n && tot && m!=='file' && ((m==='ai'&&VO.ai&&VO.sig===voSig()?VO.ai.total:est)>tot-.5); $('#btnVoFit').hidden=!tooLong; }
 const poVoice=()=>S.poVoice&&S.poVoice!=='auto'&&TC_VOICES[S.poVoice]?S.poVoice:tcVsKey()==='tho'?(poCur().v||'Sulafat'):TC_VS[tcVsKey()][1]; /* Truyền cảm hứng: giọng theo kiểu đọc (đọc thơ thì theo từng bài) */
-const voSig=()=>[voLines().join('\n'),S.vstyle==='tc'?'tc:'+poVoice()+':'+tcVsKey():S.voVoice,S.voTone,gModel('tts'),S.vstyle==='fn'?['bo','me','con'].map(k=>S['fnV_'+k]||'').join(','):''].join('|');
+const voSig=()=>[voLines().join('\n'),S.vstyle==='tc'?'tc2:'+poVoice()+':'+tcVsKey():S.voVoice,S.voTone,gModel('tts'),S.vstyle==='fn'?['bo','me','con'].map(k=>S['fnV_'+k]||'').join(','):''].join('|');
 $('#voVoice').innerHTML=Object.entries(VO_VOICES).map(([k,v])=>`<option value="${k}">${v}</option>`).join(''); $('#voTone').innerHTML=Object.entries(VO_TONES).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join('');
 chipGroup('#voChips','vo','vo',voSync); chipGroup('#subStyleChips','sub','subStyle',voSync); chipGroup('#subPosChips','subpos','subPos',voSync);
 $('#voText').oninput=e=>{ S.voText=e.target.value; S.voAuto=false; persist(); clearTimeout(voSync._t); voSync._t=setTimeout(voSync,300); };
@@ -4129,12 +4142,15 @@ async function ttsSafe(text,voice,style){ const n=String(text).split(/\s+/).leng
   try{ const b=await gTTS(text,voice,style+'. Read the text exactly as written, do not add or drop any word.'); if(ok(b)) return b; }catch(e){ err=e; if(['nokey','badkey','aqkey','quota','blocked','net','denied'].includes(e.code)) throw e; }
   try{ const b=await gTTS(text,voice,'Read this Vietnamese text aloud, slowly, warmly and with feeling. Say only these exact words'); if(ok(b)) return b; }catch(e){ if(!err) err=e; }
   throw err||aiErr('empty'); }
+/* Truyền cảm hứng: câu cảm ơn cuối chỉ hiện chữ, không đọc (Ông Chủ dặn 25/10) */
+const tcSilent=t=>S.vstyle==='tc' && TC_END.includes(String(t).trim());
+function tcQuiet(){ const sr=24000, b=new AudioBuffer({length:Math.round(sr*2.6),numberOfChannels:1,sampleRate:sr}); b._quiet=1; return b; }
 async function voMakeAI(force){ const L=voLines(); if(!L.length){ toast('Gõ lời đọc trước'); return null; } if(!force && VO.ai && VO.sig===voSig()) return VO.ai; if(!gKey()) throw aiErr('nokey');
   const style=VO_TONES[S.voTone][1], bufs=new Array(L.length); let done=0; $('#voHint').textContent=`Đang tạo giọng đọc 0/${L.length} câu…`;
-  const work=async i=>{ const sp=S.vstyle==='fn'?fnSpk(L[i]):null; bufs[i]=sp?await gTTS(sp.text,S['fnV_'+sp.who]||FN_WHO[sp.who].def,FN_WHO[sp.who].st+'. Read the text exactly as written, do not add or drop any word.'):S.vstyle==='tc'?await ttsSafe(L[i],poVoice(),tcVsPrompt()):await gTTS(L[i],S.voVoice,style+'. '+VO_ROLE[voRole(i,L.length)]+' Read the text exactly as written, do not add or drop any word.'); done++; if(!$('#renderBox').hidden && S.vstyle==='tc') $('#renderMsg').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; $('#voHint').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; };
+  const work=async i=>{ if(tcSilent(L[i])){ bufs[i]=tcQuiet(); done++; return; } const sp=S.vstyle==='fn'?fnSpk(L[i]):null; bufs[i]=sp?await gTTS(sp.text,S['fnV_'+sp.who]||FN_WHO[sp.who].def,FN_WHO[sp.who].st+'. Read the text exactly as written, do not add or drop any word.'):S.vstyle==='tc'?await ttsSafe(L[i],poVoice(),tcVsPrompt()):await gTTS(L[i],S.voVoice,style+'. '+VO_ROLE[voRole(i,L.length)]+' Read the text exactly as written, do not add or drop any word.'); done++; if(!$('#renderBox').hidden && S.vstyle==='tc') $('#renderMsg').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; $('#voHint').textContent=`Đang tạo giọng đọc ${done}/${L.length} câu…`; };
   for(let i=0;i<L.length;i+=2) await Promise.all([work(i),i+1<L.length?work(i+1):null]);
   const trim=b=>{ const d=b.getChannelData(0), thr=.01; let a=0, z=d.length-1; while(a<z && Math.abs(d[a])<thr) a++; while(z>a && Math.abs(d[z])<thr) z--; return {a:Math.max(0,a-b.sampleRate*.03)/b.sampleRate, e:Math.min(d.length,z+b.sampleRate*.08)/b.sampleRate}; };
-  const segs=bufs.map((b,i)=>{ const t=trim(b); return {text:L[i],buf:b,off:t.a,d:Math.max(.2,t.e-t.a)}; }); const total=segs.reduce((a,s)=>a+s.d,0)+(segs.length-1)*.3+.5;
+  const segs=bufs.map((b,i)=>{ if(b._quiet) return {text:L[i],buf:b,off:0,d:b.duration,quiet:1}; const t=trim(b); return {text:L[i],buf:b,off:t.a,d:Math.max(.2,t.e-t.a)}; }); const total=segs.reduce((a,s)=>a+s.d,0)+(segs.length-1)*.3+.5;
   VO.ai={segs,total}; VO.sig=voSig(); voSync(); return VO.ai; }
 $('#btnVoMake').onclick=async()=>{ if(!aiNeed()) return; const b=$('#btnVoMake'); b.disabled=true; try{ await voMakeAI(true); toast('Đã tạo giọng đọc'); }catch(e){ $('#voHint').textContent=aiErrText(e); } b.disabled=false; };
 // chia đoạn nói theo chỗ ngắt hơi (dùng cho file ghi âm và clip Edit)
@@ -4197,7 +4213,7 @@ renderAudio=async function(style,st,total){ let vo=null; if(S.vo==='ai'||S.subOn
   const base=await renderAudio0(style,st,total); const file=S.vo==='file'?VO.file:null; if(!(vo||file)) return base;
   const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext, sr=44100, c=new OAC(2,Math.ceil((total+.25)*sr),sr); const cues=[];
   const vg=c.createGain(); vg.gain.value=1; const comp=c.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=3; comp.attack.value=.004; comp.release.value=.15; vg.connect(comp); comp.connect(c.destination);
-  if(vo){ let t=.5; vo.segs.forEach((sg,i)=>{ if(t<total){ const s=c.createBufferSource(); s.buffer=sg.buf; s.connect(vg); s.start(t,sg.off,Math.min(sg.d,total-t)); cues.push([t,t+sg.d]); } t+=sg.d+.3+fnVoGap(i); }); }
+  if(vo){ let t=.5; vo.segs.forEach((sg,i)=>{ if(t<total && !sg.quiet){ const s=c.createBufferSource(); s.buffer=sg.buf; s.connect(vg); s.start(t,sg.off,Math.min(sg.d,total-t)); cues.push([t,t+sg.d]); } t+=sg.d+.3+fnVoGap(i); }); }
   else { const s=c.createBufferSource(); s.buffer=file; s.connect(vg); s.start(.3,0,Math.max(.1,total-.3)); voSpeech(file).forEach(x=>cues.push([x[0]+.3,x[1]+.3])); }
   if(base){ const s=c.createBufferSource(); s.buffer=base; const mg=c.createGain(); s.connect(mg); mg.connect(c.destination); const g=mg.gain; g.setValueAtTime(1,0);
     cues.forEach(([a,b])=>{ g.setTargetAtTime(.3,Math.max(0,a-.2),.07); g.setTargetAtTime(1,b+.15,.25); }); s.start(0); }
