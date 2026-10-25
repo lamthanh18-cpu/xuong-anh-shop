@@ -179,7 +179,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 78</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 79</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -656,6 +656,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
           <button class="btn primary big" type="button" id="btnSaveVideo">Lưu video</button>
           <p class="hint" id="videoInfo"></p>
         </div>
+        <div id="fpSlotVideo" class="stack" style="margin-top:16px;border-top:2px solid var(--line,#ddd);padding-top:12px"><b>📅 Đăng hàng loạt lên Facebook</b><p class="hint" style="margin:0">Video vừa tạo ở trên tự có trong danh sách. Video làm cả loạt (Câu nói hay, Thơ hay, Mẹo hay): bấm 📁 Chọn cả thư mục clip → chọn thư mục của loạt đó, tích các fanpage rồi Lập lịch.</p></div>
       </section>
 
       <!-- BƯỚC 4: EDIT VIDEO -->
@@ -764,6 +765,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
         <button class="btn primary big" type="button" id="btnEvBuild" disabled>Tạo video</button>
         <div id="evBox" hidden><div class="bar"><i id="evBar"></i></div><p class="hint" id="evMsg"></p><div id="evQa" class="stack sm" hidden style="border:1px solid var(--line,#ddd);border-radius:10px;padding:8px 10px"></div></div>
         <div id="evOut" class="stack"></div>
+        <div id="fpSlotEdit"></div>
         <details id="fpBox" class="stack"><summary><b>📅 Đăng hẹn giờ lên Facebook</b> (đăng chéo clip lên nhiều trang, Facebook tự đăng đúng giờ)</summary>
           <p class="hint" id="fpWhere"></p>
           <div class="row"><input type="password" id="fpTok" placeholder="Dán mã Facebook (Access Token) vào đây" autocomplete="off" style="flex:1;min-width:0"><button class="btn" type="button" id="fpLoad">Lấy danh sách trang</button></div>
@@ -1251,6 +1253,9 @@ $('#editNext').onclick=()=>{ drawThumb(items[edIdx]); edIdx++; syncEditor(); };
 $('#editDone').onclick=()=>{ $('#editModal').hidden=true; drawThumb(items[edIdx]); };
 
 /* ---------- điều khiển ---------- */
+/* 1 khung Đăng hẹn giờ dùng chung: nằm cuối tab 3. Video và trong tab 4. Edit, chuyển theo tab đang mở */
+function fpMove(tab){ const box=document.getElementById('fpBox'), to=document.getElementById(tab==='video'?'fpSlotVideo':'fpSlotEdit'); if(!box||!to) return; if(tab==='video'){ if(box.parentNode!==to) to.appendChild(box); } else if(tab==='edit' && box.previousElementSibling!==to) to.after(box); try{ fpRender(); }catch(e){} }
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>fpMove(b.dataset.tab)));
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); document.querySelectorAll('[data-pane]').forEach(p=>p.hidden=p.dataset.pane!==b.dataset.tab); try{localStorage.setItem('xas-tab',b.dataset.tab);}catch(e){} });
 try{ const t=localStorage.getItem('xas-tab'); if(t) document.querySelector(`.tabs [data-tab="${t}"]`)?.click(); }catch(e){}
 function chipGroup(sel,attr,key,after){ const box=$(sel); const set=()=>box.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset[attr]===String(S[key])));
@@ -2741,7 +2746,7 @@ $('#btnRender').onclick=async()=>{
       const r=await finEncode({W,H,total,audio:au,bitrate:QBR[S.q]||12e6,onProg:p=>{ $('#barFill').style.width=Math.round(p*100)+'%'; $('#renderMsg').textContent=`Đang dựng ${QNAME[S.q]||''}, làm mịn và tăng nét: ${Math.round(p*100)}%`; },
         draw:async t=>{ await seekClips(F.st,t); F.draw(ctx,W,H,Math.min(t,total-.001),E); return finEnhance(cv,W,H,1); }});
       try{ wk&&wk.release(); }catch(e){} stopClips();
-      if(r){ try{ actx.close(); }catch(e){} if(lastVideo) URL.revokeObjectURL(lastVideo.url); lastVideo={blob:r.blob,url:URL.createObjectURL(r.blob),ext:'mp4'}; if(S.vmusic==='lib'&&!S.musicId){ S.musRot=(S.musRot||0)+1; persist(); } $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
+      if(r){ try{ actx.close(); }catch(e){} if(lastVideo) URL.revokeObjectURL(lastVideo.url); lastVideo={blob:r.blob,url:URL.createObjectURL(r.blob),ext:'mp4'}; setTimeout(()=>{ try{ fpRender(); }catch(e){} },0); if(S.vmusic==='lib'&&!S.musicId){ S.musRot=(S.musRot||0)+1; persist(); } $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
         $('#videoInfo').textContent=finInfo(r,total,au.lufs); $('#renderMsg').textContent=(await vAutoSave(autoDir))||'Xong. Video đã hoàn thiện, xem lại rồi bấm Lưu video.'; btn.disabled=false; btn.textContent='Tạo lại video'; rendering=false; return; } }
     catch(e){ console.warn('fin',e); toast('Máy chưa dựng được bản hoàn thiện, chuyển sang quay trực tiếp'); } }
   let wake=null; try{ wake=await navigator.wakeLock?.request('screen'); }catch(e){}
@@ -2756,7 +2761,7 @@ $('#btnRender').onclick=async()=>{
   rec.stop(); await done; stream.getTracks().forEach(t=>t.stop()); stopClips(); try{ actx.close(); }catch(e){} try{ wake&&wake.release(); }catch(e){}
   const type=(rec.mimeType||mime||'video/webm').split(';')[0]; const ext=type.includes('mp4')?'mp4':'webm';
   const blob=new Blob(chunks,{type}); if(lastVideo) URL.revokeObjectURL(lastVideo.url);
-  lastVideo={blob,url:URL.createObjectURL(blob),ext}; if(S.vmusic==='lib'&&!S.musicId){ S.musRot=(S.musRot||0)+1; persist(); } $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
+  lastVideo={blob,url:URL.createObjectURL(blob),ext}; setTimeout(()=>{ try{ fpRender(); }catch(e){} },0); if(S.vmusic==='lib'&&!S.musicId){ S.musRot=(S.musRot||0)+1; persist(); } $('#vplayer').src=lastVideo.url; $('#videoOut').hidden=false;
   $('#videoInfo').textContent=`${W}×${H} · ${total.toFixed(1).replace('.',',')} giây · ${(blob.size/1048576).toFixed(1).replace('.',',')} MB · .${ext}${hiddenWarn?' · Có lúc bạn rời màn hình, nếu video bị giật hãy tạo lại.':''}`;
   $('#renderMsg').textContent=(await vAutoSave(autoDir))||'Xong. Xem lại rồi bấm Lưu video.'; btn.disabled=false; btn.textContent='Tạo lại video'; rendering=false;
 };
@@ -3562,7 +3567,12 @@ const FP_HOOKS=['🔥 {n} – mã {c}','🤔 {n} có gì đặc biệt? Xem hế
 const fpTok=()=>{ try{ return localStorage.getItem(FPK)||''; }catch(e){ return ''; } };
 function fpCodesOf(name){ const m=String(name||'').match(/^clip-live-([A-Za-z0-9-]+?)-\d{4}-\d{4}/); return m?m[1].toUpperCase().split('-').filter(Boolean):[]; }
 function fpUse(){ return fpItems().filter(x=>!fpOff.has(x.name)); }
-function fpItems(){ return evOuts.map((x,i)=>({name:x.name,blob:x.blob,meta:x.meta,caption:(document.querySelector(`[data-cap="${i}"]`)||{}).value||x.caption})).concat(fpExtra).map(x=>Object.assign(x,{caption:fpCap[x.name]!=null?fpCap[x.name]:x.caption})); }
+function fpItems(){ return fpLastItem().concat(evOuts.map((x,i)=>({name:x.name,blob:x.blob,meta:x.meta,caption:(document.querySelector(`[data-cap="${i}"]`)||{}).value||x.caption})),fpExtra).map(x=>Object.assign(x,{caption:fpCap[x.name]!=null?fpCap[x.name]:x.caption})); }
+/* video vừa tạo ở tab 3. Video: tự vào danh sách đăng (Câu nói hay, Thơ hay có sẵn bài đăng) */
+let fpLast=null; function fpLastItem(){ if(!lastVideo||!lastVideo.blob||S.vstyle==='tu'&&!lastVideo.blob) return [];
+  if(!fpLast||fpLast.blob!==lastVideo.blob){ let meta=null, caption=''; try{ if(S.vstyle==='tc'){ const po=poOn(), m=po?poCur():(!(S.tcText||'').trim()?TC_LIB[S.tcQuote]:null); if(m){ meta={kind:po?'poem':'quote',title:po?m.t:m.q.replace(/\n/g,' ')}; caption=po?pocCaption(m):tcbCaption(m); } } else if(S.vstyle==='mh'){ const t=(S.mhTitle||'').trim(); if(t){ meta={kind:'meo',title:t}; caption=mhbCaption({n:t,s:mhSteps(),w:(S.mhWhy||'').trim(),l:(S.mhNote||'').trim()}); } } }catch(e){}
+    fpLast={name:(lastVideo.name||vName()), blob:lastVideo.blob, meta, caption}; }
+  return [fpLast]; }
 const fpFoot=()=>String($('#fpFoot').value||'').trim();
 function fpMetaFor(name){ const cs=fpCodesOf(name); if(!cs.length) return null; const info=evInfo(cs[0]); return evPostData(info,cs,{code:cs.join(', '),name:info.name,lines:'',price:''}); }
 function fpCapFor(name){ const md=fpMetaFor(name); return md?evPostCap(md,0):`🔥 Hàng mới mỗi ngày tại ${S.shopName||"Nancy's Shop"}\n#NancyShop`; }
