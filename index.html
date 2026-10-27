@@ -186,7 +186,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 89</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 90</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -810,6 +810,8 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
           <div class="row"><button class="btn primary" type="button" id="fpMake">📋 Lập lịch đăng chéo</button><button class="btn" type="button" id="fpShuf">🔀 Đảo lịch</button></div>
           <p class="hint">Mỗi clip lên TẤT CẢ trang đã chọn, nhưng cùng một lúc mỗi trang đăng một clip khác nhau; giờ đăng giữa các trang lệch nhau và đổi lượt mỗi ngày; câu mở đầu bài khác nhau theo từng trang. Sửa trang, clip từng dòng hoặc bỏ tích dòng không muốn đăng.</p>
           <div id="fpPlan" class="stack"></div>
+          <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" type="button" id="fpAI">✨ AI viết nội dung bán hàng riêng cho từng bài</button><label class="check sm"><input type="checkbox" id="fpAIAuto" checked> Tự viết mỗi lần lập lịch</label></div>
+          <p class="hint" id="fpAIMsg">Mỗi bài trên lịch một nội dung khác nhau: câu mở, công thức (nỗi đau → giải pháp, AIDA, kể chuyện, 3 lý do, hỏi đáp, trước – sau…), lời chốt đều khác, Facebook không coi là bài trùng. Chỉ dùng thông tin thật của mã. Khoảng 100đ cho mỗi clip.</p>
           <button class="btn primary big" type="button" id="fpGo" disabled>📅 Gửi lên Facebook hẹn giờ</button>
           <p class="hint" id="fpMsg"></p>
           <div class="row"><button class="btn" type="button" id="fpCsv" hidden>⬇ Tải bảng gắn mã (mã · trang · giờ · link bài)</button></div>
@@ -3708,6 +3710,73 @@ const FP_WISH='💖 Chúc khách yêu đặt đơn thành công, Nancy cảm ơn
 function fpFootFix(t){ if(!t||/A01M/.test(t)) return FP_FOOT; t=t.replace('bình luận {dat} dưới bài này.\n','bình luận {dat} dưới bài này để Nancy ship hàng nhanh nhé!\n'); if(/chúc/i.test(t)) return t; const L=t.split('\n'); let i=L.findIndex(x=>/^\s*[#@]/.test(x)); if(i<0) i=L.length; L.splice(i,0,FP_WISH); return L.join('\n'); }
 // câu mở đầu khác nhau cho từng trang: gợi tò mò, chỉ nói điều có thật, không nhắc "live"
 const FP_HOOKS=['🔥 {n} – mã {c}','🤔 {n} có gì đặc biệt? Xem hết clip là biết','👀 Chị em đã thấy {n} kiểu này chưa?','⚡ Xem nhanh {n} trong 1 phút','✨ Vì sao chị em nên có {n}?','🛍️ Chị em đang tìm {n} thì xem ngay','💬 Bình luận mã {c} để đặt {n}','🎯 Gợi ý hôm nay: {n}','📣 {n} – mã {c}, xem kỹ trước khi chốt','🔍 Cận cảnh {n}, nhìn kỹ từng chi tiết','💥 {n}: xem tận mắt rồi hãy chốt','📌 Lưu lại mã {c}: {n}'];
+/* câu mở đầu dự phòng: nhiều kiểu câu khác nhau để mỗi bài trong lịch một câu riêng (Facebook giảm phân phối bài trùng lặp); L = chỉ dùng cho clip cắt từ live */
+const FP_GEN=['🌿 Nancy quay kỹ cho chị em xem: mã {c}','🎥 Clip ngắn thôi, xem đủ {n} trước khi đặt mã {c}','💡 Chọn {n} cần để ý gì? Nancy chỉ trong clip này','🧐 Soi kỹ {n}: chất liệu, chi tiết, màu thật','☀️ Gợi ý hôm nay cho chị em: {n}, mã {c}','🌙 Tối nay xem gì? Xem {n} mã {c} cùng Nancy','🏡 Món này về nhà dùng thích lắm: {n}','🎁 Mua tặng mẹ, tặng chị em đều hợp: {n}','📸 Hình thật, xem rõ từng chi tiết: {n} mã {c}','🗣️ Nancy nói thật về {n} trong clip này','⏱️ Một phút để biết {n} có hợp với chị em không','🌸 Đẹp nhẹ nhàng, dễ dùng hằng ngày: {n}','👌 Chị em thích đồ bền, dùng lâu thì xem {n} nhé','🛒 Giỏ hàng tuần này nên có {n}','📝 Ghi chú cho chị em: mã {c}, xem clip để chọn đúng','🔎 Xem rõ kích thước, màu sắc của {n} trước khi đặt','🥰 Chị em hay hỏi món nào đáng mua, đây là một gợi ý: {n}','🧺 Đồ dùng nhỏ mà tiện: {n}, mã {c}','✨ Hôm nay Nancy giới thiệu {n}','💬 Thắc mắc gì về mã {c} cứ hỏi Nancy dưới bình luận','🎬 Xem tận mắt {n} trước khi chọn','🌼 Nhẹ ví mà vẫn đẹp: {n}','📣 Mã {c} vừa lên clip, chị em xem nhé','🙌 Xem xong clip là biết có nên đặt mã {c} không','🧡 Chị em xem chậm để nhìn rõ {n}','🔖 Lưu bài này lại, lúc cần tìm mã {c} cho nhanh','📌 Một món đáng xem hôm nay: {n}','💭 Chị em đang phân vân {n}? Xem clip trước đã','👇 Chi tiết {n} trong clip, mã {c} ở dưới','🌟 Hàng chọn lọc của Nancy: mã {c}','🤍 Nancy giới thiệu chậm rãi, chị em xem kỹ {n}','🍃 Không cần vội, xem kỹ {n} rồi hãy chọn','🎯 Đúng thứ chị em đang tìm? Mã {c} đây','📲 Xem trên điện thoại cho rõ: {n}, mã {c}','🫶 Món nhỏ làm việc nhà nhẹ hơn: {n}','🔔 Chị em theo dõi trang để không lỡ mã {c} nhé'];
+const FP_CTA=['💬 Chị em xem rõ hàng thật trong clip rồi đặt mã ngay để Nancy ship hàng nhanh nhé!','💬 Ưng mẫu nào chị em đặt mã ngay dưới bình luận, Nancy ship hàng nhanh nhé!','💬 Xem hết clip, thấy hợp thì đặt mã để Nancy gói hàng ship ngay nhé!','💬 Cần hỏi thêm về mã này chị em cứ bình luận, đặt mã là Nancy ship nhanh nhé!','💬 Chị em đặt đúng mã dưới bình luận, Nancy xác nhận và ship hàng nhanh nhé!','💬 Đặt mã ngay hôm nay để Nancy ship hàng sớm cho chị em nhé!'];
+const fpMod=(k,n)=>((k%n)+n)%n;
+// các câu mở đầu dùng được cho 1 clip, mỗi câu kèm "khuôn" (k) để không lặp cùng một kiểu câu trong lịch
+function fpHookPool(x){ if(x.meta&&(x.meta.kind==='meo'||x.meta.kind==='quote'||x.meta.kind==='poem')){ const T=String(x.meta.title||'Mẹo hay').split(' · ')[0]; return (x.meta.kind==='poem'?POB_HOOKS:x.meta.kind==='quote'?TCB_HOOKS:MHB_HOOKS).map(h=>({k:h,t:h.replace('{T}',T)})); }
+  const cs=fpCodesOf(x.name), first=String(x.caption||'').split('\n')[0]||'', m=first.match(/^\S+\s+(.+?)\s+–\s/), c=cs.join(', ')||(x.meta&&x.meta.c)||'';
+  const nm0=(x.meta&&x.meta.n)||(m&&m[1])||(cs[0]&&evInfo(cs[0]).name)||'', nm=nm0?(/^\p{Lu}\p{Ll}/u.test(nm0)?nm0[0].toLowerCase()+nm0.slice(1):nm0):'mẫu này';
+  const out=[]; if(x.meta){ const ks=[...new Set([c,...cs,x.meta.c,...(x.meta.cs||[]),x.meta.n,nm0,kfmt(x.meta.p),...(x.meta.L||[]).slice(0,2)].filter(v=>v&&String(v).length>1))].sort((a,b)=>String(b).length-String(a).length);
+    evPostHooks(x.meta).forEach(t=>{ let k=t; ks.forEach(v=>{ k=k.split(String(v)).join('§'); const l=String(v); k=k.split(l[0].toLowerCase()+l.slice(1)).join('§').split(l[0].toUpperCase()+l.slice(1)).join('§'); }); if(nm0||!/mẫu này/i.test(t)) out.push({k:'E'+k,t}); }); }
+  FP_GEN.forEach(h=>{ if(!c&&h.includes('{c}')) return; const t=h.replace(/\{n\}/g,nm).replace(/\{c\}/g,c); out.push({k:'G'+h,t:t[0].toUpperCase()+t.slice(1)}); });
+  return out.length?out:[{k:'X',t:`🔥 ${nm}`}]; }
+const FPH='xas-fphist'; function fpHist(){ try{ return JSON.parse(localStorage.getItem(FPH)||'{}'); }catch(e){ return {}; } }
+function fpHistAdd(k){ const h=fpHist(), now=Date.now(); h[k]=now; Object.keys(h).forEach(x=>{ if(now-h[x]>30*864e5) delete h[x]; }); try{ localStorage.setItem(FPH,JSON.stringify(h)); }catch(e){} }
+// chia câu mở đầu cho cả lịch: mỗi bài một kiểu câu khác nhau, tránh kiểu đã đăng trong 14 ngày qua
+function fpAssignHooks(rows,rnd){ const it=fpItems(), H=fpHist(), now=Date.now(), cnt={}, ctaN=FP_CTA.length; rnd=rnd||Math.random;
+  rows.forEach((r,ri)=>{ const x=it.find(c=>c.name===r.clip); if(!x) return; const P=fpHookPool(x); let best=0, bs=-Infinity;
+    P.forEach((h,i)=>{ const ht=H[h.k], s=-(cnt[h.k]||0)*1e6-(ht&&now-ht<14*864e5?(14*864e5-(now-ht))/864e5*1e3:0)-(h.k[0]==='G'?3:0)-i*.05+rnd()*2; if(s>bs){ bs=s; best=i; } });
+    r.hook=best; r.cta=ri%ctaN; cnt[P[best].k]=(cnt[P[best].k]||0)+1; }); }
+/* ✨ AI viết nội dung bán hàng riêng cho từng bài trên lịch (theo skill viết content bán hàng: hook 2 dòng đầu, lợi ích trước, 1 lời chốt, không bịa) */
+const FP_FORM=['Nỗi đau → giải pháp (PAS): mở bằng một phiền toái quen thuộc mà món này giải quyết','AIDA: mở bằng điểm nổi bật nhất → lợi ích → mong muốn → chốt','Kể chuyện: một tình huống đời thường 2 câu của chị em, rồi tới sản phẩm','Danh sách: "3 lý do chị em nên có …", mỗi lý do 1 dòng','FAB: đặc điểm thật → lợi ích khi dùng → cảm giác sau khi có','Hỏi – đáp: mở bằng câu chị em hay thắc mắc, trả lời bằng thông tin thật','Trước – sau: cuộc sống trước khi có món này và sau khi có','Mẹo dùng: một cách dùng hay hằng ngày, rồi giới thiệu món','Sang trọng tinh tế: câu chữ chọn lọc, nhịp chậm, nhấn vẻ đẹp và sự chỉn chu','Chị em tâm sự: giọng gần gũi như bạn thân rủ nhau mua'];
+const FPAI={run:false};
+function fpAIFacts(x){ const md=x.meta&&x.meta.c?x.meta:fpMetaFor(x.name), cs=fpCodesOf(x.name), body=String(x.caption||'').split('\n').filter(l=>l.trim()&&!/^#|📌|💬/.test(l)).slice(0,10).join('\n');
+  const c=(md&&md.c)||cs.join(', '), info=cs[0]?evInfo(cs[0]):{}, p=info.p, desc=p&&p.desc?String(p.desc).slice(0,700):'';
+  return {c, c1:(md&&md.cs&&md.cs[0])||cs[0]||c, n:(md&&md.n)||info.name||'', p:md&&md.p?kfmt(md.p):'', L:(md&&md.L)||[], sz:(md&&md.sz)||[], cols:(md&&md.cols)||[], desc, body}; }
+function fpAIOrder(F){ const sz=F.sz, ex=sz.length?sz[Math.floor(sz.length/2)]:''; return F.cols.length>1?`📌 Đặt đúng mã màu chị em thích (${F.cols.map(s=>s.split(' ')[0]).join(', ')}) để Nancy ship hàng nhanh nhé!`:sz.length?`📌 Đặt mã ${F.c1} + size viết liền (ví dụ ${F.c1}${ex}) để Nancy ship hàng nhanh nhé!`:`📌 Đặt mã ${F.c1} để Nancy ship hàng nhanh nhé!`; }
+function fpAIAsk(F,forms,used){ const facts=[`Mã: ${F.c}`,F.n?`Tên: ${F.n}`:'Tên: (không có, gọi là "mẫu này" hoặc theo hình dung chung, không bịa loại hàng)',F.p?`Giá: ${F.p}`:'(Không ghi giá)',F.sz.length?`Size còn: ${F.sz.join(', ')}`:'',F.cols.length?`Màu (mỗi màu một mã): ${F.cols.join(' · ')}`:'',F.L.length?`Ý chính chị chủ nói trong clip: ${F.L.join('; ')}`:'',F.desc?`Mô tả/Công dụng (nguồn duy nhất về chất liệu, công dụng): ${F.desc}`:'',F.body?`Bài gốc (chỉ lấy thông tin thật, KHÔNG chép câu):\n${F.body}`:''].filter(Boolean).join('\n');
+  return `Bạn là người viết content bán hàng Facebook giỏi nhất của Nancy's Shop (fanpage bán thời trang, hàng tiêu dùng nhập khẩu; khách là chị em 28–55 tuổi). Bài đăng kèm 1 clip ngắn giới thiệu sản phẩm.
+Viết ${forms.length} bài KHÁC NHAU HOÀN TOÀN cho cùng sản phẩm dưới đây (mỗi bài đăng một fanpage/giờ khác nhau, Facebook giảm phân phối bài trùng lặp nên câu mở, ý, cách viết đều phải khác).
+
+THÔNG TIN THẬT (chỉ dùng thông tin này):
+${facts}
+
+CÔNG THỨC CHO TỪNG BÀI (đúng thứ tự):
+${forms.map((f,i)=>`${i+1}. ${f}`).join('\n')}
+
+CÁCH VIẾT:
+- Dòng 1 là câu mở (hook) quyết định tất cả: chỉ khoảng 2 dòng đầu hiện trước "Xem thêm". Mở bằng nỗi đau, câu hỏi, lợi ích cụ thể hoặc con số THẬT có trong dữ liệu. 1–2 emoji. Mỗi bài một kiểu câu mở khác hẳn.
+- 5–8 dòng, 50–110 chữ, câu ngắn, xuống dòng nhiều, emoji vừa phải ở đầu dòng.
+- Lợi ích dùng thật trước, tính năng sau.
+- Dòng chốt giữ ĐÚNG NGUYÊN VĂN: ${fpAIOrder(F)}
+- KHÔNG viết hashtag, KHÔNG viết hướng dẫn huỷ đơn (app tự thêm chân bài).
+${used.length?`- KHÔNG dùng lại các câu mở đã dùng cho bài khác: ${used.slice(-40).map(u=>'"'+u+'"').join('; ')}\n`:''}
+LUẬT BẮT BUỘC (trung thực):
+- Không bịa chất liệu, thông số, xuất xứ, công dụng, đánh giá khách, số lượng đã bán, giải thưởng, khan hàng, khuyến mãi, thời hạn.
+- Không nhắc "live", "livestream", "buổi live" (khách đã xem live không muốn xem lại).
+- Không dùng: tốt nhất, rẻ nhất, duy nhất, số 1, cam kết 100%, chữa, trị, giảm béo, vĩnh viễn, thần tốc. Hàng làm đẹp, sức khoẻ: không hứa kết quả.
+- Lịch sự, sang, không giật gân, không sấc xược, không lặp "ạ/dạ" cuối câu, không nói "inbox để được tư vấn". Không dùng dấu ngoặc vuông.
+${F.p?'':'- Không ghi giá.\n'}
+Trả về DUY NHẤT JSON: [{"cong_thuc":"…","bai":"…"}, …] đủ ${forms.length} bài.`; }
+async function fpAIWrite(auto){ if(FPAI.run) return; if(!fpPlan.length){ toast('Bấm Lập lịch đăng chéo trước'); return; } if(!auto && !aiNeed()) return; if(auto && (!gKey()||IN_CLAUDE)) return;
+  const it=fpItems(), msg=$('#fpAIMsg'), btn=$('#fpAI'), plan=fpPlan.slice(), alive=()=>plan.some(r=>fpPlan.includes(r)), groups={}; /* fpRender lọc lại mảng fpPlan nên so theo từng dòng */ plan.forEach(r=>{ const x=it.find(c=>c.name===r.clip); if(!x||(x.meta&&['meo','quote','poem'].includes(x.meta.kind))) return; (groups[r.clip]=groups[r.clip]||[]).push(r); });
+  const keys=Object.keys(groups); if(!keys.length){ msg.textContent='Lịch này chỉ có video mẹo hay, câu nói, thơ: đã có bài riêng, không cần AI viết.'; return; }
+  FPAI.run=true; btn.disabled=true; const used=[], seen=new Set(); let done=0, bad=0, fi=Math.floor(Math.random()*FP_FORM.length);
+  const one=async k=>{ const rows=groups[k], x=it.find(c=>c.name===k), F=fpAIFacts(x), forms=rows.map(()=>FP_FORM[(fi++)%FP_FORM.length]);
+    try{ const ask=fpAIAsk(F,forms,used); let j; try{ j=await gFetch('interactions',{model:gModel('txt'),input:[{type:'text',text:ask}]}); }
+      catch(e){ if(e.code!=='nomodel'&&e.code!=='api') throw e; j=await gFetch(`models/${gModel('txt')}:generateContent`,{contents:[{role:'user',parts:[{text:ask}]}],generationConfig:{responseMimeType:'application/json'}}); }
+      const L=postAIParse(gText(j)); if(!L.length) throw aiErr('empty'); const order=fpAIOrder(F);
+      rows.forEach((r,i)=>{ const a=L[i%L.length]; let t=String(a.t).split('\n').filter(l=>!/^\s*📌/.test(l)&&!/(chốt mã|giữ hàng|ship hàng nhanh)/i.test(l)&&!/^\s*#/.test(l)).join('\n').replace(/\b(live ?stream|livestream|buổi live|phiên live|trên live)\b/gi,'clip').trim();
+        let h=t.split('\n')[0]; if(seen.has(norm(h))){ const P=fpHookPool(x); h=P[fpMod(r.hook,P.length)].t; t=[h,...t.split('\n').slice(1)].join('\n'); } seen.add(norm(h)); used.push(h.slice(0,80));
+        r.text=t+'\n'+order; r.f=a.f+(i>=L.length?' (lặp)':''); }); }
+    catch(e){ bad++; if(['nokey','badkey','aqkey','blocked','quota','denied'].includes(e.code)) throw e; console.warn('fpAI',e); }
+    done++; msg.textContent=`AI đang viết… ${done}/${keys.length} clip (${plan.filter(r=>r.text).length} bài xong)`; if(alive()) fpRender(); };
+  try{ for(let i=0;i<keys.length;i+=3){ if(!alive()) break; await Promise.all(keys.slice(i,i+3).map(one)); }
+    const n=plan.filter(r=>r.text).length; msg.textContent=!alive()?'Lịch đã đổi, bấm ✨ để viết lại cho lịch mới.':`✓ AI đã viết ${n} bài, mỗi bài một nội dung riêng (${new Set(plan.filter(r=>r.text).map(r=>norm(r.text.split('\n')[0]))).size} câu mở khác nhau)${bad?`; ${bad} clip lỗi, dùng câu mở dự phòng`:''}. Bấm vào từng dòng để xem, sửa thẳng trong ô. Khoảng ${(keys.length*100).toLocaleString('vi-VN')}đ.`; }
+  catch(e){ msg.textContent=e.code?aiErrText(e):String(e.message||e); toast('AI chưa viết được bài'); }
+  FPAI.run=false; btn.disabled=false; if(alive()) fpRender(); }
 const fpTok=()=>{ try{ return localStorage.getItem(FPK)||''; }catch(e){ return ''; } };
 function fpCodesOf(name){ const m=String(name||'').match(/^clip-live-([A-Za-z0-9-]+?)-\d{4}-\d{4}/); return m?m[1].toUpperCase().split('-').filter(Boolean):[]; }
 function fpUse(){ return fpItems().filter(x=>!fpOff.has(x.name)); }
@@ -3720,14 +3789,15 @@ let fpLast=null; function fpLastItem(){ if(!lastVideo||!lastVideo.blob||S.vstyle
 const fpFoot=()=>String($('#fpFoot').value||'').trim();
 function fpMetaFor(name){ const cs=fpCodesOf(name); if(!cs.length) return null; const info=evInfo(cs[0]); return evPostData(info,cs,{code:cs.join(', '),name:info.name,lines:'',price:''}); }
 function fpCapFor(name){ const md=fpMetaFor(name); return md?evPostCap(md,0):`🔥 Hàng mới mỗi ngày tại ${S.shopName||"Nancy's Shop"}\n#NancyShop`; }
-function fpHookFor(x,k){ if(x.meta&&(x.meta.kind==='meo'||x.meta.kind==='quote'||x.meta.kind==='poem')){ const T=String(x.meta.title||'Mẹo hay').split(' · ')[0], H=(x.meta.kind==='poem'?POB_HOOKS:x.meta.kind==='quote'?TCB_HOOKS:MHB_HOOKS).map(h=>h.replace('{T}',T)); return H[((k%H.length)+H.length)%H.length]; } if(x.meta){ const H=evPostHooks(x.meta); if(H.length) return H[((k%H.length)+H.length)%H.length]; } const cs=fpCodesOf(x.name), first=String(x.caption||'').split('\n')[0]||'', m=first.match(/^\S+\s+(.+?)\s+–\s/), nm=(m&&m[1])||(cs[0]&&evInfo(cs[0]).name)||'sản phẩm này', c=cs.join(', ')||'';
-  const pool=c?FP_HOOKS:FP_HOOKS.filter(h=>!h.includes('{c}')); return pool[((k%pool.length)+pool.length)%pool.length].replace(/\{n\}/g,nm).replace(/\{c\}/g,c); }
+function fpHookFor(x,k){ const P=fpHookPool(x); return P[fpMod(k|0,P.length)].t; }
+const fpHookKey=(x,k)=>{ const P=fpHookPool(x); return P[fpMod(k|0,P.length)].k; };
 function fpFootFor(x){ const cs=fpCodesOf(x.name), f=fpFoot(); if(x.meta&&(x.meta.kind==='meo'||x.meta.kind==='quote'||x.meta.kind==='poem')) return ''; /* video mẹo hay, câu nói hay: không chèn hướng dẫn đặt/huỷ đơn */ if(!cs.length) return f.replace(/\{dat\}/g,'đúng mã sản phẩm').replace(/\{vd\}|\{ma\}/g,'mã');
   const c=cs[0], m=String(x.caption||'').match(/Còn size ([0-9A-Z, ]+)/i), sz=m?m[1].split(/[ ,]+/).map(v=>v.trim().toUpperCase()).filter(Boolean):evSizesOf(null,evInfo(c)), vd=c+(sz.length?sz[Math.floor(sz.length/2)]:'');
   const dat=sz.length?`mã liền size, ví dụ ${vd} (còn size ${sz.join(', ')})`:cs.length>1?`${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]} (mỗi màu một mã)`:c;
   return f.replace(/\{dat\}/g,dat).replace(/\{vd\}/g,vd).replace(/\{ma\}/g,c); }
-function fpPostCap(r){ const x=fpItems().find(i=>i.name===r.clip); if(!x) return ''; const L=String(x.caption||'').split('\n'), body=L.slice(1).join('\n').replace(/\n?#NancyShop\s*$/,'').trim(), f=fpFootFor(x);
-  return [r.hook!=null?fpHookFor(x,r.hook):L[0], body, f].filter(Boolean).join('\n\n'); }
+function fpPostCap(r){ const x=fpItems().find(i=>i.name===r.clip); if(!x) return ''; const L=String(x.caption||'').split('\n'), body=L.slice(1).join('\n').replace(/\n?#NancyShop\s*$/,'').trim(), f=fpFootFor(x); if(r.text) return [r.text.trim(), f].filter(Boolean).join('\n\n');
+  const b2=r.cta!=null?body.replace(/^💬 Chị em xem rõ hàng thật trong clip rồi đặt mã ngay để Nancy ship hàng nhanh nhé!$/m,FP_CTA[fpMod(r.cta,FP_CTA.length)]):body;
+  return [r.hook!=null?fpHookFor(x,r.hook):L[0], b2, f].filter(Boolean).join('\n\n'); }
 function fpTimes(){ return String($('#fpTimes').value||'').split(/[,;\s]+/).map(s=>s.match(/^(\d{1,2})[:h.](\d{2})?$/)).filter(Boolean).map(m=>[+m[1],+(m[2]||0)]).filter(x=>x[0]<24&&x[1]<60).sort((a,b)=>a[0]*60+a[1]-b[0]*60-b[1]).filter((x,i,a)=>!i||fpHHMM(x)!==fpHHMM(a[i-1])).slice(0,FP_MAX); }
 const FP_MAX=5;
 const fpFmt=t=>`${pad2(t.getDate())}/${pad2(t.getMonth()+1)} ${pad2(t.getHours())}:${pad2(t.getMinutes())}`;
@@ -3736,20 +3806,20 @@ const fpSelPages=()=>fpPages.filter(p=>{ const c=document.querySelector(`[data-f
 function fpMakePlan(shuffle){ const it=fpUse(), pg=fpSelPages(), tm=fpTimes(); if(!it.length||!pg.length||!tm.length){ toast(!pg.length?'Tích chọn ít nhất 1 trang':!it.length?'Chưa tích clip nào':'Kiểm tra lại giờ đăng'); return; }
   if(shuffle) fpSeed=1+Math.floor(Math.random()*1e6); const rnd=(()=>{ let s=fpSeed||1; return ()=>(s=(s*16807)%2147483647)/2147483647; })();
   const N=it.length, P=pg.length, K=tm.length, gap=P>1?Math.min(Math.max(0,+$('#fpGap').value||0),Math.floor(60/(P-1))):0, order=pg.map((p,i)=>i); if(fpSeed) for(let i=P-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
-  const rot0=fpSeed?Math.floor(rnd()*N):0, hk0=fpSeed?Math.floor(rnd()*FP_HOOKS.length):0, d0=$('#fpDay').value?new Date($('#fpDay').value+'T00:00'):new Date(), min=Date.now()+15*60000; d0.setHours(0,0,0,0);
+  const rot0=fpSeed?Math.floor(rnd()*N):0, d0=$('#fpDay').value?new Date($('#fpDay').value+'T00:00'):new Date(), min=Date.now()+15*60000; d0.setHours(0,0,0,0);
   const split=$('#fpMode').value==='split', out=[], used={}; let days=0;
   order.forEach((pi,p)=>{ const page=pg[pi], rot=(rot0+Math.round(p*N/P))%N, seq=split?it.map((x,ci)=>ci).filter(ci=>(ci+rot0)%P===p):it.map((x,i)=>(rot+i)%N); let i=0;
     for(let day=0;i<seq.length&&day<400;day++){ for(let s=0;s<K&&i<seq.length;s++){ let off=((p+day)%P)*gap; const W=fpLiveWin(), base=tm[s][0]*60+tm[s][1]; if(W&&base+off>=W[0]&&base+off<W[1]) off=W[0]-base-((P-1)-((p+day)%P))*gap; let t=new Date(d0.getFullYear(),d0.getMonth(),d0.getDate()+day,tm[s][0],tm[s][1]+off); const uk=page.id+'|'+day, U=used[uk]||(used[uk]=[]); while(U.some(u=>Math.abs(u-t)<10*60000)) t=new Date(t.getTime()-Math.max(15,P*gap)*60000); U.push(t.getTime()); if(t.getTime()<min) continue;
-      const ci=seq[i]; out.push({key:page.id+'|'+it[ci].name, page:page.id, clip:it[ci].name, at:t, on:true, hook:hk0+ci*5+p}); i++; } days=Math.max(days,day+1); } });
+      const ci=seq[i]; out.push({key:page.id+'|'+it[ci].name, page:page.id, clip:it[ci].name, at:t, on:true, hook:0}); i++; } days=Math.max(days,day+1); } });
   if(!out.length){ toast('Không xếp được lịch: kiểm tra ngày bắt đầu'); return; }
-  fpPlan=out.sort((a,b)=>a.at-b.at); fpRender(); $('#fpMsg').textContent=`Lịch: ${N} clip, ${P} trang, ${K} bài/trang/ngày${split?' (mỗi clip 1 trang)':' (mỗi clip lên tất cả trang)'} = ${fpPlan.length} bài, đăng hết trong ${days} ngày: ${fpFmt(fpPlan[0].at)} → ${fpFmt(fpPlan[fpPlan.length-1].at)}.`; }
+  fpPlan=out.sort((a,b)=>a.at-b.at); fpAssignHooks(fpPlan,rnd); fpRender(); if($('#fpAIAuto').checked && gKey() && !IN_CLAUDE) setTimeout(()=>fpAIWrite(true),0); $('#fpMsg').textContent=`Lịch: ${N} clip, ${P} trang, ${K} bài/trang/ngày${split?' (mỗi clip 1 trang)':' (mỗi clip lên tất cả trang)'} = ${fpPlan.length} bài, đăng hết trong ${days} ngày: ${fpFmt(fpPlan[0].at)} → ${fpFmt(fpPlan[fpPlan.length-1].at)}.`; }
 function fpRender(){ const it=fpItems(); $('#fpWhere').textContent=window.claude?'⚠ Nút này chỉ chạy ở bản máy tính (file xuong-anh-shop.html mở bằng Chrome), trong khung claude.ai Facebook bị chặn.':'';
   $('#fpCount').textContent=it.length?`Đã chọn ${it.filter(x=>!fpOff.has(x.name)).length}/${it.length} clip`:'';
   $('#fpList').innerHTML=it.length?`<div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn" data-fpcall="1">☑ Chọn tất cả clip</button><button type="button" class="btn" data-fpcall="0">☐ Bỏ chọn hết clip</button></div>`+it.map((x,i)=>`<div style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" data-fpuse="${esc(x.name)}"${fpOff.has(x.name)?'':' checked'} aria-label="Đăng clip ${i+1}" style="margin-top:4px;width:20px;height:20px"><details style="flex:1;min-width:0"><summary class="sm">${i+1}. ${esc((fpCodesOf(x.name).join(', ')||'')+' · '+x.name)}</summary><textarea data-fpcap="${esc(x.name)}" rows="5" aria-label="Bài gốc clip ${i+1}">${esc(x.caption||'')}</textarea></details></div>`).join(''):'<p class="sm">Chưa có clip: bấm Xuất clip ở trên, hoặc chọn clip đã lưu.</p>';
   const pOpt=sel=>fpPages.map(p=>`<option value="${esc(p.id)}"${p.id===sel?' selected':''}>${esc(p.name)}</option>`).join(''), cOpt=sel=>it.map(x=>`<option value="${esc(x.name)}"${x.name===sel?' selected':''}>${esc((fpCodesOf(x.name).join(', ')||x.name).slice(0,40))}</option>`).join('');
   fpPlan=fpPlan.filter(r=>it.some(x=>x.name===r.clip));
   $('#fpPlan').innerHTML=fpPlan.length?`<div style="overflow-x:auto"><table class="sm" style="border-collapse:collapse;width:100%"><tr><th></th><th align="left">Giờ đăng</th><th align="left">Trang</th><th align="left">Clip (mã)</th><th align="left">Câu mở đầu</th></tr>`+fpPlan.map((r,i)=>{ const x=it.find(c=>c.name===r.clip), d=fpDone[r.page+'|'+r.clip+'|'+r.at.getTime()];
-    return `<tr style="border-top:1px solid var(--line,#ddd)"><td><input type="checkbox" data-fpon="${i}"${r.on?' checked':''}${d?' disabled':''}></td><td><b>${fpFmt(r.at)}</b>${d?' ✓':''}</td><td><select data-fppg="${i}">${pOpt(r.page)}</select></td><td><select data-fpcl="${i}">${cOpt(r.clip)}</select></td><td>${esc(x?fpHookFor(x,r.hook).slice(0,60):'')}</td></tr>`; }).join('')+'</table></div>':'<p class="sm">Chọn trang + clip rồi bấm "Lập lịch đăng chéo".</p>';
+    return `<tr style="border-top:1px solid var(--line,#ddd)"><td><input type="checkbox" data-fpon="${i}"${r.on?' checked':''}${d?' disabled':''}></td><td><b>${fpFmt(r.at)}</b>${d?' ✓':''}</td><td><select data-fppg="${i}">${pOpt(r.page)}</select></td><td><select data-fpcl="${i}">${cOpt(r.clip)}</select></td><td>${r.text?`<details><summary>✨ ${esc(r.text.split('\n')[0].slice(0,70))}</summary><span class="sm" style="opacity:.7">${esc(r.f||'')}</span><textarea data-fptx="${i}" rows="7" aria-label="Nội dung bài ${i+1}" style="width:100%;min-width:220px">${esc(r.text)}</textarea></details>`:esc(x?fpHookFor(x,r.hook).slice(0,60):'')}</td></tr>`; }).join('')+'</table></div>':'<p class="sm">Chọn trang + clip rồi bấm "Lập lịch đăng chéo".</p>';
   $('#fpGo').disabled=!fpPlan.some(r=>r.on); $('#fpCsv').hidden=!Object.keys(fpDone).length; fpSchedRender(); }
 function fpSchedAll(){ const now=Date.now(), L=[]; Object.entries(fpDone).forEach(([k,d])=>{ if(+d.at>now) L.push({id:String(d.id),page:d.page,pageName:d.pageName,at:+d.at,txt:d.codes||d.name,key:k}); });
   fpRemote.forEach(s=>{ if(s.at>now && !L.some(v=>v.id===s.id||(v.page===s.page&&Math.abs(v.at-s.at)<60000))) L.push(s); }); return L.sort((a,b)=>a.at-b.at); }
@@ -3797,7 +3867,7 @@ const fpSelSave=()=>{ const n=fpSelPages().length, el=$('#fpSelN'); if(el) el.te
 $('#fpPages').addEventListener('change',fpSelSave);
 $('#fpPages').addEventListener('click',e=>{ const b=e.target.closest('[data-fpall]'); if(!b) return; const on=b.dataset.fpall==='1'; document.querySelectorAll('[data-fpp]').forEach(c=>c.checked=on); fpSelSave(); });
 $('#fpPlan').addEventListener('change',e=>{ const t=e.target; if(t.dataset.fpon!=null) fpPlan[+t.dataset.fpon].on=t.checked; if(t.dataset.fppg!=null) fpPlan[+t.dataset.fppg].page=t.value; if(t.dataset.fpcl!=null) fpPlan[+t.dataset.fpcl].clip=t.value; fpRender(); });
-$('#fpMake').onclick=()=>fpMakePlan(false); $('#fpShuf').onclick=()=>fpMakePlan(true); $('#fpBox').addEventListener('toggle',fpRender);
+$('#fpAI').onclick=()=>fpAIWrite(false); $('#fpPlan').addEventListener('input',e=>{ const t=e.target.closest('[data-fptx]'); if(!t) return; const r=fpPlan[+t.dataset.fptx]; if(r) r.text=t.value; }); $('#fpMake').onclick=()=>fpMakePlan(false); $('#fpShuf').onclick=()=>fpMakePlan(true); $('#fpBox').addEventListener('toggle',fpRender);
 $('#fpPick').onclick=()=>$('#fpFiles').click();
 const FP_PRESET={1:['19:30'],2:['11:00','19:30'],3:['07:30','11:00','19:30'],4:['07:30','09:00','11:00','19:30'],5:['07:30','09:00','11:00','19:30','20:30'],6:['07:30','09:00','11:00','17:00','19:30','20:30'],7:['07:00','07:30','09:00','11:00','17:00','19:30','20:30'],8:['07:00','07:30','09:00','10:00','11:00','17:00','19:30','20:30']};
 $('#fpPer').oninput=e=>{ const n=Math.max(1,Math.min(FP_MAX,+e.target.value||3)); $('#fpTimes').value=FP_PRESET[n].join(', '); };
@@ -3813,14 +3883,15 @@ $('#fpClear').onclick=()=>{ fpOff.clear(); fpExtra=[]; fpPlan=[]; fpRender(); };
 $('#fpFiles').onchange=e=>fpAdd(e);
 async function fpAdd(e){ const FS=[...e.target.files], js={}; e.target.value=''; for(const f of FS) if(/\.json$/i.test(f.name)){ try{ js[f.name.replace(/\.json$/i,'')]=JSON.parse(await f.text()); }catch(x){} } /* bài + dữ liệu đã lưu kèm clip lúc xuất */
   FS.filter(f=>/\.(mp4|mov|webm|m4v)$/i.test(f.name)).sort((a,b)=>{ const n=f=>+((f.name.match(/-(\d+)\.\w+$/)||[])[1]||1e6); return n(a)-n(b)||a.name.localeCompare(b.name,'en',{numeric:true}); }).forEach(f=>{ if(!fpItems().some(x=>x.name===f.name)){ const sc=js[f.name.replace(/\.\w+$/,'')]; fpExtra.push({name:f.name,blob:f,caption:(sc&&sc.caption)||fpCapFor(f.name),meta:(sc&&sc.meta)||fpMetaFor(f.name)}); } }); fpRender(); toast(`Đã có ${fpItems().length} clip`); }
-$('#fpGo').onclick=async()=>{ const rows=fpPlan.filter(r=>r.on&&!fpDone[r.page+'|'+r.clip+'|'+r.at.getTime()]); if(!rows.length){ toast('Các bài này đã gửi rồi'); return; }
+$('#fpGo').onclick=async()=>{ const rows=fpPlan.filter(r=>r.on&&!fpDone[r.page+'|'+r.clip+'|'+r.at.getTime()]); if(!rows.length){ toast('Các bài này đã gửi rồi'); return; } if(FPAI.run){ toast('Đợi AI viết xong bài rồi gửi'); return; }
+  if(rows.some(r=>/\[[^\]]*\]/.test(r.text||''))){ toast('Còn chỗ [ ] trong nội dung bài'); $('#fpMsg').textContent='✗ Sửa các chỗ còn dấu [ ] trong nội dung bài rồi bấm Gửi lại.'; return; }
   if(/\[[^\]]*\]/.test(fpFoot()+fpUse().map(x=>x.caption).join(''))){ toast('Còn chỗ [ ] chưa sửa trong bài hoặc chân bài'); $('#fpMsg').textContent='✗ Sửa các chỗ còn dấu [ ] rồi bấm Gửi lại.'; return; }
   if(rows.some(r=>r.at.getTime()<Date.now()+11*60000)){ toast('Có bài giờ đăng quá gần: bấm Lập lịch lại'); return; }
   const btn=$('#fpGo'); btn.disabled=true; let ok=0, sk=null; const rt=new Set(), sent=[];
   for(let i=0;i<rows.length;i++){ const r=rows[i], x=fpItems().find(c=>c.name===r.clip), pg=fpPages.find(p=>p.id===r.page); if(!x||!pg){ (sk=sk||[]).push(!pg?'chưa lấy danh sách trang (bấm Lấy danh sách trang)':'không còn file clip '+r.clip+' (chọn lại thư mục clip)'); continue; }
     $('#fpMsg').textContent=`Đang gửi ${i+1}/${rows.length}: ${pg.name} · ${fpFmt(r.at)} · ${x.name} (${(x.blob.size/1048576).toFixed(0)} MB)…`;
     const fd=new FormData(); fd.append('access_token',pg.access_token); fd.append('description',fpPostCap(r)); fd.append('published','false'); fd.append('scheduled_publish_time',String(Math.floor(r.at.getTime()/1000))); fd.append('source',x.blob,x.name);
-    try{ const j=await fpApi(`https://graph-video.facebook.com/${FPV}/${pg.id}/videos`,{method:'POST',body:fd}); ok++; sent.push(r.at);
+    try{ const j=await fpApi(`https://graph-video.facebook.com/${FPV}/${pg.id}/videos`,{method:'POST',body:fd}); ok++; sent.push(r.at); try{ fpHistAdd(fpHookKey(x,r.hook)); if(r.text) fpHistAdd('T'+norm(r.text.split('\n')[0]).slice(0,60)); }catch(e){}
       fpDone[r.page+'|'+r.clip+'|'+r.at.getTime()]={name:x.name,page:pg.id,pageName:pg.name,codes:fpCodesOf(x.name).join(', '),at:r.at,id:j.id,link:`https://www.facebook.com/${pg.id}/videos/${j.id}`}; fpDoneSave(); fpRender(); }
     catch(e){ if(/hết hạn/.test(e.message) && !rt.has(i)){ rt.add(i); /* mã trang hết hạn: tự lấy lại mã trang bằng mã đang dán trong ô rồi gửi lại bài này 1 lần */ const T=encodeURIComponent($('#fpTok').value.trim()); try{ const all=((await fpApi(`me/accounts?fields=id,access_token&limit=100&access_token=${T}`)).data||[]);
         try{ const B=await fpApi(`me/businesses?fields=id&limit=50&access_token=${T}`); for(const bz of (B.data||[])) for(const ed of ['owned_pages','client_pages']){ try{ all.push(...((await fpApi(`${bz.id}/${ed}?fields=id,access_token&limit=100&access_token=${T}`)).data||[])); }catch(x){} } }catch(x){}
