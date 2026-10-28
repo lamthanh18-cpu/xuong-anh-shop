@@ -5518,12 +5518,12 @@ let evSellG=null; /* đoạn đang làm: giữ lại phụ đề AI đã chép, 
 function evSellSeg(){ const x=evSrc[0]; if(!x) return null; const dur=x.dur||(x.v&&x.v.duration)||0, a=Math.max(0,Math.min(Math.max(0,dur-3),+S.evSA||0)), b=Math.max(a+3,dur-Math.max(0,+S.evSB||0)); const it=evSellItems(), szs=evSellSizes();
   if(!evSellG||evSellG.src!==x) evSellG={id:++evUid,src:x,on:true,score:null}; Object.assign(evSellG,{a,b:Math.min(b,dur||b),code:it.map(i=>i.code+(i.color?' '+i.color:'')).join(', '),name:String(S.evSName||'').trim(),pman:true,price:evSellPrice(),sizes:szs.join(' ')}); return evSellG; }
 function evSellCov(){ const it=evSellItems(), szs=evSellSizes(), pr=evSellPrice(); if(!it.length) return null; const cs=it.map(i=>i.code); let C;
-  if(it.length>1) C={code:cs.join(' · '),items:it.map(i=>({code:i.code,color:i.color,price:'',sw:(evsCol(i.color)||[0,''])[1]})),price:pr,text:evCovText(cs[0],szs)};
-  else { C=evCovData(cs[0],szs,pr); if(it[0].color && !(S.evCovText||'').trim()) C.text=['Màu '+it[0].color,C.text].filter(Boolean).join(' · '); }
+  if(it.length>1) C={code:cs.join(' · '),items:it.map(i=>({code:i.code,color:'',price:'',sw:(evsCol(i.color)||[0,''])[1]})),price:pr,text:evCovText(cs[0],szs)};
+  else C=evCovData(cs[0],szs,pr); /* Ông Chủ 28/10: trên video chỉ hiện mã, không ghi tên màu (tim màu vẫn giữ) */
   C.rect={x:3,y:2.5,w:94,h:it.length>4?17:13}; return C; }
 function evSellP(){ const it=evSellItems(), cs=it.map(i=>i.code), szs=evSellSizes(), shop=S.shopName||"Nancy's Shop";
   const P={raw:true,hook:String(S.evSHook||'').trim(),name:String(S.evSName||'').trim(),code:cs[0]||'',stamp:cs[0]||'',cta:cs.length?orderLine([cs[0]],!!szs.length):'',outro:'Gõ mã để đặt hàng',shop,lines:[],price:''};
-  if(cs.length>1){ P.code=P.stamp=it.map(x=>x.code+(x.color?' '+x.color:'')).join(' · '); P.cta=`Gõ mã ${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]}${szs.length?' kèm size':''} để đặt hàng`; }
+  if(cs.length>1){ P.code=P.stamp=cs.join(' · '); P.cta=`Gõ mã ${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]}${szs.length?' kèm size':''} để đặt hàng`; }
   if(cs.length&&szs.length) P.guide={codes:cs,sizes:szs.slice(0,8),shoe:/^\d+$/.test(szs[0]),plus:true}; return P; }
 /* bài đăng theo mẫu fanpage (Ông Chủ gửi 28/10): danh sách mã – màu kèm tim màu, chốt đơn có ví dụ, tăng số lượng +2, hủy -1, size, giá */
 function evSellCap(){ const it=evSellItems(), szs=evSellSizes(), pr=evSellPrice(), nm=String(S.evSName||'').trim(), c0=it[0]?it[0].code:'', z=szs.length?szs[Math.floor(szs.length/2)]:'', z2=szs.length?szs[szs.length-1]:'', ex=c=>c+z, n=it.length;
