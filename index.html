@@ -3458,10 +3458,10 @@ function introChip(ctx,W,py,lab,u,t,k){ if(!(k>0)) return; ctx.save(); ctx.globa
   ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(lab,px+u*2.6+dot*2+u*1.6,py+u*.15); spaced(ctx,0); ctx.restore(); }
 function evIntro(ctx,W,H,t,P,E){ const {o,u}=E, a=ease.out(seg01(t,.02,.35))*(1-seg01(t,3.1,3.6)), dy=seg01(t,3.1,3.6)*u*2; if(a<=0) return; /* mở đầu: vệt sáng lướt qua, câu mở to hiện từng chữ, gạch màu nhấn; chỉ ở phần dưới khung (Ông Chủ bỏ nhãn "cắt từ live") */
   const sw=seg01(t,0,.8); if(sw>0&&sw<1){ ctx.save(); const x=-W*.6+sw*W*2.2, g=ctx.createLinearGradient(x-W*.35,0,x+W*.35,H*.25); g.addColorStop(0,'rgba(255,255,255,0)'); g.addColorStop(.5,`rgba(255,255,255,${.22*Math.sin(sw*Math.PI)})`); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); ctx.restore(); }
-  const TOP=P._top; ctx.save(); ctx.globalAlpha=a; ctx.translate(0,TOP!=null?-dy:dy); let cy, f;
+  const TOP=P.hookLow?null:P._top; ctx.save(); ctx.globalAlpha=a; ctx.translate(0,TOP!=null?-dy:dy); let cy, f;
   if(TOP!=null){ f=fitLines(ctx,P.hook,FONT,800,u*7,W*.92,2); const bh=f.lines.length*f.size*1.22+u*4; cy=TOP+bh/2; const g=ctx.createLinearGradient(0,TOP,0,TOP+bh+u*4); g.addColorStop(0,'rgba(0,0,0,.42)'); g.addColorStop(.7,'rgba(0,0,0,.3)'); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g; ctx.fillRect(0,TOP,W,bh+u*4); } /* live có phụ đề: câu mở ngay dưới khung mã + giá */
   else { const gy=P.raw?H*.72:H*.6, g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(.45,'rgba(0,0,0,.45)'); g.addColorStop(1,'rgba(0,0,0,.65)'); ctx.fillStyle=g; ctx.fillRect(0,gy,W,H-gy+dy);
-  cy=P.raw?H*.885:H*.82; f=fitLines(ctx,P.hook,FONT,800,P.raw?u*7.8:u*8.2,W*.92,2); }
+  cy=P.raw?(P.hookLow?H*.78:H*.885):H*.82; f=fitLines(ctx,P.hook,FONT,800,P.raw?u*7.8:u*8.2,W*.92,2); }
   ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=u*2.2; const r=popWords(ctx,P.hook,W,cy,TOP!=null?u*7:f.size,t-.15,o,{stagger:.08,maxLines:2,anim:'rise',maxW:W*.92}); ctx.shadowColor='transparent';
   const b=f.lines.length>1?0:ease.out(seg01(t,.3+r.n*.09,.8+r.n*.09)); if(b>0){ ctx.fillStyle=o.tag; const lw=W*.2*b; ctx.fillRect(W/2-lw/2,cy+r.h/2+u*1.6,lw,Math.max(2,u*.45)); }
   ctx.restore(); }
@@ -3502,7 +3502,7 @@ function evOverlay(ctx,W,H,t,P,E){ const {o,u}=E; const total=P.total; P._top=P.
   const sg=P.segAt(t); if(sg && sg.text){ const lt=t-sg.t0, a=seg01(lt,.2,.5)*(1-seg01(lt,sg.d-.4,sg.d))*(P.raw?(P.hook?seg01(t,3.4,3.8):1)*(1-seg01(t,total-EV_CTA-.3,total-EV_CTA)):1); if(a>0){ ctx.save(); ctx.globalAlpha=a; const occ=P.raw?evBotOcc(ctx,W,H,t,P,E,ln0):0, tp=P._top!=null; /* live: chữ xếp tầng từ đáy lên, không chồng lên tên SP / dòng ✓; tắt khi đang có câu mở đầu hoặc lời chốt cuối */ const f=fitLines(ctx,sg.text,FONT,800,u*5,W*.82,2); const lh=f.size*1.25, bh=f.lines.length*lh+u*3, by=tp?P._top+occ:(P.raw?H*.955-occ:H*.9)-bh;
     ctx.fillStyle='rgba(255,255,255,.94)'; rrect(ctx,W*.07,by,W*.86,bh,u*2); ctx.fill(); ctx.fillStyle='#15202C'; ctx.textAlign='center'; ctx.textBaseline='middle'; f.lines.forEach((l,i)=>ctx.fillText(l,W/2,by+u*1.5+lh*(i+.5))); ctx.restore(); } }
   if(P._top!=null) evSubDraw(ctx,W,H,t,P.subs,u,total-EV_CTA-.1);
-  if(!P.raw) smallLogo(ctx,W,H,u,o,0); else if(logoImg && !((S.evCov||S.evMode==='sell')&&EVC_COV)){ const lw=u*11; ctx.save(); ctx.globalAlpha=.5; ctx.drawImage(logoImg,u*4,H*.075,lw,lw*logoImg.height/logoImg.width); ctx.restore(); } /* live: logo mờ, dưới dải hotline vàng; có khung che thì logo nằm trong khung */
+  if(!P.raw) smallLogo(ctx,W,H,u,o,0); else if(logoImg && S.evMode==='sell' && EVC_COV && EVC_COV.botY){ const lw=u*8.5; ctx.save(); ctx.globalAlpha=.55; ctx.drawImage(logoImg,W-u*3.5-lw,EVC_COV.botY+u*1.5,lw,lw*logoImg.height/logoImg.width); ctx.restore(); } /* video tự quay: logo nhỏ mờ góc phải, dưới khung mã */ else if(logoImg && !(S.evCov&&EVC_COV)){ const lw=u*11; ctx.save(); ctx.globalAlpha=.5; ctx.drawImage(logoImg,u*4,H*.075,lw,lw*logoImg.height/logoImg.width); ctx.restore(); } /* live: logo mờ, dưới dải hotline vàng; có khung che thì logo nằm trong khung */
   ctx.fillStyle=rgba('#ffffff',.25); ctx.fillRect(0,H-u*.9,W,u*.9); ctx.fillStyle=o.tag; ctx.fillRect(0,H-u*.9,W*Math.min(1,t/total),u*.9);
   const ct=t-(total-EV_CTA); if(ct>0 && P.raw) evCtaRaw(ctx,W,H,ct,P,E); else if(ct>0){ const a=ease.out(seg01(ct,0,.5)); ctx.save(); const gy=H*.58, g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(.45,`rgba(0,0,0,${.5*a})`); g.addColorStop(1,`rgba(0,0,0,${.7*a})`); ctx.fillStyle=g; ctx.fillRect(0,gy,W,H-gy); ctx.restore(); ctx.textAlign='center'; ctx.textBaseline='middle'; /* dải tối phía dưới, không phủ đen cả khung */
     const f=fitLines(ctx,P.cta||'',FONT,800,u*5,W*.86,2), lh=f.size*1.25, yb=H*.92-f.lines.length*lh;
@@ -5166,14 +5166,14 @@ function evBoxUnion(a,b){ if(!a) return b; if(!b) return a; const x=Math.min(a.x
 function evBoxPad(r){ if(!r) return null; const p=1.2, x=Math.max(0,r.x-p), y=Math.max(0,r.y-p); return {x,y,w:Math.min(100,r.x+r.w+p)-x,h:Math.min(100,r.y+r.h+p)-y}; }
 // lấy 14 khung trong đoạn clip, gộp vùng các ô xanh (ô to lên lúc nào cũng che kín)
 async function evDetectBoxes(v,a,b){ let u=null; for(let k=0;k<14;k++){ await evSeek(v,a+(b-a)*(k+.5)/14); u=evBoxUnion(u,evBoxMask(v)); } return evBoxPad(u); }
-function evCover(ctx,x,y,dw,dh,W,H){ if(!(S.evCov||S.evMode==='sell')||!EVC_COV) return; const C=EVC_COV, R=C.rect||{x:S.evCovX,y:S.evCovY,w:S.evCovW,h:S.evCovH}, rx=x+dw*R.x/100, ry=y+dh*R.y/100, rw=dw*R.w/100, rh=Math.max(8,dh*R.h/100, C.text?dh*.2:(C.items&&C.items.length>1?dh*.12:dh*.09)); /* ô xanh thấp thì khung kéo dài xuống cho đủ chỗ chữ to */
+function evCover(ctx,x,y,dw,dh,W,H){ if(!(S.evCov||S.evMode==='sell')||!EVC_COV) return; const C=EVC_COV, R=C.rect||{x:S.evCovX,y:S.evCovY,w:S.evCovW,h:S.evCovH}, rx=x+dw*R.x/100, ry=y+dh*R.y/100, rw=dw*R.w/100, rh=C.fit?Math.max(8,dh*R.h/100):Math.max(8,dh*R.h/100, C.text?dh*.2:(C.items&&C.items.length>1?dh*.12:dh*.09)); /* C.fit (video tự quay): khung gọn đúng cỡ chữ */ /* ô xanh thấp thì khung kéo dài xuống cho đủ chỗ chữ to */
   C.botY=Math.min(H*.6,ry+rh); /* chữ giới thiệu SP xếp ngay dưới khung này */ ctx.save(); ctx.beginPath(); ctx.rect(Math.max(0,rx),Math.max(0,ry),Math.min(W,rx+rw)-Math.max(0,rx),Math.min(H,ry+rh)-Math.max(0,ry)); ctx.clip();
   const erase=S.evMode==='sell'||S.evCovMode!=='solid'; if(erase){ const sy=Math.min(H-3,ry+rh+3); if('filter' in ctx) ctx.filter=`blur(${Math.max(2,Math.round(rh*.06))}px)`; ctx.drawImage(ctx.canvas,Math.max(0,rx-rh*.1),sy,Math.min(W,rw+rh*.2),2,rx-rh*.1,ry-rh*.1,rw+rh*.2,rh*1.2); ctx.filter='none'; }
   const m=erase?Math.min(rh*.06,dh*.008):0, bx=rx+m, by=ry+m, bw=rw-2*m, bh=rh-2*m, rad=erase?bh*.16:0;
   const g=ctx.createLinearGradient(bx,0,bx+bw,0); g.addColorStop(0,erase?'rgba(20,33,90,.93)':'#14215a'); g.addColorStop(1,erase?'rgba(36,58,143,.93)':'#243a8f'); ctx.fillStyle=g; rrect(ctx,bx,by,bw,bh,rad); ctx.fill();
   if(!erase){ ctx.fillStyle='#E5344D'; ctx.fillRect(bx,by,Math.max(4,bh*.07),bh); }
   /* logo shop mờ ở góc trên trái trong khung: nằm dưới dải chữ vàng hotline, trên dòng mã; chữ mã + giá xếp phía dưới logo */
-  let cby=by, cbh=bh; if(logoImg && S.evMode!=='short'){ let lh=Math.min(Math.max(bh*.2,dh*.03),dh*.05), lw=lh*logoImg.width/logoImg.height; if(lw>bw*.3){ lw=bw*.3; lh=lw*logoImg.height/logoImg.width; } const ly=by+Math.max(bh*.05,dh*.005);
+  let cby=by, cbh=bh; if(logoImg && S.evMode==='live'){ let lh=Math.min(Math.max(bh*.2,dh*.03),dh*.05), lw=lh*logoImg.width/logoImg.height; if(lw>bw*.3){ lw=bw*.3; lh=lw*logoImg.height/logoImg.width; } const ly=by+Math.max(bh*.05,dh*.005);
     ctx.save(); ctx.globalAlpha=.5; ctx.drawImage(logoImg,bx+Math.max(bh*.07,dh*.008),ly,lw,lh); ctx.restore(); cby=ly+lh; cbh=by+bh-cby; }
   // chữ chuyển động: mã rơi từng chữ và nảy, giá bật ra, vệt sáng quét qua, dòng cú pháp gõ dần: CHỈ lần đầu; sau đó đứng yên gọn gàng, giá nhịp nhẹ (không lặp chữ bay lộn xộn, không vệt chéo)
   const T=C.t==null?5:C.t, cyc=T<7?T:7+((T-7)%7), Tc=T<7?T:(T-7)%7, first=T<7, Ta=first?Tc:99, bnc=p=>{ const n=7.5625,d=2.75; return p<1/d?n*p*p:p<2/d?n*(p-=1.5/d)*p+.75:p<2.5/d?n*(p-=2.25/d)*p+.9375:n*(p-=2.625/d)*p+.984375; };
@@ -5520,9 +5520,10 @@ function evSellSeg(){ const x=evSrc[0]; if(!x) return null; const dur=x.dur||(x.
 function evSellCov(){ const it=evSellItems(), szs=evSellSizes(), pr=evSellPrice(); if(!it.length) return null; const cs=it.map(i=>i.code); let C;
   if(it.length>1) C={code:cs.join(' · '),items:it.map(i=>({code:i.code,color:'',price:'',sw:(evsCol(i.color)||[0,''])[1]})),price:pr,text:evCovText(cs[0],szs)};
   else C=evCovData(cs[0],szs,pr); /* Ông Chủ 28/10: trên video chỉ hiện mã, không ghi tên màu (tim màu vẫn giữ) */
-  C.rect={x:3,y:2.5,w:94,h:it.length>4?17:13}; return C; }
+  if(szs.length && !(S.evCovText||'').trim()) C.text=`Size ${szs.join(', ')} · gõ liền size: ${cs[0]}${szs[Math.floor(szs.length/2)]}`; /* dòng ngắn 1 hàng: khung thấp, không che mặt người mẫu đứng */
+  const rows=it.length>4?2:1; C.rect={x:3,y:2,w:94,h:rows>1?(C.text?14.4:(C.price?12.4:9.6)):(C.text?9.4:(C.price?8:6))}; C.fit=true; return C; }
 function evSellP(){ const it=evSellItems(), cs=it.map(i=>i.code), szs=evSellSizes(), shop=S.shopName||"Nancy's Shop";
-  const P={raw:true,hook:String(S.evSHook||'').trim(),name:String(S.evSName||'').trim(),code:cs[0]||'',stamp:cs[0]||'',cta:cs.length?orderLine([cs[0]],!!szs.length):'',outro:'Gõ mã để đặt hàng',shop,lines:[],price:''};
+  const P={raw:true,hook:String(S.evSHook||'').trim(),name:String(S.evSName||'').trim(),code:cs[0]||'',stamp:cs[0]||'',cta:cs.length?orderLine([cs[0]],!!szs.length):'',outro:'Gõ mã để đặt hàng',shop,lines:[],price:'',hookLow:true};
   if(cs.length>1){ P.code=P.stamp=cs.join(' · '); P.cta=`Gõ mã ${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]}${szs.length?' kèm size':''} để đặt hàng`; }
   if(cs.length&&szs.length) P.guide={codes:cs,sizes:szs.slice(0,8),shoe:/^\d+$/.test(szs[0]),plus:true}; return P; }
 /* bài đăng theo mẫu fanpage (Ông Chủ gửi 28/10): danh sách mã – màu kèm tim màu, chốt đơn có ví dụ, tăng số lượng +2, hủy -1, size, giá */
