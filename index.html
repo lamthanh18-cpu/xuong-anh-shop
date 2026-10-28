@@ -721,6 +721,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
           <label for="evSName">Tên sản phẩm <small>(hiện ngắn dưới khung mã, bỏ trống cũng được)</small></label>
           <input type="text" id="evSName" placeholder="Ví dụ: Cardigan len cài cúc">
           <span class="lbl">Điểm nổi bật <small>(hiện lần lượt từng dòng ✓ ngay dưới ô mã giá như clip cắt live; bỏ trống dòng nào thì bỏ dòng đó)</small></span>
+          <div class="row" style="align-items:center;gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="evSAI">🤖 AI nghe lời host, tự điền 3 ý</button><span class="sm" id="evSAIMsg">AI chép lời trong video, chọn câu hay host nói về chất liệu, thiết kế, điểm khác biệt (khoảng 100đ/video, chỉ lấy ý host nói, không bịa).</span></div>
           <label for="evSL1">Chất liệu</label><input type="text" id="evSL1" placeholder="Ví dụ: Len dệt kim mềm mịn, không xù">
           <label for="evSL2">Thiết kế đặc biệt</label><input type="text" id="evSL2" placeholder="Ví dụ: Túi nắp tam giác, viền phối màu sang">
           <label for="evSL3">Điểm mới lạ, khác biệt</label><input type="text" id="evSL3" placeholder="Ví dụ: Mặc 2 kiểu: cài kín làm áo len, mở ra làm cardigan">
@@ -5564,6 +5565,20 @@ async function evSellBuild(){ if(evBusy) return; const x=evSrc[0]; if(!x){ toast
       $('#evBar').style.width='100%'; $('#evMsg').textContent=`Xong: ${nm} (${Math.round(r.dur)} giây, ${it.length} mã${P.subs&&P.subs.length?', có phụ đề':''}${S.evAud!=='orig'?', nhạc nền nhỏ':''}).${saved?` Đã tự lưu vào thư mục ${autoDir.name}.`:' Xem lại rồi bấm Lưu video.'} Bài đăng theo mẫu fanpage ở ngay dưới video.`; } }
   catch(err){ toast(err.message==='nosupport'?'Trình duyệt này chưa hỗ trợ tạo video. Dùng Chrome bản mới.':'Có lỗi khi tạo video, thử lại'); console.error(err); $('#evMsg').textContent='⚠ Có lỗi khi tạo video: '+(err&&err.message||err); }
   document.title=t0; EVC_COV=null; evBusy=false; evRenderSegs(); }
+/* AI nghe lời host: chép lời (dùng lại cho phụ đề lúc xuất), chọn 3 ý hay về chất liệu, thiết kế, điểm khác biệt */
+async function evSellAI(){ const x=evSrc[0], msg=$('#evSAIMsg'), btn=$('#evSAI'); if(!x){ toast('Chọn video trước'); return; } if(!gKey()){ msg.textContent=aiErrText(aiErr('nokey')); return; } if(evBusy||btn.disabled) return; btn.disabled=true;
+  try{ await evDurOf(x); const g=evSellSeg(), sk=g.a.toFixed(1)+'-'+g.b.toFixed(1);
+    if(!(g.subK===sk&&g.subs&&g.subs.length)){ msg.textContent='AI đang nghe lời host…'; const X=await evIndex(x), orig=await evClipAudio(X,g.a,g.b); if(!orig) throw new Error('Không đọc được tiếng của video'); g.subs=evSubCues(await gTranscribe(orig),orig,g.b-g.a); g.subK=sk; }
+    const said=g.subs.map(c=>c.text).join(' ').trim(); if(!said) throw new Error('Video không có lời nói');
+    msg.textContent='AI đang chọn câu hay…'; const nm=String(S.evSName||'').trim();
+    const ask=`Đây là lời chủ shop thời trang nói khi giới thiệu sản phẩm${nm?' "'+nm+'"':''} trong video bán hàng:\n"""${said}"""\nChọn 3 ý hay nhất CHỈ DỰA TRÊN lời đã nói, tuyệt đối không bịa thêm thông tin. Viết lại gọn, tự nhiên, sang trọng, mỗi ý tối đa 9 từ, không dấu chấm cuối câu, không dùng "ạ", không giật gân:\n- chat_lieu: chất liệu, cảm giác khi mặc\n- thiet_ke: thiết kế đặc biệt (chi tiết, đường viền, túi, cúc…)\n- khac_biet: điểm mới lạ, khác biệt (cách mặc, form, hợp dáng/cân nặng, công dụng…)\nÝ nào host không nói tới thì để chuỗi rỗng. Chỉ trả về JSON {"chat_lieu":"","thiet_ke":"","khac_biet":""}.`;
+    const t=await gWrite(ask), m=t.match(/\{[\s\S]*\}/); let j={}; try{ j=m?JSON.parse(m[0]):{}; }catch(e){ j={}; }
+    const v=[j.chat_lieu,j.thiet_ke,j.khac_biet].map(s=>String(s||'').trim().replace(/[.。!]+$/,'')); if(!v.some(Boolean)) throw new Error('AI không tìm thấy ý nào về chất liệu, thiết kế trong lời host');
+    ['evSL1','evSL2','evSL3'].forEach((k,i)=>{ S[k]=v[i]; $('#'+k).value=v[i]; }); persist(); evSellPrev();
+    msg.textContent=`✓ AI đã điền ${v.filter(Boolean).length}/3 ý từ lời host${v.some(s=>!s)?' (ý host không nói tới thì để trống, gõ thêm nếu muốn)':''}. Xem lại, sửa chữ nếu cần. Phụ đề đã chép sẵn, lúc tạo video không mất tiền chép lại.`; }
+  catch(e){ console.warn('sell ai',e); msg.textContent='⚠ '+(e&&e.code?aiErrText(e):(e&&e.message||e)); }
+  btn.disabled=false; }
+$('#evSAI').onclick=evSellAI;
 { const b0=$('#btnEvBuild').onclick; $('#btnEvBuild').onclick=function(){ if(S.evMode==='sell') return evSellBuild(); return b0.apply(this,arguments); }; }
 { const r1=evRenderSegs; evRenderSegs=function(){ r1.apply(this,arguments); const sell=S.evMode==='sell', f=$('#evSegs').closest('.field'); if(f) f.hidden=sell; if(sell){ const b=$('#btnEvBuild'); b.disabled=!evSrc.length||evBusy; b.textContent='🛍️ Tạo video bán hàng'; } else { const b=$('#btnEvBuild'); if(/^🛍️/.test(b.textContent)) b.textContent=S.evMode==='live'?'Xuất clip':'Tạo video'; } }; }
 { const s1=evSync; evSync=function(){ s1.apply(this,arguments); const sell=S.evMode==='sell'; $('#evSellBox').hidden=!sell; if(sell){ $('#evDurField').hidden=true; $('#evProdField').hidden=true; $('#evLiveBox').hidden=true; ['evColor','evPunch'].forEach(id=>{ const l=$('#'+id)&&$('#'+id).closest('label'); if(l) l.hidden=true; }); $('#evFile').multiple=false; $('#evSrcLbl').textContent='Video tự quay (1 video)'; $('#evHint').textContent=EV_HINT.sell; $('#evSSub').checked=S.evSub!==false; evSellRows(); evSellPrev(); } evRenderSegs(); }; }
