@@ -5118,7 +5118,7 @@ function evMarkAdd(){ const x=evMarkSrc(), v=$('#evMark'); if(!x){ toast('Chọn
   $('#evMarkCode').value=''; evRenderSegs(); toast(`Đã thêm clip mã ${g.code} từ ${fmtT(a)}`); }
 
 // chữ bán hàng chạy giữa clip: mỗi ý hiện vài giây, trượt vào từ trái
-function evPoints(ctx,W,H,t,P,E){ const {o,u}=E, L=P.lines, t0=9.8, t1=P.total-EV_CTA-.2; if(t<t0||t>=t1||!L.length) return; const per=Math.max(3.5,Math.min(7,(t1-t0)/L.length)), k=Math.floor((t-t0)/per), lt=t-t0-k*per, line=L[k%L.length];
+function evPoints(ctx,W,H,t,P,E){ const {o,u}=E, L=P.lines, t0=9.8, t1=P.total-EV_CTA-.2; if(t<t0||t>=t1||!L.length) return; const per=P.once?4.2:Math.max(3.5,Math.min(7,(t1-t0)/L.length)), k=Math.floor((t-t0)/per), lt=t-t0-k*per, line=L[k%L.length]; if(P.once&&k>=L.length) return;
   const a=ease.out(seg01(lt,0,.45))*(1-seg01(lt,per-.35,per)); if(a<=0) return; ctx.save(); ctx.globalAlpha=Math.min(1,a*1.3); ctx.translate(0,(1-a)*H*(P._top!=null?-.03:.06));
   const f=fitLines(ctx,line,FONT,800,u*4.8,W*.72,2), lh=f.size*1.22, bh=Math.max(u*8.4,f.lines.length*lh+u*3), bw=Math.min(W*.9,Math.max(...f.lines.map(l=>ctx.measureText(l).width))+u*14), x=(W-bw)/2, y=P._top!=null?P._top:(P.raw?H*.955:H*.9)-bh; // sát chân video, hoặc ngay dưới khung mã khi chân video dành cho phụ đề
   ctx.shadowColor='rgba(0,0,0,.3)'; ctx.shadowBlur=u*2; ctx.fillStyle='rgba(255,255,255,.96)'; rrect(ctx,x,y,bw,bh,u*2.2); ctx.fill(); ctx.shadowColor='transparent';
@@ -5171,7 +5171,7 @@ function evBoxUnion(a,b){ if(!a) return b; if(!b) return a; const x=Math.min(a.x
 function evBoxPad(r){ if(!r) return null; const p=1.2, x=Math.max(0,r.x-p), y=Math.max(0,r.y-p); return {x,y,w:Math.min(100,r.x+r.w+p)-x,h:Math.min(100,r.y+r.h+p)-y}; }
 // lấy 14 khung trong đoạn clip, gộp vùng các ô xanh (ô to lên lúc nào cũng che kín)
 async function evDetectBoxes(v,a,b){ let u=null; for(let k=0;k<14;k++){ await evSeek(v,a+(b-a)*(k+.5)/14); u=evBoxUnion(u,evBoxMask(v)); } return evBoxPad(u); }
-function evCover(ctx,x,y,dw,dh,W,H){ if(!(S.evCov||S.evMode==='sell')||!EVC_COV) return; const C=EVC_COV, R=C.rect||{x:S.evCovX,y:S.evCovY,w:S.evCovW,h:S.evCovH}, rx=x+dw*R.x/100, ry=y+dh*R.y/100, rw=dw*R.w/100, rh=C.fit?Math.max(8,dh*R.h/100):Math.max(8,dh*R.h/100, C.text?dh*.2:(C.items&&C.items.length>1?dh*.12:dh*.09)); /* C.fit (video tự quay): khung gọn đúng cỡ chữ */ /* ô xanh thấp thì khung kéo dài xuống cho đủ chỗ chữ to */
+function evCover(ctx,x,y,dw,dh,W,H){ if(EVC_COV&&EVC_COV.fit&&!EVC_COV._in) return evCoverFit(ctx,x,y,dw,dh,W,H); if(!(S.evCov||S.evMode==='sell')||!EVC_COV) return; const C=EVC_COV, R=C.rect||{x:S.evCovX,y:S.evCovY,w:S.evCovW,h:S.evCovH}, rx=x+dw*R.x/100, ry=y+dh*R.y/100, rw=dw*R.w/100, rh=C.fit?Math.max(8,dh*R.h/100):Math.max(8,dh*R.h/100, C.text?dh*.2:(C.items&&C.items.length>1?dh*.12:dh*.09)); /* C.fit (video tự quay): khung gọn đúng cỡ chữ */ /* ô xanh thấp thì khung kéo dài xuống cho đủ chỗ chữ to */
   C.botY=Math.min(H*.6,ry+rh); /* chữ giới thiệu SP xếp ngay dưới khung này */ ctx.save(); ctx.beginPath(); ctx.rect(Math.max(0,rx),Math.max(0,ry),Math.min(W,rx+rw)-Math.max(0,rx),Math.min(H,ry+rh)-Math.max(0,ry)); ctx.clip();
   const erase=S.evMode==='sell'||S.evCovMode!=='solid'; if(erase){ const sy=Math.min(H-3,ry+rh+3); if('filter' in ctx) ctx.filter=`blur(${Math.max(2,Math.round(rh*.06))}px)`; ctx.drawImage(ctx.canvas,Math.max(0,rx-rh*.1),sy,Math.min(W,rw+rh*.2),2,rx-rh*.1,ry-rh*.1,rw+rh*.2,rh*1.2); ctx.filter='none'; }
   const m=erase?Math.min(rh*.06,dh*.008):0, bx=rx+m, by=ry+m, bw=rw-2*m, bh=rh-2*m, rad=erase?bh*.16:0;
@@ -5524,13 +5524,19 @@ let evSellG=null; /* đoạn đang làm: giữ lại phụ đề AI đã chép, 
 function evSellSeg(){ const x=evSrc[0]; if(!x) return null; const dur=x.dur||(x.v&&x.v.duration)||0, a=Math.max(0,Math.min(Math.max(0,dur-3),+S.evSA||0)), b=Math.max(a+3,dur-Math.max(0,+S.evSB||0)); const it=evSellItems(), szs=evSellSizes();
   if(!evSellG||evSellG.src!==x) evSellG={id:++evUid,src:x,on:true,score:null}; Object.assign(evSellG,{a,b:Math.min(b,dur||b),code:it.map(i=>i.code+(i.color?' '+i.color:'')).join(', '),name:String(S.evSName||'').trim(),pman:true,price:evSellPrice(),sizes:szs.join(' ')}); return evSellG; }
 function evSellCov(){ const it=evSellItems(), szs=evSellSizes(), pr=evSellPrice(); if(!it.length) return null; const cs=it.map(i=>i.code); let C;
-  if(it.length>1) C={code:cs.join(' · '),items:it.map(i=>({code:i.code,color:'',price:'',sw:(evsCol(i.color)||[0,''])[1]})),price:pr,text:evCovText(cs[0],szs)};
-  else C=evCovData(cs[0],szs,pr); /* Ông Chủ 28/10: trên video chỉ hiện mã, không ghi tên màu (tim màu vẫn giữ) */
+  if(it.length>1) C={code:cs.join(' · '),items:it.map(i=>({code:i.code,color:i.color,price:''})),price:pr,text:evCovText(cs[0],szs)};
+  else { C=evCovData(cs[0],szs,pr); if(it[0].color) C.code=cs[0]+' '+it[0].color; } /* Ông Chủ 28/10: ghi rõ tên màu cạnh mã (khách không đoán được màu qua hình vẽ) */
   if(szs.length && !(S.evCovText||'').trim()) C.text=`Size ${szs.join(', ')} · gõ liền size: ${cs[0]}${szs[Math.floor(szs.length/2)]}`; /* dòng ngắn 1 hàng: khung thấp, không che mặt người mẫu đứng */
-  const rows=it.length>4?2:1; C.rect={x:3,y:2,w:94,h:rows>1?(C.text?14.4:(C.price?12.4:9.6)):(C.text?9.4:(C.price?8:6))}; C.fit=true; return C; }
+  const rows=it.length>4?2:1; C.rect={x:3,y:2,w:94,h:rows>1?(C.text?14.4:(C.price?12.4:9.6)):(C.text?9.4:(C.price?8:6))}; C.fit=true; const c0=cs[0], cN=cs[cs.length-1]; const seq=cs.every((c,i)=>!i||evsNext(cs[i-1])===c); C.mini=(it.length>1?`${seq?c0+'–'+cN:cs.length+' mã'} · ${it.length} màu`:`${c0}${it[0].color?' '+it[0].color:''}`)+(pr?` · ${it.length>1?'Đồng giá ':''}${pr}`:''); return C; }
+/* bớt chữ trên màn hình (Facebook hạn chế video nhiều chữ): ô mã đầy đủ 7 giây đầu, rồi thu thành dải nhỏ trên cùng; cứ 15 giây bung lại 5 giây */
+function evFullA(T){ if(T==null) return 1; const win=[[0,7],[15,20],[30,35],[45,50],[60,65],[75,80]]; let a=0; for(const [s,e] of win){ a=Math.max(a,Math.min(seg01(T,s-.4,s),1-seg01(T,e,e+.4))*(s===0?1:1)); } return T<.01?1:a; }
+function evCoverFit(ctx,x,y,dw,dh,W,H){ const C=EVC_COV, a=evFullA(C.t), mini=C.mini||'', fs=dh*.024, mh=fs*1.9, my=y+dh*.02;
+  let botFull=null; if(a>0){ ctx.save(); ctx.globalAlpha=a; C._in=true; try{ evCover(ctx,x,y,dw,dh,W,H); } finally{ C._in=false; } ctx.restore(); botFull=C.botY; }
+  if(a<1 && mini){ ctx.save(); ctx.globalAlpha=1-a; ctx.font=fontOf(800,fs); const tw=Math.min(ctx.measureText(mini).width,dw*.86), bw=tw+fs*1.6, bx=x+(dw-bw)/2; ctx.fillStyle='rgba(20,33,90,.88)'; rrect(ctx,bx,my,bw,mh,mh/2); ctx.fill(); ctx.fillStyle='#FFD84D'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(mini,x+dw/2,my+mh/2+fs*.05,dw*.86); ctx.restore(); }
+  const bm=my+mh; C.botY=botFull==null?bm:bm+(botFull-bm)*a; }
 function evSellP(){ const it=evSellItems(), cs=it.map(i=>i.code), szs=evSellSizes(), shop=S.shopName||"Nancy's Shop";
-  const P={raw:true,hook:String(S.evSHook||'').trim(),name:String(S.evSName||'').trim(),code:cs[0]||'',stamp:cs[0]||'',cta:cs.length?orderLine([cs[0]],!!szs.length):'',outro:'Gõ mã để đặt hàng',shop,lines:evSellLines(),price:'',hookLow:true};
-  if(cs.length>1){ P.code=P.stamp=cs.join(' · '); P.cta=`Gõ mã ${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]}${szs.length?' kèm size':''} để đặt hàng`; }
+  const P={raw:true,hook:String(S.evSHook||'').trim(),name:String(S.evSName||'').trim(),code:cs[0]||'',stamp:cs[0]||'',cta:cs.length?orderLine([cs[0]],!!szs.length):'',outro:'Gõ mã để đặt hàng',shop,lines:evSellLines(),price:'',hookLow:true,once:true};
+  if(cs.length>1){ P.code=P.stamp=it.map(x=>x.code+(x.color?' '+x.color:'')).join(' · '); P.cta=`Gõ mã ${cs.slice(0,-1).join(', ')} hoặc ${cs[cs.length-1]}${szs.length?' kèm size':''} để đặt hàng`; }
   if(cs.length&&szs.length) P.guide={codes:cs,sizes:szs.slice(0,8),shoe:/^\d+$/.test(szs[0]),plus:true}; return P; }
 /* bài đăng theo mẫu fanpage (Ông Chủ gửi 28/10): danh sách mã – màu kèm tim màu, chốt đơn có ví dụ, tăng số lượng +2, hủy -1, size, giá */
 function evSellCap(){ const it=evSellItems(), szs=evSellSizes(), pr=evSellPrice(), nm=String(S.evSName||'').trim(), c0=it[0]?it[0].code:'', z=szs.length?szs[Math.floor(szs.length/2)]:'', z2=szs.length?szs[szs.length-1]:'', ex=c=>c+z, n=it.length;
