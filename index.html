@@ -186,7 +186,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 91</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 92</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -816,8 +816,9 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
           <p class="hint" id="fpAIMsg">Mỗi bài trên lịch một nội dung khác nhau: câu mở, công thức (nỗi đau → giải pháp, AIDA, kể chuyện, 3 lý do, hỏi đáp, trước – sau…), lời chốt đều khác, Facebook không coi là bài trùng. Chỉ dùng thông tin thật của mã. Khoảng 100đ cho mỗi clip.</p>
           <label class="check sm"><input type="checkbox" id="fpSub" checked> 📝 Gửi kèm phụ đề tiếng Việt cho từng video (Facebook báo video có phụ đề đạt hiệu quả cao hơn). Clip chưa có phụ đề thì AI chép lời, khoảng 50đ/clip.</label>
           <details class="sm"><summary><b>▶ Danh sách phát (playlist)</b>: Facebook KHÔNG cho app thêm video vào danh sách phát, phải thêm tay. Xem cách làm</summary>
-            <p class="hint">Facebook chỉ cho phần mềm ĐỌC danh sách phát, không cho tạo hay thêm video (đã kiểm tra tài liệu Graph API). App ghi sẵn cột "Danh sách phát" gợi ý cho từng video trong bảng gắn mã, nhân viên thêm tay mỗi ngày 1 lần sau khi bài đã lên:</p>
-            <ol class="hint"><li>Trên máy tính, vào trang Facebook (đang dùng với tư cách trang) → tab <b>Video</b> → <b>Danh sách phát</b>.</li><li>Lần đầu: bấm <b>Tạo danh sách phát</b>, đặt tên đúng theo cột gợi ý (Thời trang, Giày dép, Gia dụng, Mỹ phẩm, Mẹo hay việc nhà, Câu nói hay, Thơ hay). Mỗi trang tạo 1 lần.</li><li>Hằng ngày: mở danh sách phát → <b>Thêm video</b> → tích các video mới đã lên → Lưu.</li></ol></details>
+            <div class="row"><label class="sm">Danh sách phát mặc định <input type="text" id="fpPl" value="Quảng bá SP" style="width:180px"></label></div>
+            <p class="hint">Facebook chỉ cho phần mềm ĐỌC danh sách phát, không cho thêm video vào (đã kiểm tra tài liệu Graph API). App ghi tên danh sách phát ở trên vào cột "Danh sách phát" của bảng gắn mã. Nhân viên thêm tay mỗi ngày 1 lần, sau khi các bài đã lên:</p>
+            <ol class="hint"><li>Trên máy tính, vào trang Facebook (đang dùng với tư cách trang) → tab <b>Video</b> → <b>Danh sách phát</b> → mở <b>Quảng bá SP</b>.</li><li>Bấm <b>Thêm video</b> → tích các video mới lên hôm nay → Lưu.</li><li>Làm lần lượt từng fanpage có tên trong bảng gắn mã.</li></ol></details>
           <button class="btn primary big" type="button" id="fpGo" disabled>📅 Gửi lên Facebook hẹn giờ</button>
           <p class="hint" id="fpMsg"></p>
           <div class="row"><button class="btn" type="button" id="fpCsv" hidden>⬇ Tải bảng gắn mã (mã · trang · giờ · link bài · danh sách phát)</button></div>
@@ -3903,7 +3904,7 @@ $('#fpFiles').onchange=e=>fpAdd(e);
 async function fpAdd(e){ const FS=[...e.target.files], js={}; e.target.value=''; for(const f of FS) if(/\.json$/i.test(f.name)){ try{ js[f.name.replace(/\.json$/i,'')]=JSON.parse(await f.text()); }catch(x){} } /* bài + dữ liệu đã lưu kèm clip lúc xuất */
   FS.filter(f=>/\.(mp4|mov|webm|m4v)$/i.test(f.name)).sort((a,b)=>{ const n=f=>+((f.name.match(/-(\d+)\.\w+$/)||[])[1]||1e6); return n(a)-n(b)||a.name.localeCompare(b.name,'en',{numeric:true}); }).forEach(f=>{ if(!fpItems().some(x=>x.name===f.name)){ const sc=js[f.name.replace(/\.\w+$/,'')]; fpExtra.push({name:f.name,blob:f,caption:(sc&&sc.caption)||fpCapFor(f.name),meta:(sc&&sc.meta)||fpMetaFor(f.name),srt:(sc&&sc.srt)||''}); } }); fpRender(); toast(`Đã có ${fpItems().length} clip`); }
 /* danh sách phát gợi ý theo nhóm (Facebook không cho app tự thêm video vào danh sách phát) */
-function fpPlFor(x){ const k=x&&x.meta&&x.meta.kind; if(k==='meo') return 'Mẹo hay việc nhà'; if(k==='quote') return 'Câu nói hay'; if(k==='poem') return 'Thơ hay'; const cs=fpCodesOf(x&&x.name); let nm=(x&&x.meta&&x.meta.n)||''; if(!nm&&!cs.length) return 'Video Nancy';
+function fpPlFor(x){ const d=String(($('#fpPl')||{}).value||'').trim(); if(d) return d; /* Ông Chủ 28/10: mặc định Quảng bá SP, fanpage nào cũng tạo sẵn */ const k=x&&x.meta&&x.meta.kind; if(k==='meo') return 'Mẹo hay việc nhà'; if(k==='quote') return 'Câu nói hay'; if(k==='poem') return 'Thơ hay'; const cs=fpCodesOf(x&&x.name); let nm=(x&&x.meta&&x.meta.n)||''; if(!nm&&!cs.length) return 'Video Nancy';
   try{ nm=nm||evInfo(cs[0]).name||''; }catch(e){} const c=guessCat(nm); return c==='khac'?'Hàng mới Nancy':CATS[c]; }
 /* phụ đề gửi lên Facebook: dùng phụ đề có sẵn của clip, chưa có thì AI chép lời (nhớ theo tên clip, không chép lại) */
 const fpSrtMem={};
@@ -3912,6 +3913,7 @@ async function fpSrtFor(x){ if(x.srt) return x.srt; if(fpSrtMem[x.name]!=null) r
     const c=evSubCues(await gTranscribe(buf),buf,buf.duration); fpSrtMem[x.name]=c.length?srtOf(c):''; }catch(e){ console.warn('fp srt',e); return ''; } return fpSrtMem[x.name]; }
 async function fpSendSrt(vid,srt,tok,name){ const fd=new FormData(); fd.append('access_token',tok); fd.append('default_locale','vi_VN'); fd.append('captions_file',new Blob([srt],{type:'application/x-subrip'}),String(name||'video').replace(/\.\w+$/,'').replace(/[^A-Za-z0-9_-]/g,'')+'.vi_VN.srt');
   await fpApi(`${vid}/captions`,{method:'POST',body:fd}); }
+try{ const v=localStorage.getItem('xas-fppl'); if(v!=null) $('#fpPl').value=v; }catch(e){} $('#fpPl').addEventListener('change',e=>{ try{ localStorage.setItem('xas-fppl',e.target.value.trim()); }catch(x){} });
 $('#fpGo').onclick=async()=>{ const rows=fpPlan.filter(r=>r.on&&!fpDone[r.page+'|'+r.clip+'|'+r.at.getTime()]); if(!rows.length){ toast('Các bài này đã gửi rồi'); return; } if(FPAI.run){ toast('Đợi AI viết xong bài rồi gửi'); return; }
   if(rows.some(r=>/\[[^\]]*\]/.test(r.text||''))){ toast('Còn chỗ [ ] trong nội dung bài'); $('#fpMsg').textContent='✗ Sửa các chỗ còn dấu [ ] trong nội dung bài rồi bấm Gửi lại.'; return; }
   if(/\[[^\]]*\]/.test(fpFoot()+fpUse().map(x=>x.caption).join(''))){ toast('Còn chỗ [ ] chưa sửa trong bài hoặc chân bài'); $('#fpMsg').textContent='✗ Sửa các chỗ còn dấu [ ] rồi bấm Gửi lại.'; return; }
