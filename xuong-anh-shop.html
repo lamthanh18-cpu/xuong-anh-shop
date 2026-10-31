@@ -186,7 +186,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
     <div class="brand">
       <div class="mark" id="brandMark">SALE</div>
       <div>
-        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 96</small></h1>
+        <h1>Xưởng Ảnh Shop <small id="appVer" title="Phiên bản app đang mở. Cập nhật xong phải thấy số mới ở đây." style="font-size:15px;font-weight:800;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;vertical-align:middle;white-space:nowrap">Phiên bản 97</small></h1>
         <p class="sub">Cắt ảnh đúng khổ Facebook, chèn giá và mã, ghép video. Ảnh xử lý ngay trên máy, không tải lên đâu cả.</p>
         <p class="sub" id="phoneNote" hidden style="color:var(--accent);font-weight:600">📱 Bản điện thoại: dùng Hàng, Ảnh, Chữ &amp; logo, Video. Cắt livestream và đăng hẹn giờ Facebook làm trên máy tính.</p>
       </div>
@@ -756,7 +756,7 @@ video.out{width:100%;max-height:60vh;background:#000;border-radius:10px}
             <label class="check"><input type="checkbox" id="evSizeGuide"> Cuối clip giày dép, quần áo: hiện bảng hướng dẫn chốt đơn &amp; hủy đơn theo size</label>
             <label class="check"><input type="checkbox" id="evSub"> 📝 Phụ đề chạy dưới chân clip theo lời host (AI chép lời, khoảng 50đ/clip; tên, ✓ chất liệu, câu mở lên ngay dưới khung mã + giá)</label>
             <div class="evfind"><label for="evFind"><b>⚡ Chỉ cần 1–2 mã?</b> Gõ mã hoặc tên sản phẩm: AI chỉ tìm đoạn đó, nghe tới đâu thấy là dừng, xuất luôn video</label>
-              <div class="row"><input type="text" id="evFind" list="evCodeList" placeholder="Ví dụ: XC52 hoặc bếp từ (2 mã: XC52, A01)" style="flex:1;min-width:0;font-weight:700"><button class="btn primary" type="button" id="btnEvFind">🔎 Tìm và xuất riêng</button></div>
+              <div class="row"><input type="text" id="evFind" list="evCodeList" placeholder="Ví dụ: XC52 · bếp từ · cả mẫu nhiều màu: E15-18 (= E15, E16, E17, E18)" style="flex:1;min-width:0;font-weight:700"><button class="btn primary" type="button" id="btnEvFind">🔎 Tìm và xuất riêng</button></div>
               <p class="hint" id="evFindMsg">Nhanh và rẻ hơn nghe cả buổi: mã ở phút 20 thì AI chỉ nghe khoảng 25 phút đầu. Video đã nghe rồi thì tìm lại không mất tiền.</p></div>
             <div class="row"><button class="btn primary" type="button" id="btnEvAI">🤖 AI nghe live, tìm từng mã</button></div>
             <p class="hint">AI Google nghe tiếng livestream, tìm chỗ bắt đầu giới thiệu từng mã tới lúc chuyển sang mã sau, ghi lại tên, giá và các ý chị chủ nói để làm chữ trên clip. Chỉ chạy ở bản máy tính; ước khoảng 3.000đ cho 1 giờ live.</p>
@@ -3612,7 +3612,7 @@ function evRenderSegs(){ const box=$('#evSegs'); const live=S.evMode==='live';
   if(!evSegs.length){ box.innerHTML=`<p class="hint">${evSrc.length?(live?(S.evBy==='code'?'Chưa có clip nào. Bấm "🤖 AI nghe live, tìm từng mã" hoặc tự đánh dấu mã ở trên; có clip rồi nút Xuất bên dưới mới sáng.':'Chưa có clip nào. Bấm "🔍 Tìm đoạn hay" ở trên; có clip rồi nút Xuất bên dưới mới sáng.'):'Đang chấm điểm video…'):(live?'Chưa có video. Bấm "+ Chọn video trên máy" để chọn file livestream.':'Chưa có video. Bấm "+ Chọn video trên máy".')}</p>`; $('#btnEvBuild').disabled=true; return; }
   const byC=live&&S.evBy==='code', isDone=g=>byC&&g.done&&!g.on&&!g.need, ord=evSegs.map((g,i)=>i).filter(i=>!isDone(evSegs[i])).sort((x,y)=>(evSegs[y].need?1:0)-(evSegs[x].need?1:0)||x-y), dn=evSegs.map((g,i)=>i).filter(i=>isDone(evSegs[i]));
   const rowH=i=>{ const g=evSegs[i]; return `<div class="evseg${g.need?' need':''}" data-i="${i}"><canvas width="96" height="${Math.round(96*VFMTS[S.vfmt].h/VFMTS[S.vfmt].w)}"></canvas><div>
-    ${g.need?`<div class="evneed">⚠ Cần sửa: ${esc(g.need)}</div>`:isDone(g)?`<div class="sm" style="color:#2e7d32;font-weight:700">✓ Đã xuất${g.done==='saved'?', đã lưu vào thư mục':''}</div>`:''}<div class="sm">${live?'Clip '+(i+1):'Đoạn '+(i+1)} · ${esc(g.src.name.slice(0,24))} · ${fmtT(g.a)}–${fmtT(g.b)} (${(g.b-g.a).toFixed(1).replace('.',',')} giây)</div>
+    ${g.need?`<div class="evneed">⚠ Cần sửa: ${esc(g.need)}</div>`:isDone(g)?`<div class="sm" style="color:#2e7d32;font-weight:700">✓ Đã xuất${g.done==='saved'?', đã lưu vào thư mục':''}</div>`:''}<div class="sm">${live?'Clip '+(i+1):'Đoạn '+(i+1)} · ${esc(g.src.name.slice(0,24))} · ${g.parts?`${g.parts.length} đoạn nối liền (mỗi màu 1 đoạn) · ${fmtT(g.parts[0].a)}–${fmtT(g.parts[g.parts.length-1].b)} (${g.parts.reduce((t,p)=>t+p.b-p.a,0).toFixed(0)} giây)`:`${fmtT(g.a)}–${fmtT(g.b)} (${(g.b-g.a).toFixed(1).replace('.',',')} giây)`}</div>
     ${g.score!=null?`<div class="evscore" title="Độ sôi nổi"><i style="width:${Math.round(g.score*100)}%"></i></div>`:''}
     ${live?evSegCodeUI(g,i):''}
     <input type="text" data-f="text" value="${esc(g.text||'')}" placeholder="Chữ trên đoạn này (không bắt buộc)" aria-label="Chữ đoạn ${i+1}">
@@ -3653,7 +3653,7 @@ async function evOpenLive(fs){ const note=[], ok=/\.(mp4|mkv|mov|m4v|webm)$/i; c
   let s0=0; for(let i=1;i<L.length;i++){ const a=L[i-1], b=L[i]; const gap=a.t0!=null&&b.t0!=null?(b.t0-(a.t0+a.dur*1000))/1000:null; b.join=gap==null||gap<120; if(gap!=null && gap>900) s0=i; }
   if(s0>0){ const old=L.slice(0,s0); old.forEach(x=>URL.revokeObjectURL(x.url)); L=L.slice(s0); note.push(`thư mục có nhiều buổi live, app lấy buổi mới nhất (${new Date(L[0].t0).toLocaleString('vi-VN')}), bỏ ${old.length} file của buổi trước`); }
   if(L.length) L[0].join=false; L.forEach(x=>{ x.id=++evUid; }); evSrc=L;
-  let restored=0, rf=0; for(const x of evSrc){ const c=await evAiLoad(x); if(c.segs.length){ rf++; c.segs.forEach(s=>{ evSegs.push(Object.assign({id:++evUid,src:x,score:null},s)); restored++; }); } }
+  let restored=0, rf=0; for(const x of evSrc){ const c=await evAiLoad(x); if(c.segs.length){ rf++; c.segs.forEach(s=>{ const g=Object.assign({id:++evUid,src:x,score:null},s); if(g.parts) g.parts=g.parts.map(p=>({src:x,a:p.a,b:p.b})); else delete g.parts; evSegs.push(g); restored++; }); } }
   evRenderSrc(); evRenderSegs(); const nt=note.length?' Đã '+note.join('; ')+'.':'';
   const head=evSrc.length>1?`Đã mở ${evSrc.length} file của buổi live, xếp theo giờ quay: ${evSrc.map((x,i)=>`${i+1}. ${x.name}`).join(' → ')}.`:`Đã mở ${evSrc[0]?evSrc[0].name:''}.`;
   if(restored){ $('#evBar').style.width='100%'; $('#evMsg').textContent=`✓ Đã mở lại kết quả AI nghe lần trước: ${restored} mã${evSrc.length>1?` (${rf}/${evSrc.length} file đã nghe)`:''}. ${rf<evSrc.length?'Bấm "🤖 AI nghe live" để nghe nốt các file còn lại (file đã nghe không mất tiền).':'Không cần nghe lại, bấm Xuất luôn.'} ${head}${nt}`; toast(`Dùng lại kết quả đã nghe: ${restored} mã, không mất tiền`); }
@@ -3669,7 +3669,7 @@ $('#evSegs').addEventListener('input',e=>{ const el=e.target.closest('input[data
 $('#evSegs').addEventListener('click',e=>{ const b=e.target.closest('[data-ev]'); if(!b) return; const row=b.closest('.evseg'), g=evSegs[+row.dataset.i];
   if(b.dataset.ev==='prev'){ const pv=$('#evPrev'); pv.hidden=false; if(pv.dataset.u!==g.src.url){ pv.src=g.src.url; pv.dataset.u=g.src.url; } pv.currentTime=g.a; pv.play().catch(()=>{}); pv.ontimeupdate=()=>{ if(pv.currentTime>=g.b) pv.pause(); }; return; }
   if(b.dataset.ev==='join'){ if(evBusy) return; const P=evSegs.filter(x=>x!==g&&x.src===g.src&&x.a<=g.a).sort((x,y)=>y.a-x.a)[0]; if(!P){ toast('Không có clip nào ngay trước clip này để gộp'); return; } /* Ông Chủ 30/10: cùng mẫu nhiều màu → 1 video */
-    P.code=[P.code,g.code].map(s=>String(s||'').trim()).filter(Boolean).join(', '); P.b=Math.min(g.src.dur,Math.max(P.b,g.b),P.a+150); P.on=true; delete P.need; delete P.done; delete P.subs; if(!P.name) P.name=g.name; if(!P.lines&&g.lines) P.lines=g.lines; evSegs.splice(evSegs.indexOf(g),1); toast(`Đã gộp: ${P.code} chung 1 video`); evRenderSegs(); return; }
+    P.code=[P.code,g.code].map(s=>String(s||'').trim()).filter(Boolean).join(', '); if(g.a-P.b<=8 && !P.parts) P.b=Math.min(g.src.dur,Math.max(P.b,g.b),P.a+90); else { if(!P.parts) P.parts=[{src:P.src,a:P.a,b:P.b}]; P.parts.push(...(g.parts||[{src:g.src,a:g.a,b:g.b}])); const per=Math.max(10,Math.floor(90/P.parts.length)); P.parts.forEach(x=>{ x.b=Math.min(x.b,x.a+per); }); P.a=P.parts[0].a; P.b=P.parts[0].b; } /* xa nhau: mỗi mã 1 đoạn nối liền, ≤ 90 giây */ P.on=true; delete P.need; delete P.done; delete P.subs; if(!P.name) P.name=g.name; if(!P.lines&&g.lines) P.lines=g.lines; evSegs.splice(evSegs.indexOf(g),1); toast(`Đã gộp: ${P.code} chung 1 video`); evRenderSegs(); return; }
   if(b.dataset.ev==='l5'||b.dataset.ev==='s5'){ g.b=Math.max(g.a+8,Math.min(g.src.dur,g.b+(b.dataset.ev==='l5'?5:-5))); evRenderSegs(); return; }
   const d=b.dataset.ev==='p5'?5:-5, L=g.b-g.a; g.a=Math.max(0,Math.min(g.src.dur-L,g.a+d)); g.b=g.a+L; evRenderSegs(); });
 // tự kiểm duyệt trước khi xuất (cắt live theo mã): sửa điểm cắt, độ dài, mã trùng; báo clip thiếu giá; sau khi xuất kiểm tra file
@@ -3683,7 +3683,7 @@ function evAutoCheck(use){ const fix=[], warn=[], on=use.filter(g=>g.on).sort((x
     else if(F && F.a<=5){ const st=Math.max(L?L.b+.3:0,A.dur-Math.min(20,Math.max(0,58-(F.b-F.a)))); if(A.dur-st>=2){ F.pre={src:A,a:st,b:A.dur}; fix.push(`${fmt(F)}: phần giới thiệu bắt đầu ở cuối ${A.name}, đã nối ${xl(F.pre)} giây cuối file đó vào đầu clip`); } } }
   const seen={}; on.filter(g=>g.on).forEach(g=>{ const k=evCodesOf(g).join(','); const o=seen[k]; if(o){ const keep=(g.b-g.a)>(o.b-o.a)?g:o, drop=keep===g?o:g; drop.on=false; seen[k]=keep; fix.push(`${fmt(drop)} bị lặp 2 lần: giữ đoạn dài hơn ${fmtT(keep.a)}`); } else seen[k]=g; });
   const L=on.filter(g=>g.on); L.forEach((g,i)=>{ const nx=L[i+1]&&L[i+1].src===g.src?L[i+1]:null, np=!nx&&L[i+1]&&L[i+1].pre&&L[i+1].pre.src===g.src?L[i+1].pre:null, lim=nx?nx.a-.3:np?np.a-.3:(g.src.dur>0?g.src.dur:1e9), a0=g.a, b0=g.b, ex=()=>(g.pre?g.pre.b-g.pre.a:0)+(g.cont?g.cont.b-g.cont.a:0);
-    if(g.b>lim) g.b=lim; if(g.b-g.a+ex()>62){ if(g.cont) g.cont.b=Math.max(g.cont.a+1,g.cont.a+60-(g.b-g.a)-(g.pre?g.pre.b-g.pre.a:0)); if(g.b-g.a+ex()>62) g.b=g.a+Math.max(5,60-ex()); } if(g.b-g.a+ex()<20 && !g.cont) g.b=Math.min(lim,g.a+30-ex());
+    if(g.parts) return; /* tổ hợp nhiều màu: các đoạn đã tự căn ≤ 90 giây */ if(g.b>lim) g.b=lim; const MX=evCodesOf(g).length>1?90:60; /* cụm nhiều màu được tới 90 giây */ if(g.b-g.a+ex()>MX+2){ if(g.cont) g.cont.b=Math.max(g.cont.a+1,g.cont.a+MX-(g.b-g.a)-(g.pre?g.pre.b-g.pre.a:0)); if(g.b-g.a+ex()>MX+2) g.b=g.a+Math.max(5,MX-ex()); } if(g.b-g.a+ex()<20 && !g.cont) g.b=Math.min(lim,g.a+30-ex());
     const sb=evcSnap(g.src,g.b); if(!g.cont && sb<=lim && sb-g.a+ex()>=15) g.b=sb; // kết ở chỗ ngắt hơi, không cắt giữa câu
     if(Math.abs(g.b-b0)>.6||Math.abs(g.a-a0)>.6) fix.push(`${fmt(g)}: chỉnh đoạn ${fmtT(a0)}–${fmtT(b0)} → ${fmtT(g.a)}–${fmtT(g.b)} (${Math.round(g.b-g.a+ex())} giây)`);
     if(g.b-g.a+ex()<15){ if(g.asked) warn.push(`${fmt(g)} chỉ dài ${Math.round(g.b-g.a+ex())} giây: anh/chị đã xem, vẫn xuất`); else g.need=`chỉ dài ${Math.round(g.b-g.a+ex())} giây (mã sau đến quá sớm): bấm ▶ Xem, dùng Sớm 5 giây / Dài +5 cho đủ đoạn giới thiệu`; }
@@ -3712,7 +3712,7 @@ $('#btnEvBuild').onclick=async()=>{ if(evBusy) return; if(S.evMode==='live') for
           try{ r=await Promise.race([evRenderOffline(segs[0],P,prog,{hw:!evSW&&att===0,abort:ab}),dog]); }catch(e){ console.warn('offline',att,e); r=null; ab.dead=true; ab.close.forEach(f=>{ try{ f(); }catch(x){} }); if(att===0) evSW=true; } ab.done=true; }
         if(!r){ if(byC) g0.need='xuất bị kẹt 2 lần (máy bận) nên đã bỏ qua: bấm Xuất lại, chỉ mã này được xuất'; else bad.push(`${g0.code||'Clip '+(j+1)} (${fmtT(g0.a)}): xuất bị kẹt 2 lần nên đã bỏ qua, các clip khác vẫn xuất. Mở lại app, chỉ tích clip này rồi bấm Xuất.`); bad.skip=(bad.skip||0)+1; evQaShow(qa,bad); continue; } }
       if(!r){
-      P.subs=P.subs||segs[0].subs||null; const r0=await evRender(segs,P,(p,t,tt)=>{ $('#evBar').style.width=Math.round((j+p*.5)/jobs.length*100)+'%'; $('#evMsg').textContent=`${live?`Clip ${j+1}/${jobs.length}: `:''}đang quay ${t.toFixed(1).replace('.',',')} / ${tt.toFixed(1).replace('.',',')} giây`; });
+      P.subs=P.subs||segs[0].subs||null; const r0=await evRender(g0.parts?g0.parts.map(x=>Object.assign({},g0,x,{parts:null})):segs,P,(p,t,tt)=>{ $('#evBar').style.width=Math.round((j+p*.5)/jobs.length*100)+'%'; $('#evMsg').textContent=`${live?`Clip ${j+1}/${jobs.length}: `:''}đang quay ${t.toFixed(1).replace('.',',')} / ${tt.toFixed(1).replace('.',',')} giây`; });
       const vf=VFMTS[S.vfmt], k=QK[S.q]||1.5; r=r0; try{ r=await finRecorded(r0,Math.round(vf.w*k/2)*2,Math.round(vf.h*k/2)*2,p=>{ $('#evBar').style.width=Math.round((j+.5+p*.5)/jobs.length*100)+'%'; $('#evMsg').textContent=`${live?`Clip ${j+1}/${jobs.length}: `:''}hoàn thiện ${QNAME[S.q]||''} (làm nét, chuẩn âm thanh) ${Math.round(p*100)}%`; },live); }catch(e){ console.warn('fin',e); r=r0; } }
       const d=new Date(), nm=live&&info.code?evClipName(gcs.length>1?gcs:[info.code],evNoColor(evGroupItems(g0).reduce((t,x)=>x.color?t.replace(new RegExp('\\s*(màu\\s+)?'+x.color.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'iu'),''):t,String(g0.name||info.name||'').trim()).trim()),g0.pman?g0.price:(info.price||g0.price),r.ext):`${live?'clip-live':'video-edit'}${live&&info.code?'-'+(gcs.length>1?gcs.join('-'):info.code).replace(/[^A-Za-z0-9_-]/g,''):''}-${pad2(d.getDate())}${pad2(d.getMonth()+1)}-${pad2(d.getHours())}${pad2(d.getMinutes())}${live?'-'+(j+1):''}.${r.ext}`;
       evOuts.splice(j,0,{name:nm,srt:live&&P.subs&&P.subs.length?srtOf(P.subs):'',info:r.W?finInfo(r,r.dur,r.lufs):'',blob:r.blob,url:URL.createObjectURL(r.blob),dur:r.dur,...(byC?(()=>{ const md=evPostData(info,gcs.length?gcs:[info.code||g0.code],g0); return {meta:md,caption:evPostCap(md,j)}; })():{caption:live&&S.evBy==='code'&&gcs.length>1?evCaptionGroup(info,gcs,segs[0],EVC_COV):evCaption(info,j,segs[0])}),slot:live?slots[order.indexOf(j)]:'',from:live?`${fmtT(segs[0].a)}–${fmtT(segs[0].b)}`:''}); evRenderOuts(); document.title=`⏳ ${j+1}/${jobs.length} clip · Xưởng Ảnh`; { const o=evOuts[Math.min(j,evOuts.length-1)]; if(!r.blob||r.blob.size<150000){ if(byC) g0.need='file xuất ra bị hỏng, chưa lưu: bấm Xuất lại'; else bad.push(`${o.name}: file hỏng hoặc quá nhỏ, nên xuất lại`); } else if(live&&r.lufs==null&&r.W){ if(byC) g0.need='clip không có tiếng gốc, chưa lưu: bấm ▶ Xem kiểm tra rồi Xuất lại'; else bad.push(`${o.name}: không đọc được tiếng gốc`); } if(byC&&g0.need) o.bad=g0.need; if(bad.length) evQaShow(qa,bad); }
@@ -4937,7 +4937,7 @@ async function evMixAudio(orig,total){ const OAC=window.OfflineAudioContext||win
   if(S.evAud!=='orig'){ try{ const mb=await evMusic(total); const s=c.createBufferSource(); s.buffer=mb; const g=c.createGain(); g.gain.value=S.evAud==='mix'?.16:.85; s.connect(g); g.connect(c.destination); s.start(); }catch(e){} }
   return await c.startRendering(); }
 // dựng một clip live: g = {src,a,b}, P = chữ; trả về như finEncode
-async function evRenderOffline(g,P,onProg,opt={}){ if(!finOK()) throw new Error('nofin'); const X=await evIndex(g.src); const PT=[g.pre,{src:g.src,a:g.a,b:g.b},g.cont].filter(Boolean), XS=[]; for(const p of PT) XS.push(p.src===g.src?X:await evIndex(p.src)); const acc=Math.max(.5,PT.reduce((s,p)=>s+p.b-p.a,0));
+async function evRenderOffline(g,P,onProg,opt={}){ if(!finOK()) throw new Error('nofin'); const X=await evIndex(g.src); const PT=[g.pre,...(g.parts||[{src:g.src,a:g.a,b:g.b}]),g.cont].filter(Boolean), XS=[]; for(const p of PT) XS.push(p.src===g.src?X:await evIndex(p.src)); const acc=Math.max(.5,PT.reduce((s,p)=>s+p.b-p.a,0));
   let total=acc; if(total<10 && P.code) total+=EV_CTA; P.total=total; P.segAt=t=>t<acc?{t0:0,d:acc,text:g.text||''}:null;
   const vf=VFMTS[S.vfmt], k=QK[S.q]||1.5, W=Math.round(vf.w*k/2)*2, H=Math.round(vf.h*k/2)*2; const E=envFor(W,H); E.style='ban'; await fontsReady();
   const cv=document.createElement('canvas'); cv.width=W; cv.height=H; const ctx=cv.getContext('2d'); ctx.imageSmoothingQuality='high'; // thu nhỏ hình live chất lượng cao nhất, giữ nét
@@ -5044,7 +5044,7 @@ function evCovFor(g,info,szs){ const cs=evCodesOf(g), base=g&&g.pman?(g.price||'
   return {code:cs.join(' · '),items:it.map(x=>({code:x.code,color:x.color,price:same?'':x.price})),price:same?(ps[0]||base):'',text:(szs.length&&!(S.evCovText||'').trim()?`Size ${szs.join(', ')}`:null)||evCovText(cs[0],szs)}; }
 // khung trên cho cụm nhiều màu: mỗi mã một ô đỏ "K132 nâu" rơi xuống lần lượt, dưới là "Đồng giá 199.000đ" (giá chung chỉ hiện một lần)
 function evCovGroupDraw(ctx,C,bx,by,bw,bh,dh,T,Tc,bnc){ const it=C.items, n=it.length, ch=Math.min(bh,dh*.13), cy0=by+(bh-ch)/2, pp0=C.price?'Đồng giá '+C.price:'', rest=C.text?(pp0?' · ':'')+C.text:'', has2=!!(pp0||rest);
-  const rowsN=n>3?2:1, rowH=ch*(has2?(rowsN>1?.31:.54):(rowsN>1?.46:.8)), per=Math.ceil(n/rowsN), rows=[]; for(let r=0;r<rowsN;r++) rows.push(it.slice(r*per,(r+1)*per));
+  const rowsN=n>3?2:1, rowH=ch*(has2?(rowsN>1?.28:.5):(rowsN>1?.46:.8)), per=Math.ceil(n/rowsN), rows=[]; for(let r=0;r<rowsN;r++) rows.push(it.slice(r*per,(r+1)*per));
   const lab=x=>x.code+(x.color?' '+x.color:'')+(x.price?' '+x.price:''), hw=x=>x.sw?fs*1.3:0; let fs=rowH*.62; ctx.font=fontOf(900,fs);
   const rowW=row=>row.reduce((s,x)=>s+ctx.measureText(lab(x)).width+fs*.9+hw(x),0)+fs*.4*(row.length-1); const mw=Math.max(...rows.map(rowW)); if(mw>bw*.94){ fs*=bw*.94/mw; ctx.font=fontOf(900,fs); }
   const top=has2?cy0+ch*.04:cy0+(ch-rowH*rowsN)/2; let k=0; ctx.textAlign='left';
@@ -5054,7 +5054,7 @@ function evCovGroupDraw(ctx,C,bx,by,bw,bh,dh,T,Tc,bnc){ const it=C.items, n=it.l
         if(hx) evHeart(ctx,x+fs*.45+fs*.5,cy+fs*.04,fs*1.1,item.sw);
         ctx.fillStyle='#fff'; ctx.fillText(item.code,x+fs*.45+hx,cy+fs*.04); const tail=lab(item).slice(item.code.length); if(tail){ ctx.fillStyle='#FFE7A3'; ctx.fillText(tail,x+fs*.45+hx+ctx.measureText(item.code).width,cy+fs*.04); } ctx.restore(); }
       x+=w+fs*.4; }); });
-  if(!has2) return; const st=.1+n*.22+.3, pp=seg01(Tc,st,st+.4); if(pp<=0) return; const yT=top+rowH*rowsN, h2=ch*.96-rowH*rowsN, line=pp0+rest; let f=fitLines(ctx,line,FONT,900,h2*.62,bw*.92,1), y2=yT+h2/2;
+  if(!has2) return; const st=.1+n*.22+.3, pp=seg01(Tc,st,st+.4); if(pp<=0) return; const yT=top+rowH*rowsN, h2=ch*.96-rowH*rowsN, line=pp0+rest; let f=fitLines(ctx,line,FONT,900,Math.max(h2*.66,dh*.024),bw*.92,1), y2=yT+h2/2;
   if(f.size<dh*.022){ const room=Math.max(h2,by+bh*.97-yT); f=fitLines(ctx,line,FONT,900,Math.min(dh*.026,room/2.6),bw*.92,2); y2=yT+Math.min(room,f.lines.length*f.size*1.25+f.size*.3)/2; } // chữ nhỏ quá khách không đọc được: to lên, xuống 2 dòng
   ctx.font=fontOf(900,f.size); const sc=(.2+.8*ease.back(pp))*(1+.05*Math.max(0,Math.sin(T*5.5))*(pp>=1?1:0));
   ctx.save(); ctx.translate(bx+bw/2,y2); ctx.scale(sc,sc); ctx.globalAlpha=Math.min(1,pp*2); const LN=f.lines, lh=f.size*1.25;
@@ -5087,7 +5087,7 @@ function evcSnap(src,a){ const L=src.loud; if(!L) return a; let best=a, bv=1e9; 
 
 // lưu kết quả AI nghe live trên máy (theo tên + dung lượng + ngày sửa của file): mở lại file, đổi bản app vẫn dùng lại, không nghe lại, không mất tiền
 const evAiKey=x=>x&&x.file?`ai:${x.file.name}|${x.file.size}|${x.file.lastModified}`:'';
-const evSegPack=g=>({a:g.a,b:g.b,on:g.on,code:g.code,name:g.name||'',price:g.price||'',pman:!!g.pman,quote:g.quote||'',lines:g.lines||'',sizes:g.sizes||'',text:g.text||'',man:!!g.man,need:g.need||'',done:g.done||'',asked:!!g.asked});
+const evSegPack=g=>({a:g.a,b:g.b,on:g.on,code:g.code,name:g.name||'',price:g.price||'',pman:!!g.pman,quote:g.quote||'',lines:g.lines||'',sizes:g.sizes||'',text:g.text||'',man:!!g.man,need:g.need||'',done:g.done||'',asked:!!g.asked,parts:g.parts?g.parts.map(p=>({a:p.a,b:p.b})):null});
 let evAiCs={}, evAiT=0; // kết quả AI nghe của từng file trong buổi live
 function evAiSave(){ if(S.evMode!=='live'||!evSrc.length) return; clearTimeout(evAiT); evAiT=setTimeout(()=>{ evSrc.forEach(x=>{ const k=evAiKey(x), c=evAiCs[k]; if(!k||!c) return; c.segs=evSegs.filter(g=>g.src===x).map(evSegPack); c.t=Date.now(); evIdb('put',c,k); }); },400); }
 async function evAiLoad(x){ const k=evAiKey(x); const c=(k&&await evIdb('get',null,k))||{name:x.file?x.file.name:'',parts:{},segs:[]}; if(!c.parts) c.parts={}; if(k) evAiCs[k]=c; return c; }
@@ -5114,14 +5114,16 @@ async function evAIRun(F){ F=F&&F.which?F:null; if(!evSrc.length){ toast('Chọn
 
 /* ⚡ chỉ cắt 1–2 mã: gõ mã hoặc tên, AI tìm đúng đoạn đó (dừng sớm khi đã thấy), chỉ xuất clip của mã đó */
 const evZ=c=>evcNorm(c).replace(/^0+|(?<=\D)0+/g,'');
-function evFindQ(s){ return String(s||'').split(/[,;\n]+/).map(t=>t.trim()).filter(Boolean).slice(0,3).map(t=>{ const c=t.replace(/\s+/g,''); if(/^[A-Za-z]{0,5}\d{1,6}[A-Za-z0-9]*$/.test(c)) return {t,code:evcNorm(c)};
+/* Ông Chủ 31/10: gõ khoảng mã 'E15-18' hoặc 'E15-E18' → E15, E16, E17, E18 (tối đa 12 mã) */
+function evFindExpand(s){ return String(s||'').replace(/\b([A-Za-z]{0,5})(\d{1,6})\s*[-–~]\s*([A-Za-z]{0,5})(\d{1,6})\b/g,(m,p1,n1,p2,n2)=>{ if(p2&&p2.toUpperCase()!==p1.toUpperCase()) return m; const a=+n1, b=+n2; if(!(b>a)||b-a>11) return m; const w=/^0/.test(n1)?n1.length:0, out=[]; for(let k=a;k<=b;k++) out.push(p1.toUpperCase()+String(k).padStart(w,'0')); return out.join(', '); }); }
+function evFindQ(s){ s=evFindExpand(s); let T=String(s||'').split(/[,;\n]+/).map(t=>t.trim()).filter(Boolean); if(T.length===1&&T[0].split(/\s+/).length>1&&T[0].split(/\s+/).every(w=>/^[A-Za-z]{0,5}\d{1,6}[A-Za-z0-9]*$/.test(w))) T=T[0].split(/\s+/); /* gõ 'HC99 HC100 HC101' cách nhau dấu cách cũng được */ return T.slice(0,12).map(t=>{ const c=t.replace(/\s+/g,''); if(/^[A-Za-z]{0,5}\d{1,6}[A-Za-z0-9]*$/.test(c)) return {t,code:evcNorm(c)};
     const n=norm(t), ps=n?evProducts().filter(p=>norm((analyse(p).base||'')+' '+(p.name||'')).includes(n)):[]; return {t,n,codes:ps.length&&ps.length<=4?ps.map(p=>evcNorm(p.code)):[]}; }); }
 function evFindMk(q){ const codeHit=(cs,k)=>{ const w=q[k]; const L=w.code?[w.code]:w.codes; return L.some(c=>cs.some(x=>evZ(x)===evZ(c))); };
   const txtHit=(t,k)=>!!q[k].n && norm(t).includes(q[k].n);
   return { q, got:new Set(), label:q.map(w=>w.code||`"${w.t}"`).join(', '), codes:q.flatMap(w=>w.code?[w.code]:w.codes),
     which:x=>{ const cs=[x.code,...(x.codes||[])].filter(Boolean); for(let k=0;k<q.length;k++) if(codeHit(cs,k)||txtHit([x.name,x.quote,...(x.points||[]),...cs.map(c=>evInfo(c).name)].join(' '),k)) return k; return -1; },
     seg:g=>{ const cs=evCodesOf(g); for(let k=0;k<q.length;k++) if(codeHit(cs,k)||txtHit([g.name,g.quote,g.lines,...cs.map(c=>evInfo(c).name)].join(' '),k)) return k; return -1; } }; }
-async function evFindRun(){ const msg=$('#evFindMsg'), inp=$('#evFind'), q=evFindQ(inp.value); if(!evSrc.length){ toast('Chọn video livestream trước'); msg.textContent='Bấm "+ Chọn video trên máy" để chọn file livestream trước.'; return; }
+async function evFindRun(){ const msg=$('#evFindMsg'), inp=$('#evFind'); { const ex=evFindExpand(inp.value); if(ex!==inp.value){ inp.value=ex; S.evFind=ex; persist(); } } const q=evFindQ(inp.value); if(!evSrc.length){ toast('Chọn video livestream trước'); msg.textContent='Bấm "+ Chọn video trên máy" để chọn file livestream trước.'; return; }
   if(!q.length){ toast('Gõ mã hoặc tên sản phẩm cần tách'); inp.focus(); return; } if(evBusy) return; const F=evFindMk(q);
   const pick=segs=>{ const hit=segs.filter(g=>F.seg(g)>=0); return hit; };
   let hit=pick(evSegs); const C=x=>evAiCs[evAiKey(x)];
@@ -5132,8 +5134,13 @@ async function evFindRun(){ const msg=$('#evFindMsg'), inp=$('#evFind'), q=evFin
     hit=pick(evSegs); const cost=Math.round(r.paidS/3600*3000/100)*100;
     if(!hit.length){ evRenderSegs(); evAiSave(); msg.textContent=`AI đã nghe hết ${Math.round(r.heardS/60)} phút live nhưng không thấy ${F.label}${r.segs.length?` (nghe được ${r.segs.length} mã khác, xem ở dưới)`:''}. Host cần đọc mã thành lời; thử gõ tên sản phẩm hoặc tự đánh dấu.`; toast('Không thấy '+F.label); return; }
     F.info=`AI nghe ${Math.round(r.heardS/60)} phút${r.stop?' (thấy rồi nên dừng sớm)':''}${r.paidS?`, khoảng ${cost.toLocaleString('vi-VN')}đ`:', dùng lại phần đã nghe, không mất tiền'}. `; }
+  const miss=q.filter((w,k)=>!hit.some(g=>F.seg(g)===k||(w.code&&evCodesOf(g).some(c=>evZ(c)===evZ(w.code))))).map(w=>w.code||w.t);
+  if(hit.length>1){ /* Ông Chủ 31/10: tìm cả tổ hợp nhiều mã cùng 1 mẫu (mỗi màu 1 mã) → gộp chung 1 video */ hit.sort((m,n)=>evSrc.indexOf(m.src)-evSrc.indexOf(n.src)||m.a-n.a); const out=[];
+    for(const g of hit){ const h=out[out.length-1]; if(h&&h.src===g.src&&evcSib(evCodesOf(h),evCodesOf(g))){ if(!h.parts) h.parts=[{src:h.src,a:h.a,b:h.b}]; h.parts.push({src:g.src,a:g.a,b:g.b}); h.code=[h.code,g.code].filter(Boolean).join(', '); if(!h.name) h.name=g.name; if(!h.lines&&g.lines) h.lines=g.lines; delete h.subs; delete h.done; delete h.need; evSegs.splice(evSegs.indexOf(g),1); } else out.push(g); }
+    out.forEach(g=>{ if(!g.parts) return; const per=Math.max(10,Math.floor(90/g.parts.length)); g.parts.forEach(p=>{ p.b=Math.min(p.b,p.a+per); }); g.a=g.parts[0].a; g.b=g.parts[0].b; }); /* mỗi màu một đoạn ngắn nối liền, cả clip ≤ 90 giây */
+    hit=out; }
   evSegs.forEach(g=>g.on=hit.includes(g)); evRenderSegs(); evAiSave();
-  const miss=q.filter((w,k)=>!hit.some(g=>F.seg(g)===k)).map(w=>w.code||w.t);
+
   msg.textContent=`Thấy ${hit.map(g=>`${g.code} lúc ${fmtT(g.a)}`).join(', ')}. ${F.info||''}${miss.length?`Chưa thấy: ${miss.join(', ')}. `:''}Đang xuất ${hit.length} clip, các mã khác không làm.`;
   toast(`Đang xuất ${hit.length} clip`); const bb=$('#btnEvBuild'); bb.scrollIntoView({block:'center',behavior:'smooth'}); await bb.onclick(); }
 
